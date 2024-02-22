@@ -2,9 +2,9 @@
 {
     public class Singleton<T> where T:new()
     {
-        private T _instance;
+        private static T _instance;
 
-        public T Instance
+        public static T Instance
         {
             get
             {
