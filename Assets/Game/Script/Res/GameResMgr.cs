@@ -13,7 +13,7 @@ namespace Game.Script.Res
         {
             var path = System.IO.Path.Combine("Assets/Game/Res/Config/" , szName + ".csv");
             var op =  Addressables.LoadAssetAsync<TextAsset>(path);
-            var textAsset = op.WaitForCompletion() as TextAsset;
+            var textAsset = op.WaitForCompletion();
             
             readCallBack(szName, textAsset.text, userCallBack);
         }
