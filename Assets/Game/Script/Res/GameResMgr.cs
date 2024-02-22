@@ -2,6 +2,7 @@
 using CSVHelper;
 using Game.Script.Common;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Game.Script.Res
 {
@@ -10,12 +11,11 @@ namespace Game.Script.Res
 
         public void OnCsvRead(string szName, System.Action<string, string, System.Action<List<CsvRow>>> readCallBack, System.Action<List<CsvRow>> userCallBack)
         {
-#if UNITY_EDITOR
             var path = System.IO.Path.Combine("Assets/Game/Res/Config/" , szName + ".csv");
-            var textAsset = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(path);
-
+            var op =  Addressables.LoadAssetAsync<TextAsset>(path);
+            var textAsset = op.WaitForCompletion() as TextAsset;
+            
             readCallBack(szName, textAsset.text, userCallBack);
-#endif
         }
     }
 }
