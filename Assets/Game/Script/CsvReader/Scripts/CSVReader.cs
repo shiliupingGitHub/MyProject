@@ -44,7 +44,7 @@ public class CSVReader
                 return 0;
 
         }
-        catch (Exception e)
+        catch (Exception)
         {
             Debug.LogError(text);
         }

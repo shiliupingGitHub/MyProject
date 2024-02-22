@@ -11,6 +11,7 @@ namespace Game.Script.Map
     }
     public class MapData
     {
+        private string _bkId;
         private List<MapActorConfig> _mapActorConfigs;
     }
 }
