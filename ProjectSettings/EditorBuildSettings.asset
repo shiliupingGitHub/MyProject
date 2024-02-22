@@ -6,11 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Mirror/Examples/Room/Scenes/MirrorRoomOnline.unity
-    guid: d7a6763559b31854586c9e49916273ef
-  - enabled: 1
-    path: Assets/Mirror/Examples/Room/Scenes/MirrorRoomGame.unity
-    guid: 48478f4d522f96945b8396f376299d3a
+    path: Assets/Game/Res/Scene/Entry.unity
+    guid: 04c1d51f072362341af83743d29b37b3
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 46208993c8dcc074eb70b6ecb77a17c6,
       type: 2}
