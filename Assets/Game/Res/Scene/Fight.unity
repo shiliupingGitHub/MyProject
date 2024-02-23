@@ -131,20 +131,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1628158450640590122, guid: fc06ff51835f3f7448c8234d48a759ec,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2162612741562883330, guid: fc06ff51835f3f7448c8234d48a759ec,
         type: 3}
       propertyPath: m_Name
       value: TestFightMap
       objectReference: {fileID: 0}
+    - target: {fileID: 4350340442712461388, guid: fc06ff51835f3f7448c8234d48a759ec,
+        type: 3}
+      propertyPath: m_TagString
+      value: MainCamera
+      objectReference: {fileID: 0}
     - target: {fileID: 7845182371767544309, guid: fc06ff51835f3f7448c8234d48a759ec,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7845182371767544309, guid: fc06ff51835f3f7448c8234d48a759ec,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 7845182371767544309, guid: fc06ff51835f3f7448c8234d48a759ec,
         type: 3}
