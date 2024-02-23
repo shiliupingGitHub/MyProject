@@ -12,15 +12,14 @@ namespace Game.Script.UI
 
         protected virtual string ResPath => string.Empty;
 
-        public virtual GameObject Init(Transform parent)
+        public virtual void Init(Transform parent)
         {
             if (!ResPath.IsNullOrEmpty())
             {
                 var asset = GameResMgr.Instance.LoadAssetSync<GameObject>(ResPath);
                 _gameObject = UnityEngine.Object.Instantiate(asset,parent);
-                Object.DontDestroyOnLoad(_gameObject);
             }
-            return _gameObject;
+           
         }
     }
 }

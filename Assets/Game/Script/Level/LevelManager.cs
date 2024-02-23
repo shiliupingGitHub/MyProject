@@ -15,7 +15,8 @@ namespace Game.Script.Level
         
         private Dictionary<LevelType, Level> levels = new Dictionary<LevelType, Level>()
         {
-            {LevelType.Hall, new HallLevel()}
+            {LevelType.Hall, new HallLevel()},
+            { LevelType.Fight , new FightLevel()}
         };
 
         private LevelType curLevel = LevelType.None;

@@ -31,8 +31,9 @@ namespace Game.Script.UI
                 {
                     Object.Destroy(frame.FrameGo);
                 }
-                queueFrames.Clear();
+              
             }
+            queueFrames.Clear();
         }
 
         public T Show<T>(bool bUseQueue = true) where  T : Frame
