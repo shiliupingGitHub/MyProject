@@ -17,5 +17,12 @@ namespace Game.Script.Res
             
             readCallBack(szName, textAsset.text, userCallBack);
         }
+
+        public T LoadAssetSync<T>(string path)
+        {
+            var op = Addressables.LoadAssetAsync<T>(path);
+
+            return op.WaitForCompletion();
+        }
     }
 }
