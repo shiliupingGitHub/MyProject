@@ -1,5 +1,6 @@
 ﻿using System;
 using Game.Script.Level;
+using Game.Script.Misc;
 using Game.Script.Res;
 using Game.Script.UI;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace Game.Script.Entry
         {
             CSVHelper.CsvHelper.mLoader += GameResMgr.Instance.OnCsvRead;
             UIManager.Instance.Init();
+            GameTickManager.Instance.Init();
             LevelManager.Instance.Enter(LevelType.Hall);
         }
     }
