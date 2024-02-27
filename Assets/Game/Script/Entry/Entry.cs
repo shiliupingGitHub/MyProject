@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Script.Game;
 using Game.Script.Level;
 using Game.Script.Misc;
 using Game.Script.Res;
