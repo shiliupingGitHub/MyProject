@@ -9,6 +9,7 @@ namespace Game.Script.Level
         None,
         Hall,
         Fight,
+        Edit,
     }
     public class LevelManager : Singleton<LevelManager>
     {
@@ -16,7 +17,8 @@ namespace Game.Script.Level
         private Dictionary<LevelType, Level> levels = new Dictionary<LevelType, Level>()
         {
             {LevelType.Hall, new HallLevel()},
-            { LevelType.Fight , new FightLevel()}
+            { LevelType.Fight , new FightLevel()},
+            { LevelType.Edit , new EditLevel()},
         };
 
         private LevelType curLevel = LevelType.None;
