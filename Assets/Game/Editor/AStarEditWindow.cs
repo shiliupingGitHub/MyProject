@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace Game.Editor
 {
-    public class AStartEditWindow : EditorWindow
+    public class AStarEditWindow : EditorWindow
     {
         private bool bEnableEdit = false;
         [MenuItem("AStar/Edit")]
         private static void ShowWindow()
         {
-            var window = GetWindow<AStartEditWindow>();
+            var window = GetWindow<AStarEditWindow>();
             window.titleContent = new GUIContent("AStar");
             window.Show();
         }

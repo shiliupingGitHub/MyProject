@@ -3,5 +3,6 @@
     public enum SkillType
     {
         PlayAnimation = 0,
+        ApplyHurt = 1,
     }
 }

@@ -18,8 +18,13 @@ namespace Game.Script.Character.Skill.Action
             string ret = param;
             ParseParam(param);
 #if UNITY_EDITOR
-            UnityEngine.GUILayout.Label("动作");
-            aniName = UnityEngine.GUILayout.TextField(aniName);
+            UnityEngine.GUILayout.BeginHorizontal();
+            GUIStyle style = new GUIStyle();
+            style.alignment = TextAnchor.MiddleRight;
+            style.normal.textColor = Color.green;
+            UnityEngine.GUILayout.Label("动作:", style );
+            aniName = UnityEngine.GUILayout.TextField(aniName, GUILayout.Width(100));
+            UnityEngine.GUILayout.EndHorizontal();
             ret = aniName;
 #endif
             return ret;
