@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game.Script.Character.Skill;
 using UnityEngine;
 
 namespace Skill
@@ -8,7 +9,8 @@ namespace Skill
     public class SkillActonConfig
     {
         [SerializeField] public float time = 0;
-        [SerializeField] public Action action;
+        [SerializeField] public SkillType skillType;
+        [SerializeField] public string actionParam;
     }
     
     [CreateAssetMenu(fileName = "skill", menuName = "技能配置文件", order = 0)]
