@@ -5,15 +5,15 @@ using UnityEngine;
 
 namespace Skill.Editor
 {
-    [CustomEditor(typeof(SkillAsset))]
+    [CustomEditor(typeof(Skill))]
     public class SkillAssetEditor : UnityEditor.Editor
     {
-        private SkillAsset _skillAsset = null;
+        private Skill _skill = null;
         private float curTime = 0;
         private int selectActionIndex = 0;
         private void OnEnable()
         {
-            _skillAsset = target as SkillAsset;
+            _skill = target as Skill;
         }
 
        
@@ -23,7 +23,7 @@ namespace Skill.Editor
             EditorGUILayout.BeginVertical();
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("持续时间", GUILayout.Width(100));
-            _skillAsset.maxTime = EditorGUILayout.FloatField( _skillAsset.maxTime, GUILayout.Width(100));
+            _skill.maxTime = EditorGUILayout.FloatField( _skill.maxTime, GUILayout.Width(100));
             EditorGUILayout.EndHorizontal();
             
             EditorGUILayout.Space(50);
@@ -31,7 +31,7 @@ namespace Skill.Editor
             
             EditorGUILayout.BeginHorizontal();
           
-            curTime = GUILayout.HorizontalSlider(curTime, 0, _skillAsset.maxTime);
+            curTime = GUILayout.HorizontalSlider(curTime, 0, _skill.maxTime);
             curTime = EditorGUILayout.FloatField(curTime, GUILayout.Width(100));
             EditorGUILayout.EndHorizontal();
             
@@ -45,9 +45,9 @@ namespace Skill.Editor
                 if (SkillMgr.Instance.DefaultActions.TryGetValue(type, out var defaultAction))
                 {
                      var param = defaultAction.GetDefaultParam();
-                    _skillAsset.cacheActions.Add(new SkillActonConfig()
+                    _skill.actions.Add(new SkillActonConfig()
                     {
-                        actionParam = param, skillType = type, time = curTime,
+                        param = param, skillType = type, time = curTime,
                     });
                 }
                
@@ -63,7 +63,7 @@ namespace Skill.Editor
             bool bRemove = false;
             SkillActonConfig removeActionConfig = null;
           
-            foreach (var action in _skillAsset.cacheActions)
+            foreach (var action in _skill.actions)
             {
                 EditorGUILayout.BeginHorizontal();
                 int skillTypeIndex = (int)action.skillType;
@@ -77,7 +77,7 @@ namespace Skill.Editor
                     var oldColor = GUI.color;
                     GUI.color = Color.green;
                     EditorGUILayout.BeginVertical();
-                    action.actionParam = SkillMgr.Instance.DefaultActions[action.skillType].OnGui(action.actionParam);
+                    action.param = SkillMgr.Instance.DefaultActions[action.skillType].OnGui(action.param);
                     EditorGUILayout.EndVertical();
                     GUI.color = oldColor;
                     if (GUILayout.Button("X", GUILayout.Width(100)))
@@ -91,7 +91,7 @@ namespace Skill.Editor
 
             if (bRemove)
             {
-                _skillAsset.cacheActions.Remove(removeActionConfig);
+                _skill.actions.Remove(removeActionConfig);
             }
             EditorGUILayout.EndVertical();
          

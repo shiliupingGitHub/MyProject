@@ -37,7 +37,7 @@ namespace BehaviorDesigner.Editor.ObjectDrawers
                 reorderableList = new ReorderableList(stackedAction.actions, typeof(Action), true, true, true, true);
                 reorderableList.drawHeaderCallback += (Rect rect) =>
                 {
-                    EditorGUI.LabelField(rect, "Actions");
+                    EditorGUI.LabelField(rect, "actions");
                 };
                 reorderableList.onAddDropdownCallback += OnAddDropdownCallback;
                 reorderableList.drawElementCallback += OnDrawElementCallback;
