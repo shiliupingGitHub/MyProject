@@ -1,4 +1,5 @@
-﻿using Mirror;
+﻿using Game.Script.Res;
+using Mirror;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -18,5 +19,21 @@ namespace Game.Script.Misc
             player.name = $"{playerPrefab.name} [connId={conn.connectionId}]";
             NetworkServer.AddPlayerForConnection(conn, player);
         }
+
+        public override void OnServerSceneChanged(string sceneName)
+        {
+            base.OnServerSceneChanged(sceneName);
+
+            if (sceneName.Contains("Fight"))
+            {
+                var bkTemplate = GameResMgr.Instance.LoadAssetSync<GameObject>("Assets/Game/Res/Map/ScenePrefab/TestScene.prefab");
+
+                if (null != bkTemplate)
+                {
+                     GameObject.Instantiate(bkTemplate);
+                }
+            }
+        }
+        
     }
 }

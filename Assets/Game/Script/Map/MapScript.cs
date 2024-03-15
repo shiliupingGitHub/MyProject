@@ -70,7 +70,7 @@ namespace Game.Script.Map
                 _bkMat.SetColor(Color1, Color.green);
                 Graphics.DrawMeshInstanced(_bkMesh, 0, _bkMat, bkMatrixs.ToArray(), bkMatrixs.Count);
             }
-            if (_blockMatrix4X4s.Count > 0 && _blockMat != null && _blockMesh != null)
+            if (_blockMatrix4X4s != null && _blockMatrix4X4s.Count > 0 && _blockMat != null && _blockMesh != null)
             {
                 _blockMat.SetColor(Color1, Color.red);
                 _blockMat.enableInstancing = true;
