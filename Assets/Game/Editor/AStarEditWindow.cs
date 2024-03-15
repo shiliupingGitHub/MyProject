@@ -14,8 +14,10 @@ namespace Game.Editor
     {
         private bool bEnableEdit = false;
 
-        private Mesh _mesh;
-        private Material _material;
+        private Mesh _blockMesh;
+        private Mesh _bkMesh;
+        private Material _blockMaterial;
+        private Material _bkMaterial;
         
 
         [MenuItem("AStar/Edit")]
@@ -29,20 +31,36 @@ namespace Game.Editor
         
         private void OnBecameVisible()
         {
-            if (_mesh == null)
+            if (_blockMesh == null)
             {
-                _mesh = new Mesh();
+                _blockMesh = new Mesh();
+            }
+
+            if (_bkMesh == null)
+            {
+                _bkMesh = new Mesh();
             }
             
-            if (_material == null)
+            if (_blockMaterial == null)
             {
-                _material = new Material(Shader.Find("Unlit/DrawAstarShader"));
+                _blockMaterial = new Material(Shader.Find("Shader Graphs/DrawAStar"));
+                _blockMaterial.enableInstancing = true;
+            }
+            
+            if (_bkMaterial == null)
+            {
+                _bkMaterial = new Material(Shader.Find("Shader Graphs/DrawAStar"));
+                _bkMaterial.enableInstancing = true;
             }
         }
 
         private void OnBecameInvisible()
         {
-            
+            var mapScript = GameObject.FindObjectOfType<MapScript>();
+            if (mapScript != null)
+            {
+                mapScript.SetDraw(null, null, null, null, new List<Matrix4x4>());
+            }
         }
 
 
@@ -60,21 +78,20 @@ namespace Game.Editor
         {
             SceneView.duringSceneGui -= OnSceneView;
         }
-        
-        void  CreateMesh(MapScript mapScript)
+
+        void CreateBkMesh(MapScript mapScript)
         {
-       
-            _mesh.Clear();
+            _bkMesh.Clear();
             
             Vector3[] vertices = new Vector3[4]
             {
                 new Vector3(0, 0, 0),
-                new Vector3(mapScript.aStarSize * mapScript.xAStarNum, 0, 0),
+                new Vector3(mapScript.aStarSize * mapScript.xAStarNum , 0, 0),
                 new Vector3(0, mapScript.aStarSize * mapScript.yAStarNum, 0),
-                new Vector3(mapScript.aStarSize * mapScript.xAStarNum, mapScript.aStarSize * mapScript.yAStarNum, 0)
+                new Vector3(mapScript.aStarSize * mapScript.xAStarNum, mapScript.aStarSize * mapScript.yAStarNum , 0)
             };
                 
-            _mesh.vertices = vertices;
+            _bkMesh.vertices = vertices;
 
             int[] tris = new int[6]
             {
@@ -83,7 +100,7 @@ namespace Game.Editor
                 // upper right triangle
                 2, 3, 1
             };
-            _mesh.triangles = tris;
+            _bkMesh.triangles = tris;
             
             Vector2[] uv = new Vector2[4]
             {
@@ -92,7 +109,41 @@ namespace Game.Editor
                 new Vector2(0, 1),
                 new Vector2(1, 1)
             };
-            _mesh.uv = uv;
+            _bkMesh.uv = uv;
+        }
+        
+        void  CreateBlockMesh(MapScript mapScript)
+        {
+       
+            _blockMesh.Clear();
+            
+            Vector3[] vertices = new Vector3[4]
+            {
+                new Vector3(0, 0, 0),
+                new Vector3(mapScript.aStarSize , 0, 0),
+                new Vector3(0, mapScript.aStarSize, 0),
+                new Vector3(mapScript.aStarSize, mapScript.aStarSize , 0)
+            };
+                
+            _blockMesh.vertices = vertices;
+
+            int[] tris = new int[6]
+            {
+                // lower left triangle
+                0, 2, 1,
+                // upper right triangle
+                2, 3, 1
+            };
+            _blockMesh.triangles = tris;
+            
+            Vector2[] uv = new Vector2[4]
+            {
+                new Vector2(0, 0),
+                new Vector2(1, 0),
+                new Vector2(0, 1),
+                new Vector2(1, 1)
+            };
+            _blockMesh.uv = uv;
             
             
         }
@@ -104,8 +155,23 @@ namespace Game.Editor
             
             if (mapScript != null)
             {
-                 CreateMesh(mapScript);
-                 
+                 CreateBlockMesh(mapScript);
+                 CreateBkMesh(mapScript);
+                 List<Matrix4x4> matrix4X4s = new();
+                 Vector3 offset = mapScript.transform.position + mapScript.originOffset;
+                 foreach (var block in mapScript.blocks)
+                 {
+                     (uint x, uint y) = mapScript.DeCodeIndex(block);
+
+                     Vector3 position = new Vector3(x * mapScript.aStarSize, y * mapScript.aStarSize, -1);
+
+                     position += offset;
+                     Matrix4x4 matrix4 =  Matrix4x4.TRS(position, quaternion.identity, Vector3.one);
+                     
+                     matrix4X4s.Add(matrix4);
+                     
+                 }
+                 mapScript.SetDraw(_blockMesh, _bkMesh, _blockMaterial, _bkMaterial, matrix4X4s);
             }
         }
 
@@ -138,36 +204,47 @@ namespace Game.Editor
             mapScript.SetBlock((uint)x, (uint)y, block);
         }
 
+
+
         void OnSceneView(SceneView sceneView)
         {
             var mapScript = GameObject.FindObjectOfType<MapScript>();
-            if (bEnableEdit && mapScript)
+            if (mapScript)
             {
-                HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
+                if (bEnableEdit)
+                {
+                    HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
                 
-               FillMesh(sceneView.camera);
-               if (Event.current.isMouse && Event.current.button == 0 && Event.current.type == EventType.MouseDown)
-               {
-                   var mousePos = Event.current.mousePosition;
-                   mousePos.y = Camera.current.pixelHeight - mousePos.y;
-                   var worldPos =  sceneView.camera.ScreenToWorldPoint(mousePos);
+                    FillMesh(sceneView.camera);
+                    if (Event.current.isMouse && Event.current.button == 0 && Event.current.type == EventType.MouseDown)
+                    {
+                        var mousePos = Event.current.mousePosition;
+                        mousePos.y = Camera.current.pixelHeight - mousePos.y;
+                        var worldPos =  sceneView.camera.ScreenToWorldPoint(mousePos);
 
-                   (int x, int y) = GetGridIndex(mapScript, worldPos);
+                        (int x, int y) = GetGridIndex(mapScript, worldPos);
 
-                   if (x >= 0 && y >= 0)
-                   {
+                        if (x >= 0 && y >= 0)
+                        {
 
-                       if (Event.current.shift)
-                       {
-                           SetBlock(mapScript, x, y, false);
-                       }
-                       else
-                       {
-                           SetBlock(mapScript, x, y, true);
-                       }
-                   }
-               }
+                            if (Event.current.shift)
+                            {
+                                SetBlock(mapScript, x, y, false);
+                            }
+                            else
+                            {
+                                SetBlock(mapScript, x, y, true);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    mapScript.SetDraw(null, null, null, null, new List<Matrix4x4>());
+                    
+                }
             }
+           
         }
     }
 }
