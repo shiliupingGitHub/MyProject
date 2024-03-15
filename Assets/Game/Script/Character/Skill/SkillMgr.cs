@@ -42,7 +42,7 @@ namespace Game.Script.Character.Skill
             
             DefaultActions.Clear();
             ActionTypes.Clear();
-
+            Descriptions.Clear();
             var baseType = typeof(SkillAction);
             var types =  baseType.Assembly.GetTypes();
             
