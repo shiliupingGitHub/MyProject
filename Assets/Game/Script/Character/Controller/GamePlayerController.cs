@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 namespace Game.Script.Character
 {
     
-    public class GamePlayerController : BaseController
+    public class GamePlayerController : BaseSkillController
     {
         public InputActionReference MoveUpAction;
         public InputActionReference MoveDownAction;
