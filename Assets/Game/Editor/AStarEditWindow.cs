@@ -86,9 +86,9 @@ namespace Game.Editor
             Vector3[] vertices = new Vector3[4]
             {
                 new Vector3(0, 0, 0),
-                new Vector3(mapScript.aStarSize * mapScript.xAStarNum , 0, 0),
-                new Vector3(0, mapScript.aStarSize * mapScript.yAStarNum, 0),
-                new Vector3(mapScript.aStarSize * mapScript.xAStarNum, mapScript.aStarSize * mapScript.yAStarNum , 0)
+                new Vector3(mapScript.gridSize * mapScript.xGridNum , 0, 0),
+                new Vector3(0, mapScript.gridSize * mapScript.yGridNum, 0),
+                new Vector3(mapScript.gridSize * mapScript.xGridNum, mapScript.gridSize * mapScript.yGridNum , 0)
             };
                 
             _bkMesh.vertices = vertices;
@@ -120,9 +120,9 @@ namespace Game.Editor
             Vector3[] vertices = new Vector3[4]
             {
                 new Vector3(0, 0, 0),
-                new Vector3(mapScript.aStarSize , 0, 0),
-                new Vector3(0, mapScript.aStarSize, 0),
-                new Vector3(mapScript.aStarSize, mapScript.aStarSize , 0)
+                new Vector3(mapScript.gridSize , 0, 0),
+                new Vector3(0, mapScript.gridSize, 0),
+                new Vector3(mapScript.gridSize, mapScript.gridSize , 0)
             };
                 
             _blockMesh.vertices = vertices;
@@ -163,7 +163,7 @@ namespace Game.Editor
                  {
                      (uint x, uint y) = mapScript.DeCodeIndex(block);
 
-                     Vector3 position = new Vector3(x * mapScript.aStarSize, y * mapScript.aStarSize, -1);
+                     Vector3 position = new Vector3(x * mapScript.gridSize, y * mapScript.gridSize, -1);
 
                      position += offset;
                      Matrix4x4 matrix4 =  Matrix4x4.TRS(position, quaternion.identity, Vector3.one);
@@ -175,28 +175,7 @@ namespace Game.Editor
             }
         }
 
-        (int, int) GetGridIndex( MapScript mapScript, Vector3 worldPos)
-        {
 
-            int retX = -1;
-            int retY = -1;
-
-            Vector3 o = mapScript.transform.position + mapScript.originOffset;
-            Vector3 max = o + new Vector3(mapScript.aStarSize * mapScript.xAStarNum, mapScript.aStarSize * mapScript.yAStarNum);
-
-            var offset = (worldPos - o) / mapScript.aStarSize;
-
-            if (offset.x >= 0 && offset.x < mapScript.xAStarNum)
-            {
-                retX = Mathf.FloorToInt(offset.x);
-            }
-            
-            if (offset.y >= 0 && offset.y < mapScript.yAStarNum)
-            {
-                retY = Mathf.FloorToInt(offset.y);
-            }
-            return (retX, retY);
-        }
 
         void SetBlock(MapScript mapScript, int x, int y, bool block)
         {
@@ -222,7 +201,7 @@ namespace Game.Editor
                         mousePos.y = Camera.current.pixelHeight - mousePos.y;
                         var worldPos =  sceneView.camera.ScreenToWorldPoint(mousePos);
 
-                        (int x, int y) = GetGridIndex(mapScript, worldPos);
+                        (int x, int y) = mapScript.GetGridIndex(worldPos);
 
                         if (x >= 0 && y >= 0)
                         {

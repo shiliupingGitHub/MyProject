@@ -4,21 +4,60 @@ using UnityEngine;
 
 namespace Game.Script.Map
 {
-    public class ActorData
+    public struct ActorData
     {
-        public int x = 0;
-        public int y = 0;
-        public string id;
+        public int x;
+        public int y;
+        public int id;
+        public GameObject go;
     }
     public class MapData
     {
         public int bkId;
-        public List<ActorData> mapActorConfigs;
+        public List<ActorData> actors = new();
 
         private GameObject _bkMapGo;
-        public void LoadSync(bool net = false)
+        public void LoadSync(bool preview = true,bool net = false)
         {
             LoadBk();
+        }
+
+        public bool AddActor(Vector3 position, ActorConfig actorConfig, bool preview = true, bool net = false)
+        {
+            MapScript mapScript = GameObject.FindObjectOfType<MapScript>();
+
+            if (mapScript == null)
+                return false;
+
+
+            (int x, int y) = mapScript.GetGridIndex(position);
+
+            if (x < 0 || y < 0)
+            {
+                return false;
+            }
+            var template = GameResMgr.Instance.LoadAssetSync<GameObject>(actorConfig.path);
+
+            if (template)
+            {
+                var go = GameObject.Instantiate(template) as GameObject;
+                if (preview)
+                {
+                    go.tag = "Preview";
+                }
+
+                ActorData actorData = new();
+                actorData.go = go;
+                actorData.x = x;
+                actorData.y = y;
+                actorData.id = actorConfig.id;
+                actors.Add(actorData);
+               var putPosition =  mapScript.GetGridStartPosition(x, y);
+               go.transform.position = putPosition;
+
+
+            }
+            return false;
         }
 
         public void LoadBk()

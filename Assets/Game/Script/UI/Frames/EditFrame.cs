@@ -138,6 +138,17 @@ namespace Game.Script.UI.Frames
                     bIsDraging = false;
                 };
             }
+
+            if (_inputActionReferences.TryGetValue("EditAddActor", out var inputAddActor))
+            {
+                inputAddActor.action.started += delegate(InputAction.CallbackContext callbackContext)
+                {
+                    if (null != curSelectShadow && null != curSelectActorConfig && null != _curMapData)
+                    {
+                        _curMapData.AddActor(curSelectShadow.transform.position,curSelectActorConfig);
+                    }
+                };
+            }
         }
 
         void EnableInput()

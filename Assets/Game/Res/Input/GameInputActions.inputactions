@@ -58,6 +58,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "EditAddActor",
+                    "type": "Button",
+                    "id": "361d961c-b15a-41d0-af67-495029d68fe5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -148,6 +157,17 @@
                     "action": "EditDrag",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "e3e0e534-7e0b-4252-9e84-0745d5b912ef",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EditAddActor",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

@@ -46,9 +46,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originOffset: {x: -4, y: -2, z: 0}
-  aStarSize: 0
-  xAStarNum: 0
-  yAStarNum: 0
+  gridSize: 0.5
+  xGridNum: 20
+  yGridNum: 6
   blocks: 
 --- !u!1001 &1011874208326068783
 PrefabInstance:

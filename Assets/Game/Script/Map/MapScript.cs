@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game.Script.Attribute;
 using Unity.Mathematics;
+using UnityEngine.Serialization;
 
 namespace Game.Script.Map
 {
@@ -11,11 +12,11 @@ namespace Game.Script.Map
     {
         [Label("原点起始偏移")] public Vector3 originOffset;
         
-        [Label("a*格子尺寸")] public float aStarSize = 1;
+        [Label("格子尺寸")] public float gridSize = 1;
 
-        [Label("a* X方向数量")]public int xAStarNum = 1;
+        [Label("X方向数量")]public int xGridNum = 100;
 
-        [Label("a* Y方向数量")]public int yAStarNum = 1;
+        [Label("Y方向数量")]public int yGridNum = 100;
         [SerializeField] public List<uint> blocks  = new();
 
         public bool IsBlock(uint x, uint y)
@@ -75,6 +76,38 @@ namespace Game.Script.Map
                 _blockMat.enableInstancing = true;
                 Graphics.DrawMeshInstanced(_blockMesh, 0, _blockMat, _blockMatrix4X4s.ToArray(), _blockMatrix4X4s.Count);
             }
+        }
+
+        public Vector3 GetGridStartPosition(int x, int y)
+        {
+            Vector3 o = transform.position + originOffset;
+
+            o.x += x * gridSize;
+            o.y += y * gridSize;
+            o.z = -1;
+            return o;
+        }
+        public (int, int) GetGridIndex(Vector3 worldPos)
+        {
+
+            int retX = -1;
+            int retY = -1;
+
+            Vector3 o = transform.position + originOffset;
+            Vector3 max = o + new Vector3(gridSize * xGridNum, gridSize * yGridNum);
+
+            var offset = (worldPos - o) / gridSize;
+
+            if (offset.x >= 0 && offset.x < xGridNum)
+            {
+                retX = Mathf.FloorToInt(offset.x);
+            }
+            
+            if (offset.y >= 0 && offset.y < yGridNum)
+            {
+                retY = Mathf.FloorToInt(offset.y);
+            }
+            return (retX, retY);
         }
         public void SetBlock(uint x, uint y, bool block)
         {
