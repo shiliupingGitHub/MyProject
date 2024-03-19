@@ -178,6 +178,9 @@ namespace Game.Script.Map
             o.z = -1;
             return o;
         }
+
+        public Vector3 Offset => transform.position + originOffset;
+
         public (int, int) GetGridIndex(Vector3 worldPos)
         {
 

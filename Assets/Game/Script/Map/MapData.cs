@@ -6,8 +6,7 @@ namespace Game.Script.Map
 {
     public struct ActorData
     {
-        public int x;
-        public int y;
+        public Vector3 offset;
         public int id;
         public GameObject go;
     }
@@ -29,13 +28,7 @@ namespace Game.Script.Map
             if (mapScript == null)
                 return false;
 
-
-            (int x, int y) = mapScript.GetGridIndex(position);
-
-            if (x < 0 || y < 0)
-            {
-                return false;
-            }
+            
             var template = GameResMgr.Instance.LoadAssetSync<GameObject>(actorConfig.path);
 
             if (template)
@@ -48,12 +41,10 @@ namespace Game.Script.Map
 
                 ActorData actorData = new();
                 actorData.go = go;
-                actorData.x = x;
-                actorData.y = y;
+                actorData.offset = position - mapScript.Offset;
                 actorData.id = actorConfig.id;
                 actors.Add(actorData);
-               var putPosition =  mapScript.GetGridStartPosition(x, y);
-               go.transform.position = putPosition;
+               go.transform.position = position;
 
 
             }
