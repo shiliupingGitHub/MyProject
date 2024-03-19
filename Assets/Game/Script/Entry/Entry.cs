@@ -19,6 +19,7 @@ namespace Game.Script.Entry
             GameTickManager.Instance.Init();
             SkillMgr.Instance.Init();
             LevelManager.Instance.Enter(LevelType.Hall);
+         
         }
     }
 }

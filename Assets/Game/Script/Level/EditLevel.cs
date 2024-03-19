@@ -1,4 +1,6 @@
-﻿using UnityEngine.SceneManagement;
+﻿using Game.Script.UI;
+using Game.Script.UI.Frames;
+using UnityEngine.SceneManagement;
 
 namespace Game.Script.Level
 {
@@ -9,6 +11,7 @@ namespace Game.Script.Level
         {
             base.Enter();
             SceneManager.LoadScene(SceneName);
+            UIManager.Instance.Show<EditFrame>();
         }
     }
 }

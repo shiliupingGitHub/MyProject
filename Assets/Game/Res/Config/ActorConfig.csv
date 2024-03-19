@@ -1,0 +1,4 @@
+int,string,int[],int[],string
+id,actor,blockX,blockY,name
+id编号,路径,x方向阻挡,y方向阻挡,名字
+1,Assets/Game/Res/Actor/Actor_1.prefab,,,测试actor1

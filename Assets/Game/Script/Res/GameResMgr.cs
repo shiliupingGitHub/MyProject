@@ -14,8 +14,9 @@ namespace Game.Script.Res
             var path = System.IO.Path.Combine("Assets/Game/Res/Config/" , szName + ".csv");
             var op =  Addressables.LoadAssetAsync<TextAsset>(path);
             var textAsset = op.WaitForCompletion();
-            
-            readCallBack(szName, textAsset.text, userCallBack);
+
+            var content = System.Text.Encoding.GetEncoding("GBK").GetString(textAsset.bytes);
+            readCallBack(szName, content, userCallBack);
         }
 
         public T LoadAssetSync<T>(string path)
