@@ -38,7 +38,6 @@ namespace Game.Script.Map
 
             return (retX, retY);
         }
-#if UNITY_EDITOR
         private Mesh _blockMesh;
         private Mesh _bkMesh;
         private Material _blockMat;
@@ -77,8 +76,6 @@ namespace Game.Script.Map
                 Graphics.DrawMeshInstanced(_blockMesh, 0, _blockMat, _blockMatrix4X4s.ToArray(), _blockMatrix4X4s.Count);
             }
         }
-#endif
-
         public void SetBlock(uint x, uint y, bool block)
         {
             var a = x << 16;

@@ -5,7 +5,7 @@ using CSVHelper;
 [System.Serializable]
 public class MapConfig {
 	public 	int	id;
-	public 	string	actor;
+	public 	string	path;
 	public 	string	name;
 	static Dictionary<int,MapConfig> mDic = null;
  	 public static Dictionary<int,MapConfig>  dic {
@@ -29,7 +29,7 @@ public class MapConfig {
 			e.id= CsvHelper.Toint(r[0]);
 
 		 if(r.Count >1)
-			e.actor= CsvHelper.Tostring(r[1]);
+			e.path= CsvHelper.Tostring(r[1]);
 
 		 if(r.Count >2)
 			e.name= CsvHelper.Tostring(r[2]);

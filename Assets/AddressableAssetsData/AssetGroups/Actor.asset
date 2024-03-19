@@ -12,11 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
   m_Name: Actor
   m_EditorClassIdentifier: 
-  m_GroupName: New Group
+  m_GroupName: Actor
   m_Data:
     m_SerializedData: []
   m_GUID: 33362ae02b27ed641828de14abd1f16d
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 1f6eb233cb077e34fbfa16068075dcc9
+    m_Address: Assets/Game/Res/Actor/Actor_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8a5b7fa2f7b110e499305b11415bf217, type: 2}
   m_SchemaSet:

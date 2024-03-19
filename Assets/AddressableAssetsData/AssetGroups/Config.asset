@@ -18,13 +18,12 @@ MonoBehaviour:
   m_GUID: ea6f8580928f36d4396db4c24369a391
   m_SerializeEntries:
   - m_GUID: 786659037563fa144bc607f14e64c2a5
-    m_Address: Assets/Game/Res/Config/aiconfig.csv
+    m_Address: Assets/Game/Res/Config/ActorConfig.csv
     m_ReadOnly: 0
-    m_SerializedLabels:
-    - default
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: f3196c7715e206b4fa100078f5f80885
-    m_Address: Assets/Game/Res/Map/ScenePrefab/TestScene.prefab
+  - m_GUID: ad72dacef002beb4e8fd8a397249b728
+    m_Address: Assets/Game/Res/Config/MapConfig.csv
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

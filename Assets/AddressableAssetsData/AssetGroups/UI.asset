@@ -27,6 +27,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f553832b08a2cfe449f437fa34254da9
+    m_Address: Assets/Game/Res/UI/EditFrame.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8a5b7fa2f7b110e499305b11415bf217, type: 2}
   m_SchemaSet:

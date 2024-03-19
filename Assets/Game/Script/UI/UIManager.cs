@@ -27,15 +27,13 @@ namespace Game.Script.UI
         {
             foreach (var frame in queueFrames)
             {
-                if (frame.FrameGo != null)
-                {
-                    Object.Destroy(frame.FrameGo);
-                }
+                frame.Destroy();
               
             }
             queueFrames.Clear();
         }
 
+        
         public T Show<T>(bool bUseQueue = true) where  T : Frame
         {
             T ret = null;
@@ -60,6 +58,7 @@ namespace Game.Script.UI
             }
             
             queueFrames.Add(ret);
+            ret.Show();
             
             return ret;
         }

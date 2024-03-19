@@ -5,7 +5,7 @@ using CSVHelper;
 [System.Serializable]
 public class ActorConfig {
 	public 	int	id;
-	public 	string	actor;
+	public 	string	path;
 	public 	int[]	blockX;
 	public 	int[]	blockY;
 	public 	string	name;
@@ -31,7 +31,7 @@ public class ActorConfig {
 			e.id= CsvHelper.Toint(r[0]);
 
 		 if(r.Count >1)
-			e.actor= CsvHelper.Tostring(r[1]);
+			e.path= CsvHelper.Tostring(r[1]);
 
 		 if(r.Count >2)
 			e.blockX= CsvHelper.Toint_array(r[2]);
