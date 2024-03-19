@@ -116,8 +116,7 @@ namespace Game.Script.UI.Frames
             {
                 if (hook.inputAction != null)
                 {
-                    hook.inputAction.action.Enable();
-                    _inputActionReferences.Add(hook.actionName, hook.inputAction);
+                    _inputActionReferences.Add(hook.inputAction.action.name, hook.inputAction);
                 }
             }
 
@@ -147,6 +146,15 @@ namespace Game.Script.UI.Frames
                     {
                         _curMapData.AddActor(curSelectShadow.transform.position,curSelectActorConfig);
                     }
+                };
+            }
+
+            if (_inputActionReferences.TryGetValue("CancelEditActor", out var inputCancelEditActor))
+            {
+                inputCancelEditActor.action.started += delegate(InputAction.CallbackContext callbackContext)
+                {
+                   SetSelectActor(null);
+                   Cursor.visible = true;
                 };
             }
         }
@@ -221,15 +229,20 @@ namespace Game.Script.UI.Frames
                 curSelectShadow = null;
                 curSelectActorConfig = null;
             }
-            var template = GameResMgr.Instance.LoadAssetSync<GameObject>(actorConfig.path);
 
-            if (template)
+            if (actorConfig != null)
             {
-                curSelectShadow = GameObject.Instantiate(template) as GameObject;
-                curSelectActorConfig = actorConfig;
-                curSelectShadow.tag = "Shadow";
-                Cursor.visible = false;
+                var template = GameResMgr.Instance.LoadAssetSync<GameObject>(actorConfig.path);
+
+                if (template)
+                {
+                    curSelectShadow = GameObject.Instantiate(template) as GameObject;
+                    curSelectActorConfig = actorConfig;
+                    curSelectShadow.tag = "Shadow";
+                    Cursor.visible = false;
+                }
             }
+          
             
         }
 

@@ -537,6 +537,7 @@ GameObject:
   - component: {fileID: 674112747335656623}
   - component: {fileID: 8472598718208895660}
   - component: {fileID: 4001565107931431800}
+  - component: {fileID: 3286369753456211757}
   m_Layer: 5
   m_Name: EditFrame
   m_TagString: Untagged
@@ -579,7 +580,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45518a2dfe2c4722b00bcd0543a82318, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionName: Zoom
   inputAction: {fileID: 53104068646298110, guid: 16f4a2f894cb2fe45820759235d1629f,
     type: 3}
 --- !u!114 &8472598718208895660
@@ -594,7 +594,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45518a2dfe2c4722b00bcd0543a82318, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionName: EditDrag
   inputAction: {fileID: 3521731333365935950, guid: 16f4a2f894cb2fe45820759235d1629f,
     type: 3}
 --- !u!114 &4001565107931431800
@@ -609,8 +608,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45518a2dfe2c4722b00bcd0543a82318, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionName: EditAddActor
   inputAction: {fileID: -6955644407976962955, guid: 16f4a2f894cb2fe45820759235d1629f,
+    type: 3}
+--- !u!114 &3286369753456211757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3040456863780815817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45518a2dfe2c4722b00bcd0543a82318, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputAction: {fileID: -5120283992734714001, guid: 16f4a2f894cb2fe45820759235d1629f,
     type: 3}
 --- !u!1 &3570465891436636500
 GameObject:
