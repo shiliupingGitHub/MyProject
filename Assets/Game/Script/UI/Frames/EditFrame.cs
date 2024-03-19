@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Game.Script.Common;
 using Game.Script.Map;
 using Game.Script.Misc;
+using Game.Script.Res;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -26,6 +27,8 @@ namespace Game.Script.UI.Frames
         private bool bIsDraging = false;
         private bool bAddTick = false;
         private Vector3 lastDragPosition = Vector3.zero;
+        private ActorConfig curSelectActorConfig;
+        private GameObject curSelectShadow;
         void AddToTick()
         {
             if (!bAddTick)
@@ -50,7 +53,19 @@ namespace Game.Script.UI.Frames
             {
                 TickDrag();
             }
+            TickShadow();
             
+        }
+
+        void TickShadow()
+        {
+            if (curSelectShadow != null)
+            {
+                var worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+                worldPosition.z = -2;
+                curSelectShadow.transform.position = worldPosition;
+            }
         }
 
         void TickDrag()
@@ -174,7 +189,36 @@ namespace Game.Script.UI.Frames
                 var text = actorGo.transform.Find("Name").GetComponent<Text>();
                 text.text = actorConfig.Value.name;
                 actorGo.SetActive(true);
+                var btn = actorGo.GetComponent<Button>();
+
+                if (btn != null)
+                {
+                    btn.onClick.AddListener(() =>
+                    {
+                       
+                        SetSelectActor(actorConfig.Value);
+                    });
+                }
             }
+        }
+
+        void SetSelectActor(ActorConfig actorConfig)
+        {
+            if (null != curSelectShadow)
+            {
+                GameObject.Destroy(curSelectShadow);
+                curSelectShadow = null;
+                curSelectActorConfig = null;
+            }
+            var template = GameResMgr.Instance.LoadAssetSync<GameObject>(actorConfig.path);
+
+            if (template)
+            {
+                curSelectShadow = GameObject.Instantiate(template) as GameObject;
+                curSelectActorConfig = actorConfig;
+                curSelectShadow.tag = "Shadow";
+            }
+            
         }
 
         void InitMaps()
