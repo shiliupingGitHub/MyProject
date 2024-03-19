@@ -18,6 +18,12 @@ namespace Game.Script.Map
 
         [Label("Y方向数量")]public int yGridNum = 100;
         [SerializeField] public List<uint> blocks  = new();
+        
+        private Mesh _blockMesh;
+        private Mesh _bkMesh;
+        private Material _blockMat;
+        private Material _bkMat;
+        private static readonly int Color1 = Shader.PropertyToID("_Color");
 
         public bool IsBlock(uint x, uint y)
         {
@@ -26,6 +32,114 @@ namespace Game.Script.Map
 
             return blocks.Contains(index);
 
+        }
+
+
+        public bool ShowGrid { get; set; } = false;
+        public  void StartEdit()
+        {
+            if (_blockMesh == null)
+            {
+                _blockMesh = new Mesh();
+            }
+
+            if (_bkMesh == null)
+            {
+                _bkMesh = new Mesh();
+            }
+            
+            if (_blockMat == null)
+            {
+                _blockMat = new Material(Shader.Find("Shader Graphs/DrawAStar"));
+                _blockMat.enableInstancing = true;
+            }
+            
+            if (_bkMat == null)
+            {
+                _bkMat = new Material(Shader.Find("Shader Graphs/DrawAStar"));
+                _bkMat.enableInstancing = true;
+            }
+
+            CreateBkMesh();
+            CreateBlockMesh();
+        }
+
+        public void StopEdit()
+        {
+            _blockMesh = null;
+            _bkMesh = null;
+            _blockMat = null;
+            _bkMat = null;
+
+        }
+        
+        void CreateBkMesh()
+        {
+            _bkMesh.Clear();
+            
+            Vector3[] vertices = new Vector3[4]
+            {
+                new Vector3(0, 0, 0),
+                new Vector3(gridSize * xGridNum , 0, 0),
+                new Vector3(0, gridSize * yGridNum, 0),
+                new Vector3(gridSize * xGridNum, gridSize * yGridNum , 0)
+            };
+                
+            _bkMesh.vertices = vertices;
+
+            int[] tris = new int[6]
+            {
+                // lower left triangle
+                0, 2, 1,
+                // upper right triangle
+                2, 3, 1
+            };
+            _bkMesh.triangles = tris;
+            
+            Vector2[] uv = new Vector2[4]
+            {
+                new Vector2(0, 0),
+                new Vector2(1, 0),
+                new Vector2(0, 1),
+                new Vector2(1, 1)
+            };
+            _bkMesh.uv = uv;
+        }
+        
+        void  CreateBlockMesh()
+        {
+       
+            _blockMesh.Clear();
+            
+            Vector3[] vertices = new Vector3[4]
+            {
+                new Vector3(0, 0, 0),
+                new Vector3(gridSize , 0, 0),
+                new Vector3(0, gridSize, 0),
+                new Vector3(gridSize, gridSize , 0)
+            };
+                
+            _blockMesh.vertices = vertices;
+
+            int[] tris = new int[6]
+            {
+                // lower left triangle
+                0, 2, 1,
+                // upper right triangle
+                2, 3, 1
+            };
+            _blockMesh.triangles = tris;
+            
+            Vector2[] uv = new Vector2[4]
+            {
+                new Vector2(0, 0),
+                new Vector2(1, 0),
+                new Vector2(0, 1),
+                new Vector2(1, 1)
+            };
+            _blockMesh.uv = uv;
+            
+            
         }
 
         public (uint, uint) DeCodeIndex(uint index)
@@ -39,22 +153,8 @@ namespace Game.Script.Map
 
             return (retX, retY);
         }
-        private Mesh _blockMesh;
-        private Mesh _bkMesh;
-        private Material _blockMat;
-        private Material _bkMat;
-        private List<Matrix4x4> _blockMatrix4X4s;
-        private static readonly int Color1 = Shader.PropertyToID("_Color");
 
-        public void SetDraw(Mesh mesh, Mesh bkMesh, Material blockMat, Material bkMat,List<Matrix4x4> matrix4X4s)
-        {
-            _blockMesh = mesh;
-            _blockMat = blockMat;
-            _bkMesh = bkMesh;
-            _bkMat = bkMat;
-            _blockMatrix4X4s = matrix4X4s;
-        }
-        private void Update()
+        public void DrawGrid()
         {
             if (_bkMesh != null && _bkMat != null)
             {
@@ -70,11 +170,35 @@ namespace Game.Script.Map
                 _bkMat.SetColor(Color1, Color.green);
                 Graphics.DrawMeshInstanced(_bkMesh, 0, _bkMat, bkMatrixs.ToArray(), bkMatrixs.Count);
             }
-            if (_blockMatrix4X4s != null && _blockMatrix4X4s.Count > 0 && _blockMat != null && _blockMesh != null)
+            
+            List<Matrix4x4> matrix4X4s = new();
+            Vector3 offset = transform.position + originOffset;
+            foreach (var block in blocks)
+            {
+                (uint x, uint y) = DeCodeIndex(block);
+
+                Vector3 position = new Vector3(x * gridSize, y * gridSize, -1);
+
+                position += offset;
+                Matrix4x4 matrix4 =  Matrix4x4.TRS(position, quaternion.identity, Vector3.one);
+                     
+                matrix4X4s.Add(matrix4);
+                     
+            }
+            
+            if (matrix4X4s.Count > 0 && _blockMat != null && _blockMesh != null)
             {
                 _blockMat.SetColor(Color1, Color.red);
                 _blockMat.enableInstancing = true;
-                Graphics.DrawMeshInstanced(_blockMesh, 0, _blockMat, _blockMatrix4X4s.ToArray(), _blockMatrix4X4s.Count);
+                Graphics.DrawMeshInstanced(_blockMesh, 0, _blockMat, matrix4X4s.ToArray(), matrix4X4s.Count);
+            }
+        }
+        
+        private void Update()
+        {
+            if (ShowGrid)
+            {
+                DrawGrid();
             }
         }
 
