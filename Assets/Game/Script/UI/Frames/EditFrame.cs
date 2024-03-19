@@ -228,6 +228,7 @@ namespace Game.Script.UI.Frames
                 curSelectShadow = GameObject.Instantiate(template) as GameObject;
                 curSelectActorConfig = actorConfig;
                 curSelectShadow.tag = "Shadow";
+                Cursor.visible = false;
             }
             
         }
