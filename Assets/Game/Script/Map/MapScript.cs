@@ -20,8 +20,8 @@ namespace Game.Script.Map
         [SerializeField] public List<uint> blocks  = new();
         
         private Mesh _gridMesh;
-        private Material _blockMat;
-        private Material _bkMat;
+        public Material blockMat;
+        public Material gridMat;
         private static readonly int Color1 = Shader.PropertyToID("_Color");
 
         public bool IsBlock(uint x, uint y)
@@ -43,26 +43,14 @@ namespace Game.Script.Map
                 _gridMesh = new Mesh();
             }
             
-            if (_blockMat == null)
-            {
-                _blockMat = new Material(Shader.Find("Shader Graphs/DrawAStar"));
-                _blockMat.enableInstancing = true;
-            }
-            
-            if (_bkMat == null)
-            {
-                _bkMat = new Material(Shader.Find("Shader Graphs/DrawAStar"));
-                _bkMat.enableInstancing = true;
-            }
-            
             CreateGrodMesh();
         }
 
         public void StopEdit()
         {
             _gridMesh = null;
-            _blockMat = null;
-            _bkMat = null;
+            blockMat = null;
+            gridMat = null;
 
         }
         
@@ -116,7 +104,7 @@ namespace Game.Script.Map
 
         void DrawGrid()
         {
-            if (_gridMesh != null && _bkMat != null)
+            if (_gridMesh != null && gridMat != null)
             {
                 List<Matrix4x4> matrix4X4s = new();
                 Vector3 offset = transform.position + originOffset;
@@ -133,11 +121,9 @@ namespace Game.Script.Map
                     }
                 }
                 
-                if (matrix4X4s.Count > 0 && _bkMat != null && _gridMesh != null)
+                if (matrix4X4s.Count > 0 && gridMat != null && _gridMesh != null)
                 {
-                    _blockMat.SetColor(Color1, Color.green);
-                    _blockMat.enableInstancing = true;
-                    Graphics.DrawMeshInstanced(_gridMesh, 0, _blockMat, matrix4X4s.ToArray(), matrix4X4s.Count);
+                    Graphics.DrawMeshInstanced(_gridMesh, 0, gridMat, matrix4X4s.ToArray(), matrix4X4s.Count);
                 }
             }
         }
@@ -158,12 +144,9 @@ namespace Game.Script.Map
                 matrix4X4s.Add(matrix4);
                      
             }
-            
-            if (matrix4X4s.Count > 0 && _blockMat != null && _gridMesh != null)
+            if (matrix4X4s.Count > 0 && blockMat != null && _gridMesh != null)
             {
-                _blockMat.SetColor(Color1, Color.red);
-                _blockMat.enableInstancing = true;
-                Graphics.DrawMeshInstanced(_gridMesh, 0, _blockMat, matrix4X4s.ToArray(), matrix4X4s.Count);
+                Graphics.DrawMeshInstanced(_gridMesh, 0, blockMat, matrix4X4s.ToArray(), matrix4X4s.Count);
             }
         }
 

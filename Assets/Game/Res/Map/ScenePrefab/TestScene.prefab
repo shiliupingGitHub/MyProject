@@ -50,6 +50,8 @@ MonoBehaviour:
   xGridNum: 20
   yGridNum: 6
   blocks: 
+  blockMat: {fileID: 2100000, guid: 56e84c1e725703c4d8d8447ce23530c0, type: 2}
+  gridMat: {fileID: 2100000, guid: 5001ae67dbf0d1c48b7f1c22093b18ce, type: 2}
 --- !u!1001 &1011874208326068783
 PrefabInstance:
   m_ObjectHideFlags: 0
