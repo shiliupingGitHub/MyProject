@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Game.Script.Common;
 using Game.Script.Map;
 using Game.Script.Misc;
@@ -29,6 +30,7 @@ namespace Game.Script.UI.Frames
         private Vector3 lastDragPosition = Vector3.zero;
         private ActorConfig curSelectActorConfig;
         private GameObject curSelectShadow;
+        private InputField inputSaveName;
         void AddToTick()
         {
             if (!bAddTick)
@@ -282,6 +284,32 @@ namespace Game.Script.UI.Frames
                     mapScript.ShowGrid = true;
                 }
             });
+            inputSaveName = FrameGo.transform.Find("InputSaveName").GetComponent<InputField>();
+            
+            FrameGo.transform.Find("btnSave").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                if (_curMapData != null && null != inputSaveName)
+                {
+                    if (!string.IsNullOrEmpty(inputSaveName.text))
+                    {
+                        var data = _curMapData.Serialize();
+                        string path = System.IO.Path.Combine(Application.persistentDataPath, "Map");
+                        if (Application.isEditor)
+                        {
+                            path = System.IO.Path.Combine(Application.dataPath, "Game/Res/Map/Data");
+                        }
+
+                        path = System.IO.Path.Combine(path, inputSaveName.text + ".txt");
+                        
+                        File.WriteAllText(path, data);
+#if UNITY_EDITOR
+                        UnityEditor.AssetDatabase.Refresh();
+#endif
+                    }
+                }
+               
+            });
+            
             InitMaps();
             InitActors();
             InitInput();

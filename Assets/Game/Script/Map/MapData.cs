@@ -21,6 +21,11 @@ namespace Game.Script.Map
             LoadBk();
         }
 
+        public string Serialize()
+        {
+            return string.Empty;
+        }
+
         public bool AddActor(Vector3 position, ActorConfig actorConfig, bool preview = true, bool net = false)
         {
             MapScript mapScript = GameObject.FindObjectOfType<MapScript>();
