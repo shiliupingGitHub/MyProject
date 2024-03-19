@@ -62,6 +62,7 @@ namespace Game.Editor
         {
             
             mapScript.SetBlock((uint)x, (uint)y, block);
+            UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
         }
 
 
@@ -73,6 +74,7 @@ namespace Game.Editor
             {
                 if (bEnableEdit)
                 {
+                    sceneView.autoRepaintOnSceneChange = true;
                     HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
 
                     mapScript.ShowGrid = true;
