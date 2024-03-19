@@ -260,6 +260,13 @@ namespace Game.Script.UI.Frames
                 _curMapData = MapMgr.Instance.New(mapDropDown.value + 1);
                 _curMapData.LoadSync();
                 EnableInput();
+                MapScript mapScript = GameObject.FindObjectOfType<MapScript>();
+
+                if (mapScript != null)
+                {
+                    mapScript.StartEdit();
+                    mapScript.ShowGrid = true;
+                }
             });
             InitMaps();
             InitActors();

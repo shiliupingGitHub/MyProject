@@ -36,6 +36,7 @@ namespace Game.Script.Map
 
 
         public bool ShowGrid { get; set; } = false;
+        public bool ShowBlock { get; set; } = false;
         public  void StartEdit()
         {
             if (_blockMesh == null)
@@ -156,50 +157,54 @@ namespace Game.Script.Map
 
         public void DrawGrid()
         {
-            if (_bkMesh != null && _bkMat != null)
+            if (ShowGrid)
             {
-                List<Matrix4x4> bkMatrixs = new();
-                Vector3 bkPosition = transform.position;
-                bkPosition += originOffset;
+                if (_bkMesh != null && _bkMat != null)
+                {
+                    List<Matrix4x4> bkMatrixs = new();
+                    Vector3 bkPosition = transform.position;
+                    bkPosition += originOffset;
 
-                bkPosition += new Vector3(0, 0, -0.5f);
+                    bkPosition += new Vector3(0, 0, -0.5f);
 
-                var bkMatrix = Matrix4x4.TRS(bkPosition, quaternion.identity, Vector3.one);
-                bkMatrixs.Add(bkMatrix);
-                _bkMat.enableInstancing = true;
-                _bkMat.SetColor(Color1, Color.green);
-                Graphics.DrawMeshInstanced(_bkMesh, 0, _bkMat, bkMatrixs.ToArray(), bkMatrixs.Count);
+                    var bkMatrix = Matrix4x4.TRS(bkPosition, quaternion.identity, Vector3.one);
+                    bkMatrixs.Add(bkMatrix);
+                    _bkMat.enableInstancing = true;
+                    _bkMat.SetColor(Color1, Color.green);
+                    Graphics.DrawMeshInstanced(_bkMesh, 0, _bkMat, bkMatrixs.ToArray(), bkMatrixs.Count);
+                }
             }
-            
-            List<Matrix4x4> matrix4X4s = new();
-            Vector3 offset = transform.position + originOffset;
-            foreach (var block in blocks)
+
+            if (ShowBlock)
             {
-                (uint x, uint y) = DeCodeIndex(block);
+                List<Matrix4x4> matrix4X4s = new();
+                Vector3 offset = transform.position + originOffset;
+                foreach (var block in blocks)
+                {
+                    (uint x, uint y) = DeCodeIndex(block);
 
-                Vector3 position = new Vector3(x * gridSize, y * gridSize, -1);
+                    Vector3 position = new Vector3(x * gridSize, y * gridSize, -1);
 
-                position += offset;
-                Matrix4x4 matrix4 =  Matrix4x4.TRS(position, quaternion.identity, Vector3.one);
+                    position += offset;
+                    Matrix4x4 matrix4 =  Matrix4x4.TRS(position, quaternion.identity, Vector3.one);
                      
-                matrix4X4s.Add(matrix4);
+                    matrix4X4s.Add(matrix4);
                      
-            }
+                }
             
-            if (matrix4X4s.Count > 0 && _blockMat != null && _blockMesh != null)
-            {
-                _blockMat.SetColor(Color1, Color.red);
-                _blockMat.enableInstancing = true;
-                Graphics.DrawMeshInstanced(_blockMesh, 0, _blockMat, matrix4X4s.ToArray(), matrix4X4s.Count);
+                if (matrix4X4s.Count > 0 && _blockMat != null && _blockMesh != null)
+                {
+                    _blockMat.SetColor(Color1, Color.red);
+                    _blockMat.enableInstancing = true;
+                    Graphics.DrawMeshInstanced(_blockMesh, 0, _blockMat, matrix4X4s.ToArray(), matrix4X4s.Count);
+                }
             }
+ 
         }
         
         private void Update()
         {
-            if (ShowGrid)
-            {
-                DrawGrid();
-            }
+            DrawGrid();
         }
 
         public Vector3 GetGridStartPosition(int x, int y)

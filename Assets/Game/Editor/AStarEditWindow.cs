@@ -76,6 +76,7 @@ namespace Game.Editor
                     HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
 
                     mapScript.ShowGrid = true;
+                    mapScript.ShowBlock = true;
                     if (Event.current.isMouse && Event.current.button == 0 && Event.current.type == EventType.MouseDown)
                     {
                         var mousePos = Event.current.mousePosition;
@@ -101,6 +102,7 @@ namespace Game.Editor
                 else
                 {
                     mapScript.ShowGrid = false;
+                    mapScript.ShowBlock = false;
 
                 }
             }
