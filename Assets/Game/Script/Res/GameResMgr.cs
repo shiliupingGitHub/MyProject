@@ -9,6 +9,11 @@ namespace Game.Script.Res
     public class GameResMgr : Singleton<GameResMgr>
     {
 
+        public void Init()
+        {
+           var op = Addressables.InitializeAsync();
+           op.WaitForCompletion();
+        }
         public void OnCsvRead(string szName, System.Action<string, string, System.Action<List<CsvRow>>> readCallBack, System.Action<List<CsvRow>> userCallBack)
         {
             var path = System.IO.Path.Combine("Assets/Game/Res/Config/" , szName + ".csv");

@@ -14,6 +14,7 @@ namespace Game.Script.Entry
     {
         private void Start()
         {
+            GameResMgr.Instance.Init();
             GameInstance.Instance.Mode = GameMode.Hall;
             CSVHelper.CsvHelper.mLoader += GameResMgr.Instance.OnCsvRead;
             UIManager.Instance.Init();
