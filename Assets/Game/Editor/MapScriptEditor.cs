@@ -74,6 +74,7 @@ namespace Game.Editor
         
         void OnSceneView(SceneView sceneView)
         {
+            
             var mapScript = _mapScript;
             if (mapScript)
             {
