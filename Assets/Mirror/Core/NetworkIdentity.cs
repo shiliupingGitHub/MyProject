@@ -40,6 +40,7 @@ namespace Mirror
     [HelpURL("https://mirror-networking.gitbook.io/docs/components/network-identity")]
     public sealed class NetworkIdentity : MonoBehaviour
     {
+ 
         /// <summary>Returns true if running as a client and this object was spawned by a server.</summary>
         //
         // IMPORTANT:
@@ -157,6 +158,24 @@ namespace Mirror
             }
         }
 
+        //@MySelf
+        
+        [SerializeField, HideInInspector] string _assetPath;
+        public string assetPath
+        {
+            get
+            {
+
+                return _assetPath;
+            }
+            // assetId is set internally when creating or duplicating a prefab
+            internal set
+            {
+                _assetPath = value;
+                // Debug.Log($"Setting AssetId on NetworkIdentity '{name}', new assetId '{value:X4}'");
+            }
+        }
+        //@MySelf
         /// <summary>Make this object only exist when the game is running as a server (or host).</summary>
         [FormerlySerializedAs("m_ServerOnly")]
         [Tooltip("Prevents this object from being spawned / enabled on clients")]
@@ -406,6 +425,7 @@ namespace Mirror
                 // uint before = _assetId;
                 Guid guid = new Guid(AssetDatabase.AssetPathToGUID(path));
                 assetId = AssetGuidToUint(guid);
+                assetPath = path;
                 // if (_assetId != before) Debug.Log($"Assigned assetId={assetId} to {name}");
             }
         }

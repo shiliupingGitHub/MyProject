@@ -30,7 +30,8 @@ namespace Game.Script.Misc
 
                 if (null != bkTemplate)
                 {
-                     GameObject.Instantiate(bkTemplate);
+                    var go = GameObject.Instantiate(bkTemplate);
+                    NetworkServer.Spawn(go);
                 }
             }
         }

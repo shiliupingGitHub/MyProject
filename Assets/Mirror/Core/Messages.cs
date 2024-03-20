@@ -71,6 +71,7 @@ namespace Mirror
         // serialized component data
         // ArraySegment to avoid unnecessary allocations
         public ArraySegment<byte> payload;
+        public string assetPath;
     }
 
     public struct ChangeOwnerMessage : NetworkMessage

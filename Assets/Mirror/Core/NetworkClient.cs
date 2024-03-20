@@ -1201,9 +1201,24 @@ namespace Mirror
             spawned.TryGetValue(netid, out NetworkIdentity identity);
             return identity;
         }
+        
+        //@MySelf
+        public static System.Func<SpawnMessage, GameObject> OnSpawnHook;
+        //&MySelf
 
         static NetworkIdentity SpawnPrefab(SpawnMessage message)
         {
+            //@MySelf
+            if (OnSpawnHook != null)
+            {
+                var obj = OnSpawnHook.Invoke(message);
+
+                if (null != obj)
+                {
+                    return obj.GetComponent<NetworkIdentity>();
+                }
+            }
+            //@MySelf
             // custom spawn handler for this prefab? (for prefab pools etc.)
             //
             // IMPORTANT: look for spawn handlers BEFORE looking for registered

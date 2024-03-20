@@ -1306,6 +1306,9 @@ namespace Mirror
                     isOwner = isOwner,
                     sceneId = identity.sceneId,
                     assetId = identity.assetId,
+                    //@MySelf
+                    assetPath = identity.assetPath,
+                    //&MySelf
                     // use local values for VR support
                     position = identity.transform.localPosition,
                     rotation = identity.transform.localRotation,
