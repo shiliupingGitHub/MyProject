@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 218392300674805972}
   - component: {fileID: 1032492210661706399}
-  - component: {fileID: 7958723328064333129}
+  - component: {fileID: 5281505634500781809}
   m_Layer: 0
   m_Name: TestScene
   m_TagString: Untagged
@@ -53,7 +53,7 @@ MonoBehaviour:
   blocks: 
   blockMat: {fileID: 2100000, guid: 56e84c1e725703c4d8d8447ce23530c0, type: 2}
   gridMat: {fileID: 2100000, guid: 5001ae67dbf0d1c48b7f1c22093b18ce, type: 2}
---- !u!114 &7958723328064333129
+--- !u!114 &5281505634500781809
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

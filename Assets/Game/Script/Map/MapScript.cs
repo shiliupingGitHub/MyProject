@@ -23,6 +23,7 @@ namespace Game.Script.Map
         public Material blockMat;
         public Material gridMat;
         private static readonly int Color1 = Shader.PropertyToID("_Color");
+        [NonSerialized] public bool EnableEdit = false;
 
         public bool IsBlock(uint x, uint y)
         {

@@ -10,52 +10,45 @@ using UnityEngine.UI;
 
 namespace Game.Editor
 {
-    public class AStarEditWindow : EditorWindow
+    [CustomEditor(typeof(MapScript))]
+    public class MapScriptEditor : UnityEditor.Editor
     {
-        private bool bEnableEdit = false;
-        
-
-        [MenuItem("AStar/Edit")]
-        private static void ShowWindow()
+        private bool bAddedViewCallback = false;
+        private MapScript _mapScript;
+      
+        void AddViewCallBack()
         {
-            var window = GetWindow<AStarEditWindow>();
-            window.titleContent = new GUIContent("AStar");
-            window.minSize = new Vector2(500, 500);
-            window.Show();
-        }
-        
-        private void OnBecameVisible()
-        {
-            var mapScript = GameObject.FindObjectOfType<MapScript>();
-            if (null != mapScript)
+            if (!bAddedViewCallback)
             {
-                mapScript.StartEdit();
+                SceneView.duringSceneGui += OnSceneView;
+                bAddedViewCallback = true;
             }
         }
 
-        private void OnBecameInvisible()
+        void RemoveViewCallBack()
         {
-            var mapScript = GameObject.FindObjectOfType<MapScript>();
-            if (mapScript != null)
+            if (bAddedViewCallback)
             {
-                mapScript.StartEdit();
+                SceneView.duringSceneGui += OnSceneView;
+                bAddedViewCallback = false;
             }
         }
 
-
-        private void OnGUI()
+        private void Awake()
         {
-            bEnableEdit = GUILayout.Toggle(bEnableEdit, "启用编辑");
+            AddViewCallBack();
         }
 
         private void OnEnable()
         {
-            SceneView.duringSceneGui += OnSceneView;
+            _mapScript = target as MapScript;
+            
+            _mapScript.StartEdit();
         }
 
         private void OnDestroy()
         {
-            SceneView.duringSceneGui -= OnSceneView;
+            RemoveViewCallBack();
         }
         
         void SetBlock(MapScript mapScript, int x, int y, bool block)
@@ -65,18 +58,31 @@ namespace Game.Editor
             UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
         }
 
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
 
+            bool isEdit = EditorGUILayout.Toggle("编辑阻挡", _mapScript.EnableEdit);
 
+            if (isEdit != _mapScript.EnableEdit)
+            {
+                _mapScript.EnableEdit = isEdit;
+                UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
+            }
+            
+        }
+        
         void OnSceneView(SceneView sceneView)
         {
-            var mapScript = GameObject.FindObjectOfType<MapScript>();
+            var mapScript = _mapScript;
             if (mapScript)
             {
-                if (bEnableEdit)
+                if (mapScript.EnableEdit)
                 {
+                    mapScript.StartEdit();
                     sceneView.autoRepaintOnSceneChange = true;
                     HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
-
+            
                     mapScript.ShowGrid = true;
                     mapScript.ShowBlock = true;
                     if (Event.current.isMouse && Event.current.button == 0 && Event.current.type == EventType.MouseDown)
@@ -84,12 +90,12 @@ namespace Game.Editor
                         var mousePos = Event.current.mousePosition;
                         mousePos.y = Camera.current.pixelHeight - mousePos.y;
                         var worldPos =  sceneView.camera.ScreenToWorldPoint(mousePos);
-
+            
                         (int x, int y) = mapScript.GetGridIndex(worldPos);
-
+            
                         if (x >= 0 && y >= 0)
                         {
-
+            
                             if (Event.current.shift)
                             {
                                 SetBlock(mapScript, x, y, false);
@@ -105,7 +111,7 @@ namespace Game.Editor
                 {
                     mapScript.ShowGrid = false;
                     mapScript.ShowBlock = false;
-
+            
                 }
             }
            
