@@ -5,6 +5,7 @@ using Game.Script.Level;
 using Game.Script.Misc;
 using Game.Script.Res;
 using Game.Script.UI;
+using Game.Script.UI.Extern;
 using UnityEngine;
 
 namespace Game.Script.Entry
@@ -18,6 +19,7 @@ namespace Game.Script.Entry
             UIManager.Instance.Init();
             GameTickManager.Instance.Init();
             SkillMgr.Instance.Init();
+            LocalizationMgr.Instance.Init();
             LevelManager.Instance.Enter(LevelType.Hall);
          
         }
