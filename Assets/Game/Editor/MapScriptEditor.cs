@@ -18,24 +18,29 @@ namespace Game.Editor
       
         void AddViewCallBack()
         {
-            if (!bAddedViewCallback)
+            if (_mapScript.gameObject.scene.isLoaded)
             {
-                SceneView.duringSceneGui += OnSceneView;
-                bAddedViewCallback = true;
+                if (!bAddedViewCallback)
+                {
+                    SceneView.duringSceneGui += OnSceneView;
+                    bAddedViewCallback = true;
+                }
             }
+         
         }
 
         void RemoveViewCallBack()
         {
             if (bAddedViewCallback)
             {
-                SceneView.duringSceneGui += OnSceneView;
+                SceneView.duringSceneGui -= OnSceneView;
                 bAddedViewCallback = false;
             }
         }
 
         private void Awake()
         {
+            _mapScript = target as MapScript;
             AddViewCallBack();
         }
 
@@ -57,6 +62,7 @@ namespace Game.Editor
             mapScript.SetBlock((uint)x, (uint)y, block);
             UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
         }
+        
 
         public override void OnInspectorGUI()
         {
