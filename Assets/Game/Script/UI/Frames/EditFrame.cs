@@ -16,7 +16,7 @@ namespace Game.Script.UI.Frames
     {
         protected override string ResPath => "Assets/Game/Res/UI/EditFrame.prefab";
 
-        private Dropdown mapDropDown;
+        private Dropdown ddBk;
 
         private MapData _curMapData;
         private const float ZoomFactor = 400;
@@ -31,6 +31,7 @@ namespace Game.Script.UI.Frames
         private ActorConfig curSelectActorConfig;
         private GameObject curSelectShadow;
         private InputField inputSaveName;
+        private Dropdown ddSaveMaps;
         void AddToTick()
         {
             if (!bAddTick)
@@ -244,17 +245,16 @@ namespace Game.Script.UI.Frames
                     Cursor.visible = false;
                 }
             }
-          
             
         }
 
-        void InitMaps()
+        void InitBks()
         {
-            mapDropDown = FrameGo.transform.Find("ddMap").GetComponent<Dropdown>();
+            ddBk = FrameGo.transform.Find("ddBk").GetComponent<Dropdown>();
             var mapConfigs = MapConfig.dic;
 
             List<string> mapDDContent = new();
-            mapDropDown.ClearOptions();
+            ddBk.ClearOptions();
             for (int i = 1; i <= mapConfigs.Count; i++)
             {
                 var mapConfig = mapConfigs[i];
@@ -262,7 +262,53 @@ namespace Game.Script.UI.Frames
                 mapDDContent.Add(mapConfig.name);
                 
             }
-            mapDropDown.AddOptions(mapDDContent);
+            ddBk.AddOptions(mapDDContent);
+        }
+
+        void InitSavedMaps()
+        {
+            ddSaveMaps = FrameGo.transform.Find("Load/ddSaveMaps").GetComponent<Dropdown>();
+            RefreshSaveMaps();
+        }
+
+        void RefreshSaveMaps()
+        {
+            ddSaveMaps.ClearOptions();
+            List<string> allMaps = new();
+            var path = SavePath;
+            var files = Directory.GetFiles(path);
+
+            foreach (var file in files)
+            {
+                if (file.EndsWith(MapExtension))
+                {
+                    var fileName = Path.GetFileNameWithoutExtension(file);
+                    allMaps.Add(fileName);
+                }
+            }
+            ddSaveMaps.AddOptions(allMaps);
+        }
+
+        public string SavePath
+        {
+            get
+            {
+                string path = System.IO.Path.Combine(Application.persistentDataPath, "Map");
+                if (Application.isEditor)
+                {
+                    path = System.IO.Path.Combine(Application.dataPath, "Game/Res/Map/Data");
+                }
+
+                return path;
+            }
+        }
+
+        public string MapExtension
+        {
+            get
+            {
+                return ".txt";
+            }
         }
         public override void Init(Transform parent)
         {
@@ -273,7 +319,7 @@ namespace Game.Script.UI.Frames
                 {
                     _curMapData.UnLoadSync();
                 }
-                _curMapData = MapMgr.Instance.New(mapDropDown.value + 1);
+                _curMapData = MapMgr.Instance.New(ddBk.value + 1);
                 _curMapData.LoadSync();
                 EnableInput();
                 MapScript mapScript = GameObject.FindObjectOfType<MapScript>();
@@ -284,6 +330,42 @@ namespace Game.Script.UI.Frames
                     mapScript.ShowGrid = true;
                 }
             });
+            
+            FrameGo.transform.Find("Load/btnLoad").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                if (_curMapData != null)
+                {
+                    _curMapData.UnLoadSync();
+                    _curMapData = null;
+                }
+
+                var fileName = ddSaveMaps.captionText.text;
+
+                var path = Path.Combine(SavePath, fileName + MapExtension);
+
+                if (File.Exists(path))
+                {
+                    var data = File.ReadAllText(path);
+                    var mapData = MapData.DeSerialize(data);
+
+                    if (MapConfig.dic.ContainsKey(mapData.bkId))
+                    {
+                        _curMapData = mapData;
+                        _curMapData.LoadSync();
+                        MapScript mapScript = GameObject.FindObjectOfType<MapScript>();
+
+                        if (mapScript != null)
+                        {
+                            mapScript.StartEdit();
+                            mapScript.ShowGrid = true;
+                            EnableInput();
+                            inputSaveName.text = fileName;
+                        }
+                    }
+                }
+
+            });
+            
             inputSaveName = FrameGo.transform.Find("InputSaveName").GetComponent<InputField>();
             
             FrameGo.transform.Find("btnSave").GetComponent<Button>().onClick.AddListener(() =>
@@ -293,24 +375,22 @@ namespace Game.Script.UI.Frames
                     if (!string.IsNullOrEmpty(inputSaveName.text))
                     {
                         var data = _curMapData.Serialize();
-                        string path = System.IO.Path.Combine(Application.persistentDataPath, "Map");
-                        if (Application.isEditor)
-                        {
-                            path = System.IO.Path.Combine(Application.dataPath, "Game/Res/Map/Data");
-                        }
-
-                        path = System.IO.Path.Combine(path, inputSaveName.text + ".txt");
+                        string path = SavePath;
                         
+                        path = System.IO.Path.Combine(path, inputSaveName.text + MapExtension);
+         
                         File.WriteAllText(path, data);
 #if UNITY_EDITOR
                         UnityEditor.AssetDatabase.Refresh();
 #endif
+                        RefreshSaveMaps();
                     }
                 }
                
             });
             
-            InitMaps();
+            InitBks();
+            InitSavedMaps();
             InitActors();
             InitInput();
             AddToTick();

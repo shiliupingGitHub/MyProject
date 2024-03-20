@@ -1,29 +1,43 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Game.Script.Res;
+using Mirror;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Game.Script.Map
 {
-    public struct ActorData
+    [Serializable]
+    public class ActorData
     {
+        [SerializeField]
         public Vector3 offset;
+        [SerializeField]
         public int id;
+        [NonSerialized]
         public GameObject go;
     }
     public class MapData
     {
+        [SerializeField]
         public int bkId;
-        public List<ActorData> actors = new();
-
+        [SerializeField]   List<ActorData> _actors = new();
+        [NonSerialized]
         private GameObject _bkMapGo;
         public void LoadSync(bool preview = true,bool net = false)
         {
             LoadBk();
+            LoadActorsSync(preview, net);
         }
 
         public string Serialize()
         {
-            return string.Empty;
+            return JsonUtility.ToJson(this);
+        }
+
+        public static MapData DeSerialize(string data)
+        {
+           return JsonUtility.FromJson<MapData>(data);
         }
 
         public bool AddActor(Vector3 position, ActorConfig actorConfig, bool preview = true, bool net = false)
@@ -48,8 +62,8 @@ namespace Game.Script.Map
                 actorData.go = go;
                 actorData.offset = position - mapScript.Offset;
                 actorData.id = actorConfig.id;
-                actors.Add(actorData);
-               go.transform.position = position;
+                _actors.Add(actorData);
+                go.transform.position = position;
 
 
             }
@@ -64,6 +78,37 @@ namespace Game.Script.Map
                 _bkMapGo = Object.Instantiate(template) as GameObject;
                 
                 _bkMapGo.transform.localPosition = Vector3.zero;
+            }
+        }
+
+        public void LoadActorsSync(bool preview = true, bool net = false)
+        {
+            MapScript mapScript = Object.FindObjectOfType<MapScript>();
+
+            if (mapScript == null)
+                return ;
+            foreach (var actorData in _actors)
+            {
+                ActorConfig actorConfig = ActorConfig.dic[actorData.id];
+                var template = GameResMgr.Instance.LoadAssetSync<GameObject>(actorConfig.path);
+
+                if (template)
+                {
+                    var go = Object.Instantiate(template) as GameObject;
+                    if (preview)
+                    {
+                        go.tag = "Preview";
+                    }
+                    
+                    go.transform.position = mapScript.Offset + actorData.offset;
+                    actorData.go = go;
+
+                    if (net)
+                    {
+                        NetworkServer.Spawn(go);
+                    }
+
+                }
             }
         }
 
@@ -82,9 +127,22 @@ namespace Game.Script.Map
             }
         }
 
+        public void UnLoadActors()
+        {
+            foreach (var actorData in _actors)
+            {
+                if (actorData.go != null)
+                {
+                    Object.Destroy(actorData.go);
+                }
+            }
+            _actors.Clear();
+        }
+
         public void UnLoadSync()
         {
             UnLoadBk();
+            UnLoadActors();
         }
     }
 }
