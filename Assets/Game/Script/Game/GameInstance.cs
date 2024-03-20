@@ -6,12 +6,14 @@ namespace Game.Script.Game
 {
     public enum GameMode
     {
-        Game,
+        Hall,
+        Host,
         Edit,
+        Client,
     }
     public class GameInstance : SingletonWithOnInstance<GameInstance>
     {
-        public GameMode Mode { set; get; } = GameMode.Game;
+        public GameMode Mode { set; get; } = GameMode.Host;
 
         private List<GameSubsystem> _subsystems;
 
