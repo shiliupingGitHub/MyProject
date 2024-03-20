@@ -11,10 +11,10 @@ namespace Game.Script.Character
 
         private List<global::Skill.Skill> instanceSkills = new();
         private global::Skill.Skill curSkill = null;
-        public override void OnStartAuthority()
+        
+        public override void Awake()
         {
-            base.OnStartAuthority();
-
+            base.Awake();
             if (null != skills)
             {
                 foreach (var skill in skills)
@@ -26,7 +26,6 @@ namespace Game.Script.Character
                 }
             }
         }
-
         public override void Tick(float deltaTime)
         {
             base.Tick(deltaTime);
