@@ -26,7 +26,7 @@ namespace Game.Script.Map
         private GameObject _bkMapGo;
         public void LoadSync(bool preview = true,bool net = false)
         {
-            LoadBk();
+            LoadBk(net);
             LoadActorsSync(preview, net);
         }
 
@@ -70,7 +70,7 @@ namespace Game.Script.Map
             return false;
         }
 
-        public void LoadBk()
+        public void LoadBk(bool net = false)
         {
             if (MapConfig.dic.ContainsKey(bkId))
             {
@@ -78,6 +78,11 @@ namespace Game.Script.Map
                 _bkMapGo = Object.Instantiate(template) as GameObject;
                 
                 _bkMapGo.transform.localPosition = Vector3.zero;
+
+                if (net)
+                {
+                    NetworkServer.Spawn(_bkMapGo);
+                }
             }
         }
 

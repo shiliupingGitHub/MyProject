@@ -1,4 +1,5 @@
-﻿using Game.Script.Res;
+﻿using Game.Script.Map;
+using Game.Script.Res;
 using Mirror;
 using Unity.Mathematics;
 using UnityEngine;
@@ -26,13 +27,14 @@ namespace Game.Script.Misc
 
             if (sceneName.Contains("Fight"))
             {
-                var bkTemplate = GameResMgr.Instance.LoadAssetSync<GameObject>("Assets/Game/Res/Map/ScenePrefab/TestScene.prefab");
-
-                if (null != bkTemplate)
-                {
-                    var go = GameObject.Instantiate(bkTemplate);
-                    NetworkServer.Spawn(go);
-                }
+                MapMgr.Instance.LoadMap("map_test_1", true);
+                // var bkTemplate = GameResMgr.Instance.LoadAssetSync<GameObject>("Assets/Game/Res/Map/ScenePrefab/TestScene.prefab");
+                //
+                // if (null != bkTemplate)
+                // {
+                //     var go = GameObject.Instantiate(bkTemplate);
+                //     NetworkServer.Spawn(go);
+                // }
             }
         }
         
