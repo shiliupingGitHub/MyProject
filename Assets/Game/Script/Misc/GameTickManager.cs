@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game.Script.Game;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -34,6 +35,7 @@ namespace Game.Script.Misc
             {
                 action.Invoke();
             }
+            GameInstance.Instance.Tick();
         }
 
         public void AddTick(System.Action action)

@@ -31,7 +31,7 @@ namespace Skill
 
         private List<SkillAction> _executeActions;
         private SkillStatus _skillStatus = SkillStatus.None;
-        void Init()
+        public void Init()
         {
             foreach (var action in actions)
             {
@@ -57,7 +57,7 @@ namespace Skill
             });
         }
 
-        void StartSkill()
+        public void StartSkill()
         {
             _curTime = 0;
             _executeActions.Clear();
@@ -70,7 +70,7 @@ namespace Skill
             _skillStatus = SkillStatus.Executing;
         }
 
-        bool ExecuteSkill(float deltaTime, BaseController controller)
+        public bool ExecuteSkill(float deltaTime, BaseController controller)
         {
 
             if (_skillStatus != SkillStatus.Executing)
