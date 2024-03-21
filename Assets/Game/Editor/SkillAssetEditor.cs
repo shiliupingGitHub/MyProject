@@ -90,6 +90,11 @@ namespace Skill.Editor
             
             var type = SkillMgr.Instance.ActionTypes[skill];
             var action = JsonUtility.FromJson(param, type);
+
+            if (null == action)
+            {
+                action = System.Activator.CreateInstance(type);
+            }
             var typeInfo = (System.Reflection.TypeInfo)type;
             
             foreach (var field in typeInfo.DeclaredFields)
