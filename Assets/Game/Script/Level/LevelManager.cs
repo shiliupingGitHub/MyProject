@@ -13,25 +13,29 @@ namespace Game.Script.Level
     }
     public class LevelManager : Singleton<LevelManager>
     {
-        
-        private Dictionary<LevelType, Level> levels = new Dictionary<LevelType, Level>()
+        public System.Action<LevelType, LevelType> preLevelChange;
+        private readonly Dictionary<LevelType, Level> _levels = new Dictionary<LevelType, Level>()
         {
             {LevelType.Hall, new HallLevel()},
             { LevelType.Fight , new FightLevel()},
             { LevelType.Edit , new EditLevel()},
         };
 
-        private LevelType curLevel = LevelType.None;
+        private LevelType _curLevel = LevelType.None;
         
         public void Enter(LevelType levelType)
         {
-            if (levels.ContainsKey(curLevel))
+            if (preLevelChange != null)
             {
-                levels[curLevel].Leave();
+                preLevelChange.Invoke(_curLevel, levelType);
+            }
+            if (_levels.TryGetValue(_curLevel, out var level))
+            {
+                level.Leave();
             }
             UIManager.Instance.Clear();
-            levels[levelType].Enter();
-            curLevel = levelType;
+            _levels[levelType].Enter();
+            _curLevel = levelType;
         }
     }
 }

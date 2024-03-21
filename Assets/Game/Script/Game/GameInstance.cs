@@ -17,8 +17,9 @@ namespace Game.Script.Game
     {
         public GameMode Mode { set; get; } = GameMode.Host;
 
-        private List<GameSubsystem> _subsystems = new();
+        private  Dictionary<System.Type, GameSubsystem> _subsystems = new();
         private List<BaseController> _controllers = new();
+        
 
         public void RegisterController(BaseController controller)
         {
@@ -41,6 +42,14 @@ namespace Game.Script.Game
             _controllers.Remove(controller);
         }
 
+        public T GetSubsystem<T>() where T: GameSubsystem
+        {
+            var type = typeof(T);
+            GameSubsystem ret = null;
+            _subsystems.TryGetValue(type, out ret);
+            return ret as T;
+        }
+
         public override void OnOnInstance()
         {
             base.OnOnInstance();
@@ -53,7 +62,7 @@ namespace Game.Script.Game
                     if (System.Activator.CreateInstance(type) is GameSubsystem subsystem)
                     {
                         subsystem.OnInitialize();
-                        _subsystems.Add(subsystem);
+                        _subsystems.Add(type,subsystem);
                     }
                    
                 }

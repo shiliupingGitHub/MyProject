@@ -24,9 +24,11 @@ namespace Game.Script.Map
         [SerializeField]   List<ActorData> _actors = new();
         [NonSerialized]
         private GameObject _bkMapGo;
+        public GameObject BkMapGo => _bkMapGo;
+        
         public void LoadSync(bool preview = true,bool net = false)
         {
-            LoadBk(net);
+            LoadBk(preview, net);
             LoadActorsSync(preview, net);
         }
 
@@ -70,7 +72,7 @@ namespace Game.Script.Map
             return false;
         }
 
-        public void LoadBk(bool net = false)
+        public void LoadBk(bool Preview, bool net)
         {
             if (MapConfig.dic.ContainsKey(bkId))
             {
@@ -83,6 +85,7 @@ namespace Game.Script.Map
                 {
                     NetworkServer.Spawn(_bkMapGo);
                 }
+                
             }
         }
 

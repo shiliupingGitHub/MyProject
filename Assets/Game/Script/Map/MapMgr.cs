@@ -7,6 +7,7 @@ namespace Game.Script.Map
     public class MapMgr : Singleton<MapMgr>
     {
 
+        public System.Action<GameObject> loadedMap;
         public MapData New(int bkId)
         {
             MapData mapData = new MapData();
@@ -28,6 +29,11 @@ namespace Game.Script.Map
             var mapData = MapData.DeSerialize(content.text);
             
             mapData.LoadSync(false, true);
+
+            if (loadedMap != null)
+            {
+                loadedMap.Invoke(mapData.BkMapGo);
+            }
         }
     }
 }
