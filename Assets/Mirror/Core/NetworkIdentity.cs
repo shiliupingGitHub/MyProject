@@ -376,8 +376,16 @@ namespace Mirror
             hasSpawned = false;
 
 #if UNITY_EDITOR
-            DisallowChildNetworkIdentities();
-            SetupIDs();
+            //@MySelf
+            if (!gameObject.scene.isLoaded)
+            {
+            //@MySelf
+                DisallowChildNetworkIdentities();
+                SetupIDs();
+            //@MySelf
+            }
+            //@MySelf
+           
 #endif
         }
 
