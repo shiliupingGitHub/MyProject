@@ -47,18 +47,13 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ad72dacef002beb4e8fd8a397249b728
-    m_Address: Assets/Game/Res/Config/MapConfig.csv
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c28f56554bb39144c9c170717a68e137
     m_Address: Assets/Game/Res/Localization/LocalizationConfig.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f3196c7715e206b4fa100078f5f80885
-    m_Address: Assets/Game/Res/Map/ScenePrefab/TestScene.prefab
+    m_Address: Assets/Game/Res/Map/Bk/TestScene.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -89,6 +84,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d6dc51f2ba7f2424f8431d47d0b02412
     m_Address: Assets/Game/Res/Map/Data/map_test_1.txt
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f0c2daa031fcb2444a5dcc69ed978137
+    m_Address: Assets/Game/Res/Config/MapBKConfig.csv
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
