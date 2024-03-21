@@ -28,17 +28,6 @@ namespace Game.Script.Misc
             if (sceneName.Contains("Fight"))
             {
                 MapMgr.Instance.LoadMap("map_test_1", true);
-                var monsterTemplate = GameResMgr.Instance.LoadAssetSync<GameObject>("Assets/Game/Res/Monster/Monster_Test.prefab");
-                
-                if (null != monsterTemplate)
-                {
-                    var go1 = GameObject.Instantiate(monsterTemplate);
-                    go1.transform.position = new Vector3(0, 1, -1);
-                    NetworkServer.Spawn(go1);
-                    var go2 = GameObject.Instantiate(monsterTemplate);
-                    go2.transform.position = new Vector3(0, -1, -1);
-                    NetworkServer.Spawn(go2);
-                }
             }
         }
         

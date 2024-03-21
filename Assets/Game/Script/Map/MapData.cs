@@ -113,7 +113,11 @@ namespace Game.Script.Map
 
                     if (net)
                     {
-                        NetworkServer.Spawn(go);
+                        if (go.TryGetComponent(out NetworkIdentity identity))
+                        {
+                            NetworkServer.Spawn(go);
+                        }
+                        
                     }
 
                 }
