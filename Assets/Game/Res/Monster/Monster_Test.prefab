@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingOrder: 20
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b,
     type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -170,7 +170,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   skills: []
-  _externalBehaviorTree: {fileID: 0}
+  _externalBehaviorTree: {fileID: 11400000, guid: a47db7b25a25d444daf40fc760dab93b,
+    type: 2}
 --- !u!114 &8541539398798180198
 MonoBehaviour:
   m_ObjectHideFlags: 0
