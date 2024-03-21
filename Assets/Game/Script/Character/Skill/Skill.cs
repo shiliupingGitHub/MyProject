@@ -26,7 +26,7 @@ namespace Skill
     {
         [SerializeField] public float maxTime = 1;
         [FormerlySerializedAs("Actions")] [FormerlySerializedAs("cacheActions")] [SerializeField] public List<SkillActonConfig> actions;
-        [NonSerialized] private List<SkillAction> _skillActions;
+        [NonSerialized] private List<SkillAction> _skillActions = new();
         [NonSerialized] float _curTime = 0;
 
         private List<SkillAction> _executeActions;
