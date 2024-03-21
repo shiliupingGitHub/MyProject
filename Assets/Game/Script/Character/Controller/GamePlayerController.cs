@@ -17,13 +17,30 @@ namespace Game.Script.Character
         private Vector3 moveDir = Vector3.zero;
         private bool bInitCamera = false;
         private bool bCheckCamera = false;
-        
+        private Camera _camera;
         private void Update()
         {
             if (isLocalPlayer)
             {
                DoMove();
                SetUpCamera();
+            }
+        }
+
+        public override void Awake()
+        {
+            base.Awake();
+            _camera = transform.Find("Camera").GetComponent<Camera>();
+            _camera.gameObject.SetActive(false);
+        }
+
+        public override void OnStartAuthority()
+        {
+            base.OnStartAuthority();
+
+            if (null != _camera)
+            {
+                _camera.gameObject.SetActive(true);
             }
         }
 
