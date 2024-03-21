@@ -3,17 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using CSVHelper;
 [System.Serializable]
-public class MapConfig {
+public class MapBKConfig {
 	public 	int	id;
 	public 	string	path;
 	public 	string	name;
-	static Dictionary<int,MapConfig> mDic = null;
- 	 public static Dictionary<int,MapConfig>  dic {
+	static Dictionary<int,MapBKConfig> mDic = null;
+ 	 public static Dictionary<int,MapBKConfig>  dic {
 			get 
  				 {
 					if ( mDic == null) {
-							mDic = new  Dictionary<int,MapConfig>();
-							 CsvHelper.ReadConfig("MapConfig",OnLoad);
+							mDic = new  Dictionary<int,MapBKConfig>();
+							 CsvHelper.ReadConfig("MapBKConfig",OnLoad);
 							}
 					 return mDic;
 				}
@@ -24,7 +24,7 @@ public class MapConfig {
 		{
 			CsvRow r = rows[i];
 			 if (string.IsNullOrEmpty(r.LineText)) continue;
-			MapConfig e = new MapConfig ();
+			MapBKConfig e = new MapBKConfig ();
 		 if(r.Count >0)
 			e.id= CsvHelper.Toint(r[0]);
 

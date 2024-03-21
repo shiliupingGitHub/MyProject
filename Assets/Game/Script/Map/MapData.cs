@@ -74,9 +74,9 @@ namespace Game.Script.Map
 
         public void LoadBk(bool Preview, bool net)
         {
-            if (MapConfig.dic.ContainsKey(bkId))
+            if (MapBKConfig.dic.ContainsKey(bkId))
             {
-                var template = GameResMgr.Instance.LoadAssetSync<GameObject>(MapConfig.dic[bkId].path);
+                var template = GameResMgr.Instance.LoadAssetSync<GameObject>(MapBKConfig.dic[bkId].path);
                 _bkMapGo = Object.Instantiate(template) as GameObject;
                 
                 _bkMapGo.transform.localPosition = Vector3.zero;

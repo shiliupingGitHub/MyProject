@@ -254,7 +254,7 @@ namespace Game.Script.UI.Frames
         void InitBks()
         {
             ddBk = FrameGo.transform.Find("ddBk").GetComponent<Dropdown>();
-            var mapConfigs = MapConfig.dic;
+            var mapConfigs = MapBKConfig.dic;
 
             List<string> mapDDContent = new();
             ddBk.ClearOptions();
@@ -350,7 +350,7 @@ namespace Game.Script.UI.Frames
                     var data = File.ReadAllText(path);
                     var mapData = MapData.DeSerialize(data);
 
-                    if (MapConfig.dic.ContainsKey(mapData.bkId))
+                    if (MapBKConfig.dic.ContainsKey(mapData.bkId))
                     {
                         _curMapData = mapData;
                         _curMapData.LoadSync();
