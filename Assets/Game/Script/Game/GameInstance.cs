@@ -17,7 +17,7 @@ namespace Game.Script.Game
     {
         public GameMode Mode { set; get; } = GameMode.Host;
 
-        private List<GameSubsystem> _subsystems;
+        private List<GameSubsystem> _subsystems = new();
         private List<BaseController> _controllers = new();
 
         public void RegisterController(BaseController controller)
