@@ -1,33 +1,17 @@
-﻿using UnityEngine;
+﻿using Game.Script.Attribute;
+using UnityEngine;
 
 namespace Game.Script.Character.Skill.Action
 {
     [SkillDes(SkillType.PlayAnimation, "播放动作")]
     public class SkillPlayAnimSkillAction : SkillAction
     {
-        private string aniName;
-        public override void ParseParam(string param)
-        {
-            base.ParseParam(param);
-            aniName = param;
-        }
+        [SerializeField]
+        [Label("动作名")]
+        public string aniName;
 
-        public override string OnGui(string param)
-        {
-            base.OnGui(param);
-            string ret = param;
-            ParseParam(param);
-#if UNITY_EDITOR
-            UnityEngine.GUILayout.BeginHorizontal();
-            GUIStyle style = new GUIStyle();
-            style.alignment = TextAnchor.MiddleRight;
-            style.normal.textColor = Color.green;
-            UnityEngine.GUILayout.Label("动作:", style );
-            aniName = UnityEngine.GUILayout.TextField(aniName, GUILayout.Width(100));
-            UnityEngine.GUILayout.EndHorizontal();
-            ret = aniName;
-#endif
-            return ret;
-        }
+        [Label("测试float")] public float testFloat;
+        [Label("测试int")] public float testInt;
+
     }
 }

@@ -169,7 +169,8 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  skills: []
+  skills:
+  - {fileID: 11400000, guid: 84e3ddaaee53bf74493b44a67a3a1da3, type: 2}
   _externalBehaviorTree: {fileID: 11400000, guid: a47db7b25a25d444daf40fc760dab93b,
     type: 2}
 --- !u!114 &8541539398798180198

@@ -37,9 +37,9 @@ namespace Skill
             {
                 if (SkillMgr.Instance.ActionTypes.TryGetValue(action.skillType, out var type))
                 {
-                    if (System.Activator.CreateInstance(type) is SkillAction skillAction)
+                    if (JsonUtility.FromJson(action.param, type) is SkillAction skillAction)
                     {
-                        skillAction.Init(action.time, action.param);
+                        skillAction.Init(action.time);
                         _skillActions.Add(skillAction);
                     }
                 }
