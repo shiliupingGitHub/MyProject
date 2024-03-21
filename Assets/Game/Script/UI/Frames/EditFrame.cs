@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Game.Script.Attribute;
 using Game.Script.Common;
 using Game.Script.Map;
 using Game.Script.Misc;
@@ -30,7 +31,9 @@ namespace Game.Script.UI.Frames
         private Vector3 lastDragPosition = Vector3.zero;
         private ActorConfig curSelectActorConfig;
         private GameObject curSelectShadow;
+        [UIPath("InputSaveName")]
         private InputField inputSaveName;
+        [UIPath("Load/ddSaveMaps")]
         private Dropdown ddSaveMaps;
         void AddToTick()
         {
@@ -267,7 +270,6 @@ namespace Game.Script.UI.Frames
 
         void InitSavedMaps()
         {
-            ddSaveMaps = FrameGo.transform.Find("Load/ddSaveMaps").GetComponent<Dropdown>();
             RefreshSaveMaps();
         }
 
@@ -365,8 +367,6 @@ namespace Game.Script.UI.Frames
                 }
 
             });
-            
-            inputSaveName = FrameGo.transform.Find("InputSaveName").GetComponent<InputField>();
             
             FrameGo.transform.Find("btnSave").GetComponent<Button>().onClick.AddListener(() =>
             {

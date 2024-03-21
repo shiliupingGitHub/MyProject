@@ -1,4 +1,6 @@
-﻿using Game.Script.Res;
+﻿using System.Reflection;
+using Game.Script.Attribute;
+using Game.Script.Res;
 using UnityEngine;
 
 namespace Game.Script.UI
@@ -17,6 +19,54 @@ namespace Game.Script.UI
             {
                 var asset = GameResMgr.Instance.LoadAssetSync<GameObject>(ResPath);
                 _gameObject = UnityEngine.Object.Instantiate(asset,parent);
+                InitField(_gameObject);
+            }
+        }
+
+        void InitField(GameObject go)
+        {
+            var typeInfo = GetType() as TypeInfo;
+
+            if (typeInfo == null)
+            {
+                return;
+            }
+               
+            foreach (var field in typeInfo.DeclaredFields)
+            {
+                if (field.IsStatic)
+                {
+                    continue;
+                }
+
+                var pathAttribute = field.GetCustomAttribute<UIPathAttribute>();
+
+                if (null != pathAttribute)
+                {
+                    var transform = go.transform.Find(pathAttribute.Path);
+
+                    if (null != transform)
+                    {
+                        if (field.FieldType == typeof(GameObject))
+                        {
+                            field.SetValue(this, transform.gameObject);
+                        }
+                        else if (field.FieldType == typeof(Transform))
+                        {
+                            field.SetValue(this, transform);
+                        }
+                        else
+                        {
+                            var component = transform.GetComponent(field.FieldType);
+                            field.SetValue(this, component);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError($@"path {pathAttribute.Path}does not int {go.name}");
+                    }
+                  
+                }
             }
         }
 
