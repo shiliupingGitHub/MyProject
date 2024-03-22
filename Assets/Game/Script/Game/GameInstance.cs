@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Game.Script.Character;
 using Game.Script.Common;
@@ -19,8 +20,6 @@ namespace Game.Script.Game
 
         private  Dictionary<System.Type, GameSubsystem> _subsystems = new();
         private List<BaseController> _controllers = new();
-        
-
         public void RegisterController(BaseController controller)
         {
             if (!_controllers.Contains(controller))
