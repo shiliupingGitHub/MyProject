@@ -102,29 +102,37 @@ namespace Game.Script.Map
 
             return (retX, retY);
         }
-
+        List<Matrix4x4> griMatrix4X4s = new();
+        private int oldGridX = 0;
+        private int oldGridY = 0;
         void DrawGrid()
         {
             if (_gridMesh != null && gridMat != null)
             {
-                List<Matrix4x4> matrix4X4s = new();
-                Vector3 offset = transform.position + originOffset;
-                for (int x = 0; x < xGridNum; x++)
-                {
-                    for (int y = 0; y < yGridNum; y++)
-                    {
-                        Vector3 position = new Vector3(x * gridSize, y * gridSize, -1);
 
-                        position += offset;
-                        Matrix4x4 matrix4 =  Matrix4x4.TRS(position, quaternion.identity, Vector3.one);
+                if (oldGridX != xGridNum || oldGridY != yGridNum)
+                {
+                    griMatrix4X4s.Clear();
+                    oldGridX = xGridNum;
+                    oldGridY = yGridNum;
+                    Vector3 offset = transform.position + originOffset;
+                    for (int x = 0; x < xGridNum; x++)
+                    {
+                        for (int y = 0; y < yGridNum; y++)
+                        {
+                            Vector3 position = new Vector3(x * gridSize, y * gridSize, -1);
+
+                            position += offset;
+                            Matrix4x4 matrix4 =  Matrix4x4.TRS(position, quaternion.identity, Vector3.one);
                      
-                        matrix4X4s.Add(matrix4);
+                            griMatrix4X4s.Add(matrix4);
+                        }
                     }
                 }
                 
-                if (matrix4X4s.Count > 0 && gridMat != null && _gridMesh != null)
+                if (griMatrix4X4s.Count > 0 )
                 {
-                    Graphics.DrawMeshInstanced(_gridMesh, 0, gridMat, matrix4X4s.ToArray(), matrix4X4s.Count);
+                    Graphics.DrawMeshInstanced(_gridMesh, 0, gridMat, griMatrix4X4s.ToArray(), griMatrix4X4s.Count);
                 }
             }
         }
@@ -137,7 +145,7 @@ namespace Game.Script.Map
             {
                 (uint x, uint y) = DeCodeIndex(block);
 
-                Vector3 position = new Vector3(x * gridSize, y * gridSize, -1);
+                Vector3 position = new Vector3(x * gridSize, y * gridSize, -10);
 
                 position += offset;
                 Matrix4x4 matrix4 =  Matrix4x4.TRS(position, quaternion.identity, Vector3.one);
