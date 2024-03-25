@@ -18,7 +18,6 @@ namespace Game.Script.UI
                 var rootTemplate = GameResMgr.Instance.LoadAssetSync<GameObject>("Assets/Game/Res/UI/UIRoot.prefab");
                 _uiRoot = Object.Instantiate(rootTemplate);
                 Object.DontDestroyOnLoad(_uiRoot);
-                _uiRoot.transform.position = new Vector3(1000, 1000, 0);
                 _frameRoot = _uiRoot.transform.Find("Canvas");
                 bInit = true;
             }

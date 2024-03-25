@@ -39,6 +39,11 @@ public class MapAreaRenderFeature : ScriptableRendererFeature
                 return;
             }
 
+            if (renderingData.cameraData.camera.cullingMask == 32)
+            {
+                return;
+            }
+
             if (null != drawMaterial)
             {
                 CreateMesh(mapScript);
