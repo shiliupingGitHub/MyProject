@@ -15,7 +15,6 @@ namespace Game.Script.Map
     [RequireComponent(typeof(NetworkIdentity))]
     public class MapScript : MonoBehaviour
     {
-        [Label("原点起始偏移")] public Vector3 originOffset;
         [Label("X方向数量")]public int xGridNum = 100;
 
         [Label("Y方向数量")]public int yGridNum = 100;
@@ -56,7 +55,7 @@ namespace Game.Script.Map
         
         
 
-        public Vector3 Offset => transform.position + originOffset;
+        public Vector3 Offset => transform.position;
 
         public (int, int) GetGridIndex(Vector3 worldPos)
         {
@@ -64,7 +63,7 @@ namespace Game.Script.Map
             int retX = -1;
             int retY = -1;
 
-            Vector3 o = transform.position + originOffset;
+            Vector3 o = transform.position ;
             var cellSize = MyGrid.cellSize;
             
             var offset = (worldPos - o);
