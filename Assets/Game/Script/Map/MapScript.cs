@@ -1,12 +1,9 @@
 
-using System;
 using Cinemachine;
 using UnityEngine;
 using Game.Script.Attribute;
 using Game.Script.Game;
-using Game.Script.Game.Subsystem;
 using Mirror;
-using UnityEngine.Serialization;
 
 namespace Game.Script.Map
 {
@@ -19,10 +16,12 @@ namespace Game.Script.Map
 
         [Label("Y方向数量")]public int yGridNum = 100;
 
+        public bool showGrid = false;
+
         public CinemachineVirtualCamera virtualCamera;
 
         private Grid _grid;
-        private Grid MyGrid
+        public Grid MyGrid
         {
             get
             {
@@ -39,20 +38,6 @@ namespace Game.Script.Map
         {
             GameInstance.Instance.MapScript = this;
         }
-        
-        public (uint, uint) DeCodeIndex(uint index)
-        {
-            uint retX = 0;
-            uint retY = 0;
-
-            retX = index >> 16;
-
-            retY = index << 16 >> 16;
-
-            return (retX, retY);
-        }
-        
-        
         
 
         public Vector3 Offset => transform.position;
