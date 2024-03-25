@@ -1954,11 +1954,11 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 5.062979, y: 4.4325285}
-      - {x: 0.8224167, y: 4.1134024}
-      - {x: 0.58499485, y: -0.12251127}
-      - {x: 14.7469635, y: -0.58018184}
-      - {x: 13.994665, y: 4.199216}
+    - - {x: 5.1875005, y: 5.837837}
+      - {x: -1.1165538, y: 6.1235275}
+      - {x: -1.0515676, y: -1.6523412}
+      - {x: 16.508047, y: -1.7720262}
+      - {x: 16.360565, y: 6.1381865}
   m_UseDelaunayMesh: 0
 --- !u!1 &3332723273709740305
 GameObject:
@@ -2363,9 +2363,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75ee161aed5595d4aa3c609eea789056, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  originOffset: {x: 0, y: 0, z: 0}
   xGridNum: 10
   yGridNum: 5
+  showGrid: 0
   virtualCamera: {fileID: 7400671550206152319}
 --- !u!114 &5281505634500781809
 MonoBehaviour:

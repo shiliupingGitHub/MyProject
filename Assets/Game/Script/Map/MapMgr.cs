@@ -42,6 +42,9 @@ namespace Game.Script.Map
          string AssetMapPath => "Assets/Game/Res/Map/Data/";
 
          string MapExtension => ".txt";
+         private MapScript _mapScript;
+
+  
 
         public void LoadMap(string mapName, bool net, bool inAsset = true)
         {
@@ -51,6 +54,7 @@ namespace Game.Script.Map
             var mapData = MapData.DeSerialize(content.text);
             
             mapData.LoadSync(false, true);
+            _mapScript = GameObject.FindObjectOfType<MapScript>();
         }
     }
 }

@@ -34,6 +34,40 @@ namespace Game.Script.Map
             }
         }
 
+        (int, int) GetGrid(Vector3 worldPosition)
+        {
+            Vector3 relative = worldPosition - Offset;
+
+            int gridX = Mathf.FloorToInt(relative.x / MyGrid.cellSize.x);
+            int gridY = Mathf.FloorToInt(relative.y / MyGrid.cellSize.y);
+
+            return (gridX, gridY);
+        }
+
+       public Vector3 GetPosition(int x, int y)
+        {
+            Vector3 ret = transform.position;
+
+            ret += new Vector3(x * MyGrid.cellSize.x, y * MyGrid.cellSize.y, 0);
+
+            return ret;
+        }
+        
+        public Vector3 ConvertToGridPosition(Vector3 worldPosition)
+        {
+            if ( worldPosition.x < 0 || worldPosition.y <= 0)
+            {
+                return Vector3.zero;
+            }
+            
+            (var gridX, var gridY) = GetGrid(worldPosition);
+            Vector3 ret = transform.position;
+
+            ret += new Vector3(gridX * MyGrid.cellSize.x, gridY * MyGrid.cellSize.y, 0);
+
+            return ret;
+        }
+
         private void Start()
         {
             GameInstance.Instance.MapScript = this;

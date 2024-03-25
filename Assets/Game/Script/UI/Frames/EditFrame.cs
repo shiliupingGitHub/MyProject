@@ -69,8 +69,13 @@ namespace Game.Script.UI.Frames
             {
                 var worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-                worldPosition.z = -2;
-                curSelectShadow.transform.position = worldPosition;
+                MapScript mapScript = GameObject.FindObjectOfType<MapScript>();
+
+                if (null != mapScript)
+                {
+                    curSelectShadow.transform.position =  mapScript.ConvertToGridPosition(worldPosition);
+                }
+                
             }
         }
 
@@ -160,7 +165,6 @@ namespace Game.Script.UI.Frames
                 inputCancelEditActor.action.started += delegate(InputAction.CallbackContext callbackContext)
                 {
                    SetSelectActor(null);
-                   Cursor.visible = true;
                 };
             }
         }
@@ -245,7 +249,6 @@ namespace Game.Script.UI.Frames
                     curSelectShadow = GameObject.Instantiate(template) as GameObject;
                     curSelectActorConfig = actorConfig;
                     curSelectShadow.tag = "Shadow";
-                    Cursor.visible = false;
                 }
             }
             

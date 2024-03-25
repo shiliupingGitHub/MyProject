@@ -11,8 +11,8 @@ namespace Game.Script.Map
     [Serializable]
     public class ActorData
     {
-        [SerializeField]
-        public Vector3 offset;
+        [SerializeField] public int x;
+        [SerializeField] public int y;
         [SerializeField]
         public int id;
         [NonSerialized]
@@ -63,7 +63,9 @@ namespace Game.Script.Map
 
                 ActorData actorData = new();
                 actorData.go = go;
-                actorData.offset = position - mapScript.Offset;
+                (int x, int y) = mapScript.GetGridIndex(position);
+                actorData.x = x;
+                actorData.y = y;
                 actorData.id = actorConfig.id;
                 _actors.Add(actorData);
                 go.transform.position = position;
@@ -117,8 +119,8 @@ namespace Game.Script.Map
                     {
                         go.tag = "Preview";
                     }
-                    
-                    go.transform.position = mapScript.Offset + actorData.offset;
+
+                    go.transform.position = mapScript.GetPosition(actorData.x, actorData.y);
                     actorData.go = go;
 
                     if (net)
