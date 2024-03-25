@@ -17,6 +17,7 @@ public class MapAreaRenderFeature : ScriptableRendererFeature
         
         private Mesh _gridMesh;
         public Material drawMaterial = null;
+        public float lineSize = 0.1f;
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
         {
         }
@@ -87,6 +88,17 @@ public class MapAreaRenderFeature : ScriptableRendererFeature
                 vertices.Add(v1);
                 indices.Add(index);
                 index++;
+                
+                var v2 = start + new Vector3(x * grid.cellSize.x + lineSize, script.yGridNum * grid.cellSize.y, 0);
+                vertices.Add(v2);
+                indices.Add(index);
+                index++;
+                
+                var v3 = start + new Vector3(x * grid.cellSize.x + lineSize, 0, 0);
+                vertices.Add(v3);
+                indices.Add(index);
+                index++;
+                
           
             }
             
@@ -101,11 +113,22 @@ public class MapAreaRenderFeature : ScriptableRendererFeature
                 vertices.Add(v1);
                 indices.Add(index);
                 index++;
+                
+                
+                var v2 = start + new Vector3(script.xGridNum * grid.cellSize.x , y * grid.cellSize.y + lineSize , 0);
+                vertices.Add(v2);
+                indices.Add(index);
+                index++;
+                
+                var v3 = start + new Vector3(0,  y * grid.cellSize.y + lineSize, 0);
+                vertices.Add(v3);
+                indices.Add(index);
+                index++;
           
             }
 
             _gridMesh.SetVertices(vertices);
-            _gridMesh.SetIndices(indices, MeshTopology.Lines, 0);
+            _gridMesh.SetIndices(indices, MeshTopology.Quads, 0);
 
 
         }
@@ -120,11 +143,13 @@ public class MapAreaRenderFeature : ScriptableRendererFeature
     CustomRenderPass m_ScriptablePass;
 
     public Material drawMaterial = null;
+    public float lineSize = 0.1f;
     /// <inheritdoc/>
     public override void Create()
     {
         m_ScriptablePass = new CustomRenderPass();
         m_ScriptablePass.drawMaterial = drawMaterial;
+        m_ScriptablePass.lineSize = lineSize;
         m_ScriptablePass.renderPassEvent = RenderPassEvent.AfterRendering;
         
     }
