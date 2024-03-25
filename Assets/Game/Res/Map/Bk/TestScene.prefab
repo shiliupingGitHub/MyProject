@@ -2026,7 +2026,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originOffset: {x: 0, y: 0, z: 0}
-  gridSize: 1
   xGridNum: 10
   yGridNum: 5
 --- !u!114 &5281505634500781809
