@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Game.Script.Character;
 using Game.Script.Common;
+using Game.Script.Map;
 using UnityEngine;
 
 namespace Game.Script.Game
@@ -16,16 +17,43 @@ namespace Game.Script.Game
     }
     public class GameInstance : SingletonWithOnInstance<GameInstance>
     {
+
+        public System.Action<MapScript> OnMapBkLoad;
+        public System.Action<GamePlayerController> OnLocalPlayerLoad;
         public GameMode Mode { set; get; } = GameMode.Host;
 
         private  Dictionary<System.Type, GameSubsystem> _subsystems = new();
         private List<BaseController> _controllers = new();
+        private GamePlayerController _myController;
+        private MapScript _mapScript;
         public void RegisterController(BaseController controller)
         {
             if (!_controllers.Contains(controller))
             {
                 _controllers.Add(controller);
             }
+        }
+        public MapScript MapScript
+        {
+            set => _mapScript = value;
+            get
+            {
+                return _mapScript;
+            }
+        }
+
+        public GamePlayerController MyController
+        {
+            set
+            {
+                _myController = value;
+
+                if (null != OnLocalPlayerLoad)
+                {
+                    OnLocalPlayerLoad.Invoke(_myController);
+                }
+            }
+            get => _myController;
         }
 
         public void Tick()
@@ -49,9 +77,9 @@ namespace Game.Script.Game
             return ret as T;
         }
 
-        public override void OnOnInstance()
+        public override void OnInstance()
         {
-            base.OnOnInstance();
+            base.OnInstance();
             var baseType = typeof(GameSubsystem);
             var assem = baseType.Assembly;
             foreach (var type in assem.GetTypes())

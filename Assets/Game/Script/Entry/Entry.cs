@@ -2,6 +2,7 @@
 using Game.Script.Character.Skill;
 using Game.Script.Game;
 using Game.Script.Level;
+using Game.Script.Map;
 using Game.Script.Misc;
 using Game.Script.Res;
 using Game.Script.UI;
@@ -20,6 +21,7 @@ namespace Game.Script.Entry
             GameTickManager.Instance.Init();
             SkillMgr.Instance.Init();
             LocalizationMgr.Instance.Init();
+            MapMgr.Instance.Init();
             LevelManager.Instance.Enter(LevelType.Hall);
          
         }

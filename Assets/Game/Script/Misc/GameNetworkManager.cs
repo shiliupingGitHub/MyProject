@@ -10,10 +10,8 @@ namespace Game.Script.Misc
     {
         public override void OnServerAddPlayer(NetworkConnectionToClient conn)
         {
-            Transform startPos = GetStartPosition();
-            GameObject player = startPos != null
-                ? Instantiate(playerPrefab, startPos.position, startPos.rotation)
-                : Instantiate(playerPrefab, Vector3.zero, quaternion.identity);
+         
+            GameObject player = Instantiate(playerPrefab, new Vector3(3, 1, 0), quaternion.identity);
 
             // instantiating a "Player" prefab gives it the name "Player(clone)"
             // => appending the connectionId is WAY more useful for debugging!

@@ -3,14 +3,14 @@
     public interface IOnInstance
     {
 
-        void OnOnInstance();
+        void OnInstance();
     }
 
     public class SingletonWithOnInstance<T>  : IOnInstance where T : IOnInstance, new()
     {
         private static T _instance;
 
-        public virtual void OnOnInstance(){}
+        public virtual void OnInstance(){}
         public static T Instance
         {
             get
@@ -18,7 +18,7 @@
                 if (_instance == null)
                 {
                     _instance = new T();
-                    _instance.OnOnInstance();
+                    _instance.OnInstance();
                 }
 
                 return _instance;

@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Script.Game;
 using Mirror;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -26,22 +27,13 @@ namespace Game.Script.Character
                SetUpCamera();
             }
         }
-
-        public override void Awake()
-        {
-            base.Awake();
-            _camera = transform.Find("Camera").GetComponent<Camera>();
-            _camera.gameObject.SetActive(false);
-        }
+        
 
         public override void OnStartAuthority()
         {
             base.OnStartAuthority();
 
-            if (null != _camera)
-            {
-                _camera.gameObject.SetActive(true);
-            }
+            GameInstance.Instance.MyController = this;
         }
 
         void DoMove()

@@ -1,4 +1,5 @@
 ﻿using Game.Script.Common;
+using Game.Script.Game;
 using Game.Script.Res;
 using UnityEngine;
 
@@ -6,8 +7,29 @@ namespace Game.Script.Map
 {
     public class MapMgr : Singleton<MapMgr>
     {
+        
+        public void Init()
+        {
+            GameInstance.Instance.OnLocalPlayerLoad += (controller) =>
+            {
+                CheckMap();
+            } ;
 
-        public System.Action<GameObject> loadedMap;
+            GameInstance.Instance.OnMapBkLoad += script =>
+            {
+                CheckMap();
+            };
+        }
+
+        void CheckMap()
+        {
+            if (GameInstance.Instance.MapScript != null && GameInstance.Instance.MyController != null)
+            {
+                var tr = GameInstance.Instance.MyController.transform;
+                GameInstance.Instance.MapScript.virtualCamera.Follow = tr;
+                GameInstance.Instance.MapScript.virtualCamera.LookAt = tr;
+            }
+        }
         public MapData New(int bkId)
         {
             MapData mapData = new MapData();
@@ -29,11 +51,6 @@ namespace Game.Script.Map
             var mapData = MapData.DeSerialize(content.text);
             
             mapData.LoadSync(false, true);
-
-            if (loadedMap != null)
-            {
-                loadedMap.Invoke(mapData.BkMapGo);
-            }
         }
     }
 }

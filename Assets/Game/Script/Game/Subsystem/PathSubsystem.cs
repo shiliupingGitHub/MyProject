@@ -23,12 +23,9 @@ namespace Game.Script.Game.Subsystem
         private readonly List<PathRequest> _pathRequestList = new();
         private ulong _pathId = 1;
         private const int PathNumPerFrame = 20;
-        private MapScript _mapScript;
+       
         
-        public MapScript MapScript
-        {
-            set => _mapScript = value;
-        }
+    
         public override void OnInitialize()
         {
             base.OnInitialize();
@@ -38,14 +35,9 @@ namespace Game.Script.Game.Subsystem
                 _pathRequestList.Clear();
                 _pathId = 1;
             };
-            MapMgr.Instance.loadedMap += go =>
-            {
-                if (null != go)
-                {
-                    _mapScript = go.GetComponent<MapScript>();
-                }
-            };
+  
             GameTickManager.Instance.AddTick(OnTick);
+            
         }
 
         ulong AddPath(Vector3 start, Vector3 end)
@@ -71,7 +63,7 @@ namespace Game.Script.Game.Subsystem
 
         void OnTick()
         {
-            if (_mapScript == null)
+            if (GameInstance.Instance.MapScript == null)
             {
                 return;
             }
@@ -84,7 +76,7 @@ namespace Game.Script.Game.Subsystem
                 {
                     var request = _pathRequestList[i];
 
-                    var path = DoPath(request.startPosition, request.endPosition, _mapScript);
+                    var path = DoPath(request.startPosition, request.endPosition, GameInstance.Instance.MapScript);
 
                     lock (this)
                     {
@@ -138,8 +130,8 @@ namespace Game.Script.Game.Subsystem
         {
             List<(bool, (int, int))> neighbourCells = new List<(bool, (int, int))>();
 
-            int heigth = _mapScript.yGridNum;
-            int width = _mapScript.xGridNum;
+            int heigth = GameInstance.Instance.MapScript.yGridNum;
+            int width = GameInstance.Instance.MapScript.xGridNum;
 
             int range = 1;
             int yStart = (int)MathF.Max(0, yCordinate - range);
@@ -183,8 +175,8 @@ namespace Game.Script.Game.Subsystem
             Func<int, int, int, int, float> heuristic = manhattanHeuristic ? calcHeuristicManhattan : calcHeuristicEuclidean;
 
             // Get the dimensions of the map
-            int mapHeight = _mapScript.yGridNum;
-            int mapWidth = _mapScript.xGridNum;
+            int mapHeight = GameInstance.Instance.MapScript.yGridNum;
+            int mapWidth = GameInstance.Instance.MapScript.xGridNum;
 
             // Define constants and arrays needed for the algorithm
             float sqrt2 = Mathf.Sqrt(2);
