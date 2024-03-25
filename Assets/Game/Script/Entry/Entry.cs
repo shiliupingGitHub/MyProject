@@ -13,16 +13,29 @@ namespace Game.Script.Entry
 {
     public class Entry : MonoBehaviour
     {
+        public GameMode EntryMode  = GameMode.Hall;
         private void Start()
         {
             GameResMgr.Instance.Init();
-            GameInstance.Instance.Mode = GameMode.Hall;
+            GameInstance.Instance.Mode = EntryMode;
             UIManager.Instance.Init();
             GameTickManager.Instance.Init();
             SkillMgr.Instance.Init();
             LocalizationMgr.Instance.Init();
             MapMgr.Instance.Init();
-            LevelManager.Instance.Enter(LevelType.Hall);
+
+            switch (EntryMode)
+            {
+                case GameMode.Hall:
+                {
+                    LevelManager.Instance.Enter(LevelType.Hall);
+                }
+                break;
+                case GameMode.Edit:
+                    LevelManager.Instance.Enter(LevelType.Edit);
+                    break;
+            }
+           
          
         }
     }

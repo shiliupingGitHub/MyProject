@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cinemachine;
 using Game.Script.Res;
 using Mirror;
 using UnityEngine;
@@ -84,6 +85,15 @@ namespace Game.Script.Map
                 if (net)
                 {
                     NetworkServer.Spawn(_bkMapGo);
+                }
+
+                if (Preview)
+                {
+                    var mapScript = _bkMapGo.GetComponent<MapScript>();
+                    
+                    mapScript.virtualCamera.gameObject.SetActive(false);
+                    var brain =  mapScript.GetComponentInChildren<CinemachineBrain>();
+                    brain.gameObject.SetActive(false);
                 }
                 
             }
