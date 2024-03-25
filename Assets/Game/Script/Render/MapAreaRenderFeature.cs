@@ -46,7 +46,7 @@ public class MapAreaRenderFeature : ScriptableRendererFeature
                 
                 cmd.DrawMesh(_gridMesh, Matrix4x4.identity, drawMaterial, 0);
                 context.ExecuteCommandBuffer(cmd);
-                cmd.Release();
+                CommandBufferPool.Release(cmd);
             }
            
             
