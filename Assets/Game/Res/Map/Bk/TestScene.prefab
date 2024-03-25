@@ -2367,6 +2367,7 @@ MonoBehaviour:
   yGridNum: 5
   showGrid: 0
   virtualCamera: {fileID: 7400671550206152319}
+  blockTilesRoot: {fileID: 8052287441676754182}
 --- !u!114 &5281505634500781809
 MonoBehaviour:
   m_ObjectHideFlags: 0

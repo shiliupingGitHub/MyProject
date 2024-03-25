@@ -101,7 +101,9 @@ namespace Game.Script.Game.Subsystem
 
         bool IsBlock(int x, int y)
         {
-            return false;
+            var area = MapMgr.Instance.GetArea(x, y);
+
+            return area?.Blocked ?? false;
         }
 
         // Calculates the Euclidean heuristic distance between two nodes

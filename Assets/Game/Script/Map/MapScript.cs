@@ -19,6 +19,7 @@ namespace Game.Script.Map
         public bool showGrid = false;
 
         public CinemachineVirtualCamera virtualCamera;
+        public Transform blockTilesRoot;
 
         private Grid _grid;
         public Grid MyGrid

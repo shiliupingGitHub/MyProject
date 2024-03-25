@@ -57,11 +57,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 56e84c1e725703c4d8d8447ce23530c0
-    m_Address: Assets/Game/Res/Mat/BlockMat.mat
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9d5e343a5f497f04c8df735174e2786e
     m_Address: Assets/Game/Res/Monster/Monster_Test.prefab
     m_ReadOnly: 0
