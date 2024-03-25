@@ -6,7 +6,6 @@ namespace Game.Script.UI.Extern
     public class LanguageData {
         public 	string	id;
         public 	string	data;
-        static Dictionary<string,LanguageData> mDic = null;
         public Dictionary<string, LanguageData> dic { get; set; } = new();
 
         public void Load(string content)

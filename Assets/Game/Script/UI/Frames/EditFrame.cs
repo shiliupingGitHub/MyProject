@@ -324,13 +324,6 @@ namespace Game.Script.UI.Frames
                 _curMapData = MapMgr.Instance.New(ddBk.value + 1);
                 _curMapData.LoadSync();
                 EnableInput();
-                MapScript mapScript = GameObject.FindObjectOfType<MapScript>();
-
-                if (mapScript != null)
-                {
-                    mapScript.StartEdit();
-                    mapScript.ShowGrid = true;
-                }
             });
             
             FrameGo.transform.Find("Load/btnLoad").GetComponent<Button>().onClick.AddListener(() =>
@@ -358,8 +351,6 @@ namespace Game.Script.UI.Frames
 
                         if (mapScript != null)
                         {
-                            mapScript.StartEdit();
-                            mapScript.ShowGrid = true;
                             EnableInput();
                             inputSaveName.text = fileName;
                         }

@@ -24,8 +24,7 @@ namespace Game.Script.Game.Subsystem
         private ulong _pathId = 1;
         private const int PathNumPerFrame = 20;
         private MapScript _mapScript;
-
-
+        
         public MapScript MapScript
         {
             set => _mapScript = value;
@@ -108,9 +107,9 @@ namespace Game.Script.Game.Subsystem
             return Mathf.Abs(nodeX - goalX) + Mathf.Abs(nodeY - goalY);
         }
 
-        bool IsBlock(MapScript walkableMap, int x, int y)
+        bool IsBlock(int x, int y)
         {
-            return walkableMap.IsBlock((uint)x, (uint)y);
+            return false;
         }
 
         // Calculates the Euclidean heuristic distance between two nodes
@@ -135,12 +134,12 @@ namespace Game.Script.Game.Subsystem
             return path;
         }
 
-        private (bool, (int, int))[] getNeighbours(int xCordinate, int yCordinate, MapScript walkableMap, bool walkableDiagonals = false)
+        private (bool, (int, int))[] getNeighbours(int xCordinate, int yCordinate, bool walkableDiagonals = false)
         {
             List<(bool, (int, int))> neighbourCells = new List<(bool, (int, int))>();
 
-            int heigth = walkableMap.yGridNum;
-            int width = walkableMap.xGridNum;
+            int heigth = _mapScript.yGridNum;
+            int width = _mapScript.xGridNum;
 
             int range = 1;
             int yStart = (int)MathF.Max(0, yCordinate - range);
@@ -158,19 +157,19 @@ namespace Game.Script.Game.Subsystem
                         continue;
                     }
 
-                    if (!IsBlock(walkableMap, x, y))
+                    if (!IsBlock(x, y))
                     {
                         continue;
                     }
 
                     if (!walkableDiagonals && // If we are not allowing diagonal movement
                         (x == xStart || x == xEnd) && (y == yStart || y == yEnd) && // If the node is a diagonal node
-                        IsBlock(walkableMap, xCordinate, y) && IsBlock(walkableMap, x, yCordinate)) // If the node is not reachable from the current node
+                        IsBlock(xCordinate, y) && IsBlock(x, yCordinate)) // If the node is not reachable from the current node
                     {
                         continue;
                     }
 
-                    neighbourCells.Add((!IsBlock(walkableMap, x, y), (x, y)));
+                    neighbourCells.Add((!IsBlock( x, y), (x, y)));
                 }
             }
 
@@ -178,14 +177,14 @@ namespace Game.Script.Game.Subsystem
         }
 
 
-        public List<(int, int)> GeneratePath(int startX, int startY, int goalX, int goalY, MapScript walkableMap, bool manhattanHeuristic = true, bool walkableDiagonals = false)
+        public List<(int, int)> GeneratePath(int startX, int startY, int goalX, int goalY, bool manhattanHeuristic = true, bool walkableDiagonals = false)
         {
             // Set the heuristic function to use based on the manhattanHeuristic parameter
             Func<int, int, int, int, float> heuristic = manhattanHeuristic ? calcHeuristicManhattan : calcHeuristicEuclidean;
 
             // Get the dimensions of the map
-            int mapHeight = walkableMap.yGridNum;
-            int mapWidth = walkableMap.xGridNum;
+            int mapHeight = _mapScript.yGridNum;
+            int mapWidth = _mapScript.xGridNum;
 
             // Define constants and arrays needed for the algorithm
             float sqrt2 = Mathf.Sqrt(2);
@@ -219,7 +218,7 @@ namespace Game.Script.Game.Subsystem
                 openSet.Dequeue();
 
                 // Get the neighbours of the current node
-                (bool, (int, int))[] neighbours = getNeighbours(currentX, currentY, walkableMap, walkableDiagonals);
+                (bool, (int, int))[] neighbours = getNeighbours(currentX, currentY, walkableDiagonals);
 
                 // Process each neighbour
                 for (int i = 0; i < neighbours.Length; i++)
