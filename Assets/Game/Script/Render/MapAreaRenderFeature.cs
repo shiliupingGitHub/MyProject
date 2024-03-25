@@ -120,7 +120,7 @@ public class MapAreaRenderFeature : ScriptableRendererFeature
     {
         m_ScriptablePass = new CustomRenderPass();
         m_ScriptablePass.drawMaterial = drawMaterial;
-        m_ScriptablePass.renderPassEvent = RenderPassEvent.AfterRenderingTransparents + 1;
+        m_ScriptablePass.renderPassEvent = RenderPassEvent.AfterRendering;
         
     }
 

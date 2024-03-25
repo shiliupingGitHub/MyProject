@@ -312,6 +312,23 @@ namespace Game.Script.UI.Frames
                 return ".txt";
             }
         }
+
+        void SetCameraCenter(MapScript mapScript)
+        {
+            Grid grid = mapScript.MyGrid;
+
+            if (grid != null)
+            {
+                Vector3 center = mapScript.transform.position;
+                center += new Vector3(grid.cellSize.x * mapScript.xGridNum * 0.5f, grid.cellSize.y * mapScript.yGridNum * 0.5f, 0);
+
+                Vector3 cameraPosition = Camera.main.transform.position;
+                cameraPosition.x = center.x;
+                cameraPosition.y = center.y;
+                Camera.main.transform.position = cameraPosition;
+
+            }
+        }
         public override void Init(Transform parent)
         {
             base.Init(parent);
@@ -324,6 +341,13 @@ namespace Game.Script.UI.Frames
                 _curMapData = MapMgr.Instance.New(ddBk.value + 1);
                 _curMapData.LoadSync();
                 EnableInput();
+                MapScript mapScript = GameObject.FindObjectOfType<MapScript>();
+                if (mapScript != null)
+                {
+                    SetCameraCenter(mapScript);
+                    mapScript.showGrid = true;
+                }
+                
             });
             
             FrameGo.transform.Find("Load/btnLoad").GetComponent<Button>().onClick.AddListener(() =>
@@ -352,6 +376,8 @@ namespace Game.Script.UI.Frames
                         if (mapScript != null)
                         {
                             EnableInput();
+                            SetCameraCenter(mapScript);
+                            mapScript.showGrid = true;
                             inputSaveName.text = fileName;
                         }
                     }
