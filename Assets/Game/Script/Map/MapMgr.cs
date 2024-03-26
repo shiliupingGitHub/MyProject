@@ -54,6 +54,7 @@ namespace Game.Script.Map
                 var tr = GameInstance.Instance.MyController.transform;
                 GameInstance.Instance.MapScript.virtualCamera.Follow = tr;
                 GameInstance.Instance.MapScript.virtualCamera.LookAt = tr;
+                GameInstance.Instance.MapScript.virtualCamera.gameObject.SetActive(true);
             }
         }
         public MapData New(int bkId)

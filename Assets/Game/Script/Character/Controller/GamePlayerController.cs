@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 
 namespace Game.Script.Character
 {
-    
     public class GamePlayerController : BaseSkillController
     {
         public InputActionReference MoveUpAction;
@@ -19,15 +18,29 @@ namespace Game.Script.Character
         private bool bInitCamera = false;
         private bool bCheckCamera = false;
         private Camera _camera;
+        private Rigidbody2D _rigidbody;
         private void Update()
         {
             if (isLocalPlayer)
             {
-               DoMove();
                SetUpCamera();
             }
         }
-        
+
+        private void FixedUpdate()
+        {
+            if (isLocalPlayer)
+            {
+                DoMove();
+            }
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            _rigidbody = GetComponent<Rigidbody2D>();
+        }
+
 
         public override void OnStartAuthority()
         {
@@ -40,8 +53,9 @@ namespace Game.Script.Character
         {
             var dir = moveDir;
             dir.Normalize();
+            
+            _rigidbody.velocity = dir * MoveSpeed * Time.deltaTime;
 
-            transform.position +=  dir * MoveSpeed * Time.deltaTime;
         }
 
         void SetUpInput()
