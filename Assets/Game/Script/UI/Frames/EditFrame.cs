@@ -16,7 +16,7 @@ namespace Game.Script.UI.Frames
     public class EditFrame : Frame
     {
         protected override string ResPath => "Assets/Game/Res/UI/EditFrame.prefab";
-
+        [UIPath("ddBk")]
         private Dropdown ddBk;
 
         private MapData _curMapData;
@@ -33,8 +33,12 @@ namespace Game.Script.UI.Frames
         private GameObject curSelectShadow;
         [UIPath("InputSaveName")]
         private InputField inputSaveName;
-        [UIPath("Load/ddSaveMaps")]
-        private Dropdown ddSaveMaps;
+        [UIPath("Load/ddSaveMaps")] private Dropdown ddSaveMaps;
+        [UIPath("btnNew")] private Button btnNew;
+        [UIPath("Load/btnLoad")] private Button btnLoad;
+        [UIPath("btnSave")] private Button btnSave;
+        [UIPath("ActorTemplate")] private GameObject actorTemplate;
+        [UIPath("svActors/Viewport/Content")] private Transform contentRoot;
         void AddToTick()
         {
             if (!bAddTick)
@@ -207,13 +211,11 @@ namespace Game.Script.UI.Frames
 
         void InitActors()
         {
-            var actorTemplate = FrameGo.transform.Find("ActorTemplate").gameObject;
-            var contentRoot = FrameGo.transform.Find("svActors/Viewport/Content");
             var actorConfigs = ActorConfig.dic;
-
             foreach (var actorConfig in actorConfigs)
             {
                 var actorGo = Object.Instantiate(actorTemplate, contentRoot) as GameObject;
+                actorGo.transform.localScale = Vector3.one;
                 actorGo.name = actorConfig.Value.id.ToString();
                 var text = actorGo.transform.Find("Name").GetComponent<Text>();
                 text.text = actorConfig.Value.name;
@@ -256,7 +258,6 @@ namespace Game.Script.UI.Frames
 
         void InitBks()
         {
-            ddBk = FrameGo.transform.Find("ddBk").GetComponent<Dropdown>();
             var mapConfigs = MapBKConfig.dic;
 
             List<string> mapDDContent = new();
@@ -335,7 +336,7 @@ namespace Game.Script.UI.Frames
         public override void Init(Transform parent)
         {
             base.Init(parent);
-            FrameGo.transform.Find("btnNew").GetComponent<Button>().onClick.AddListener(() =>
+            btnNew.GetComponent<Button>().onClick.AddListener(() =>
             {
                 if (_curMapData != null)
                 {
@@ -353,7 +354,7 @@ namespace Game.Script.UI.Frames
                 
             });
             
-            FrameGo.transform.Find("Load/btnLoad").GetComponent<Button>().onClick.AddListener(() =>
+            btnLoad.onClick.AddListener(() =>
             {
                 if (_curMapData != null)
                 {
@@ -388,7 +389,7 @@ namespace Game.Script.UI.Frames
 
             });
             
-            FrameGo.transform.Find("btnSave").GetComponent<Button>().onClick.AddListener(() =>
+            btnSave.GetComponent<Button>().onClick.AddListener(() =>
             {
                 if (_curMapData != null && null != inputSaveName)
                 {
