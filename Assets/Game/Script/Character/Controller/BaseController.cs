@@ -1,11 +1,12 @@
-﻿using Game.Script.Game;
+﻿using Game.Script.Common;
+using Game.Script.Game;
 using Mirror;
 using UnityEngine;
 
 namespace Game.Script.Character
 {
     [RequireComponent(typeof(NetworkTransformReliable))]
-    public class BaseController : NetworkBehaviour
+    public class BaseController : Actor
     {
         public virtual void Awake()
         {

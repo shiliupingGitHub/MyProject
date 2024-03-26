@@ -35,7 +35,15 @@ namespace Game.Script.Game
         }
         public MapScript MapScript
         {
-            set => _mapScript = value;
+            set
+            {
+                _mapScript = value;
+
+                if (OnMapBkLoad != null)
+                {
+                    OnMapBkLoad.Invoke(_mapScript);
+                }
+            }
             get
             {
                 return _mapScript;

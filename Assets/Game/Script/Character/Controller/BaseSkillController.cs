@@ -11,10 +11,14 @@ namespace Game.Script.Character
 
         private List<global::Skill.Skill> instanceSkills = new();
         private global::Skill.Skill curSkill = null;
+
+        private Vector3 _lastPosition = new Vector3(-1000, -1000, 0);
+        private Transform _cacheTransform;
         
         public override void Awake()
         {
             base.Awake();
+            _cacheTransform = transform;
             if (null != skills)
             {
                 foreach (var skill in skills)
@@ -33,6 +37,12 @@ namespace Game.Script.Character
             if (null != curSkill)
             {
                 curSkill.ExecuteSkill(deltaTime, this);
+            }
+
+            if (_lastPosition != _cacheTransform.position)
+            {
+                _lastPosition = _cacheTransform.position;
+                positionChanged?.Invoke();
             }
             
         }

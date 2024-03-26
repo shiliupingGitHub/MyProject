@@ -49,6 +49,7 @@ namespace CSVHelper
             else
                 return null;
         }
+
         public static int Toint(string text)
         {
             try
@@ -71,6 +72,15 @@ namespace CSVHelper
             string r = text.Trim();
             if (!string.IsNullOrEmpty(r))
                 return ToIntArray(r);
+            else
+                return null;
+        }
+
+        public static Vector2Int[] ToVector2Int_array(string text)
+        {
+            string r = text.Trim();
+            if (!string.IsNullOrEmpty(r))
+                return ToVector2IntArray(r);
             else
                 return null;
         }
@@ -120,6 +130,47 @@ namespace CSVHelper
                 return result;
             }
             return null;
+        }
+
+        public static Vector2Int[] ToVector2IntArray(string content)
+        {
+            Vector2Int[] ret = null;
+            if(!string.IsNullOrEmpty(content))
+            {
+                string[] szA = content.Split(';');
+                if (null != szA && szA.Length > 0)
+                {
+                    ret = new Vector2Int[szA.Length];
+                    for (int i = 0; i < szA.Length; i++)
+                    {
+                        try
+                        {
+                            if (!string.IsNullOrEmpty(szA[i]))
+                            {
+                                ret[i] = new Vector2Int();
+
+                                string[] szXY = szA[i].Split(":");
+
+                                if (szXY.Length >= 2)
+                                {
+                                    ret[i].x = Toint(szXY[0]);
+                                    ret[i].y = Toint(szXY[1]);
+                                }
+                                
+                                
+                            }
+                        }
+                        catch (System.Exception ex)
+                        {
+                            Debug.LogError(content);
+                            Debug.LogError(ex.Message.ToString());
+                        }
+                    
+                    }
+                }
+            }
+
+            return ret;
         }
         public static int[] ToIntArray(string content)
         {

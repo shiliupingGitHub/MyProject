@@ -1,4 +1,4 @@
-int,string,int[],int[],string
-id,path,blockX,blockY,name
-id编号,路径,x方向阻挡,y方向阻挡,名字
+int,string,Vector2Int[],int,string
+id,path,area,isBlock,name
+id编号,路径,区域,是否阻挡,名字
 1,Assets/Game/Res/Actor/Actor_1.prefab,,,测试actor1

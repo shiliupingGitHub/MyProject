@@ -1,4 +1,5 @@
 
+using System;
 using Cinemachine;
 using UnityEngine;
 using Game.Script.Attribute;
@@ -68,12 +69,12 @@ namespace Game.Script.Map
 
             return ret;
         }
-
-        private void Start()
+        
+        private void Awake()
         {
             GameInstance.Instance.MapScript = this;
         }
-        
+
 
         public Vector3 Offset => transform.position;
 

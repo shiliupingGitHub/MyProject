@@ -26,18 +26,24 @@ namespace Game.Script.Map
 
             GameInstance.Instance.OnMapBkLoad += script =>
             {
+                _mapScript = script;
                 CheckMap();
+                GenerateInitAreas();
             };
         }
 
-        public MapArea GetArea(int x, int y)
+
+        public MapArea GetArea(int x, int y, bool create = false)
         {
             uint areaKey = CreateAreaIndex((uint)x, (uint)y);
 
             MapArea ret = null;
 
-            _areas.TryGetValue(areaKey, out ret);
-
+            if (!_areas.TryGetValue(areaKey, out ret))
+            {
+                ret = new MapArea();
+                _areas.Add(areaKey, ret);
+            }
             return ret;
         }
 
@@ -68,6 +74,31 @@ namespace Game.Script.Map
             return ret;
 
         }
+        public (int, int, int) CreateAreaIndex(Vector3 position)
+        {
+            if (_mapScript == null)
+            {
+                return (-1, -1, -1);
+            }
+
+            
+            Vector3 relative = position - _mapScript.transform.position;
+
+            int x = Mathf.FloorToInt(relative.x / _mapScript.MyGrid.cellSize.x);
+            int y = Mathf.FloorToInt(relative.y / _mapScript.MyGrid.cellSize.y);
+
+            if (x < 0)
+            {
+                return (-1, -1, -1);;
+            }
+
+            if (y < 0)
+            {
+                return (-1, -1, -1);;
+            }
+            
+            return ( (int)CreateAreaIndex((uint)x, (uint)y), x, y);
+        }
 
         void AddAreaMapBlock(uint x, uint y)
         {
@@ -80,7 +111,8 @@ namespace Game.Script.Map
             }
 
             area.MapBlocked = true;
-        }   
+        }
+        
         void GenerateInitAreas()
         {
             _areas.Clear();
@@ -123,14 +155,10 @@ namespace Game.Script.Map
         public void LoadMap(string mapName, bool net, bool inAsset = true)
         {
             var path = AssetMapPath + mapName + MapExtension;
-
             var content = GameResMgr.Instance.LoadAssetSync<TextAsset>(path);
             var mapData = MapData.DeSerialize(content.text);
             
             mapData.LoadSync(false, true);
-            _mapScript = GameObject.FindObjectOfType<MapScript>();
-            GenerateInitAreas();
-
         }
     }
 }
