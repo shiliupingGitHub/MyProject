@@ -17,15 +17,14 @@ namespace Game.Script.UI.Extern
             var languageGo =GameResMgr.Instance.LoadAssetSync<GameObject>("Assets/Game/Res/Localization/LocalizationConfig.prefab");
             var localizationConfig = languageGo.GetComponent<LocalizationConfig>();
 
-            foreach (var config in localizationConfig._myDictionary)
+            for (int i = 0; i < localizationConfig._keys.Count; i++)
             {
-                if (config.Value != null)
-                {
-                    var content = System.Text.Encoding.GetEncoding("GBK").GetString(config.Value.bytes);
-                    LanguageData data = new LanguageData();
-                    data.Load(content);
-                    _languageDatas.Add(config.Key, data);
-                }
+                var key = localizationConfig._keys[i];
+                var value = localizationConfig._values[i];
+                var content = System.Text.Encoding.GetEncoding("GBK").GetString(value.bytes);
+                LanguageData data = new LanguageData();
+                data.Load(content);
+                _languageDatas.Add(key, data);
             }
         }
 
