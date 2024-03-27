@@ -12,12 +12,13 @@ namespace Game.Script.Character
         {
             GameInstance.Instance.RegisterController(this);
         }
-        
-        public virtual void OnDestroy()
+
+        protected override void OnDestroy()  
         {
+            base.OnDestroy();
             GameInstance.Instance.UnRegisterController(this);
         }
-
+        
         public virtual void Tick(float deltaTime)
         {
         }

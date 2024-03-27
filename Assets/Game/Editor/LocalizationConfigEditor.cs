@@ -19,7 +19,7 @@ namespace Game.Editor
                 {
                     EditorGUILayout.BeginHorizontal();
                     config._keys[i] = (SystemLanguage)EditorGUILayout.EnumPopup(config._keys[i], GUILayout.Width(100));
-                    config._values[i] = (TextAsset)EditorGUILayout.ObjectField(config._values[i], typeof(TextAsset));
+                    config._values[i] = (TextAsset)EditorGUILayout.ObjectField(config._values[i], typeof(TextAsset), false);
                     if (GUILayout.Button("x"))
                     {
                         delete = i;
