@@ -28,7 +28,7 @@ namespace Game.Script.Misc
                 return _instance;
             }
         }
-
+        
         private void Update()
         {
             foreach (var action in _actions)

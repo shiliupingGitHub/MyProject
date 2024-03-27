@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Game.Script.Common;
 using Game.Script.Game;
 using Game.Script.Res;
@@ -57,8 +58,14 @@ namespace Game.Script.Map
                 Game.Game.Instance.MapScript.virtualCamera.Follow = tr;
                 Game.Game.Instance.MapScript.virtualCamera.LookAt = tr;
                 Game.Game.Instance.MapScript.virtualCamera.gameObject.SetActive(true);
-                UIManager.Instance.Hide<LoadingFrame>();
+                HideLoading();
             }
+        }
+
+        async void HideLoading()
+        {
+            await Task.Delay(1);
+            UIManager.Instance.Hide<LoadingFrame>();
         }
         public MapData New(int bkId)
         {
