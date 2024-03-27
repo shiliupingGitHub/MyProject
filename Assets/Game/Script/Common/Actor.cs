@@ -8,6 +8,12 @@ using UnityEngine.Serialization;
 
 namespace Game.Script.Common
 {
+    public enum ActorType
+    {
+        Normal,
+        Shadow,
+        Preview,
+    }
     public class Actor : NetworkBehaviour
     {
         public virtual Vector2Int[] Areas => null;
@@ -19,6 +25,9 @@ namespace Game.Script.Common
         protected System.Action positionChanged;
         public Vector3 centerOffset = new Vector3(0.5f, 0.5f, 0);
         public virtual Vector3 CenterOffset => centerOffset;
+
+        public ActorType ActorType { get; set; } = ActorType.Normal;
+        
         protected virtual void Start()
         {
             cacheTransform = transform;

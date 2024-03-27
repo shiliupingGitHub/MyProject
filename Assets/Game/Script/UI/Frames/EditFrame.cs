@@ -251,6 +251,13 @@ namespace Game.Script.UI.Frames
                     curSelectShadow = GameObject.Instantiate(template) as GameObject;
                     curSelectActorConfig = actorConfig;
                     curSelectShadow.tag = "Shadow";
+
+                    var actor = curSelectShadow.GetComponent<Actor>();
+
+                    if (null != actor)
+                    {
+                        actor.ActorType = ActorType.Shadow;
+                    }
                 }
             }
             

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cinemachine;
+using Game.Script.Common;
 using Game.Script.Res;
 using Mirror;
 using UnityEngine;
@@ -61,6 +62,13 @@ namespace Game.Script.Map
                     go.tag = "Preview";
                 }
 
+                var actor = go.GetComponent<Actor>();
+
+                if (actor != null)
+                {
+                    actor.ActorType = ActorType.Preview;
+                }
+
                 ActorData actorData = new();
                 actorData.go = go;
                 (int x, int y) = mapScript.GetGridIndex(position);
@@ -118,6 +126,13 @@ namespace Game.Script.Map
                     if (preview)
                     {
                         go.tag = "Preview";
+                    }
+                    
+                    var actor = go.GetComponent<Actor>();
+
+                    if (actor != null)
+                    {
+                        actor.ActorType = ActorType.Preview;
                     }
 
                     go.transform.position = mapScript.GetPosition(actorData.x, actorData.y);
