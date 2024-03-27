@@ -87,6 +87,16 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cb581e5c9e3d70544992451501d0a540
+    m_Address: Assets/Game/Res/Misc/KcpFightNetworkManager.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 204f4fc8b0680fb498fdbb0b6d990cf4
+    m_Address: Assets/Game/Res/UI/LoadingFrame.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8a5b7fa2f7b110e499305b11415bf217, type: 2}
   m_SchemaSet:
