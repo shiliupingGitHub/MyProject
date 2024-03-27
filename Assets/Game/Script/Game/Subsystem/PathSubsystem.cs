@@ -23,9 +23,8 @@ namespace Game.Script.Game.Subsystem
         private readonly List<PathRequest> _pathRequestList = new();
         private ulong _pathId = 1;
         private const int PathNumPerFrame = 20;
-       
-        
-    
+
+
         public override void OnInitialize()
         {
             base.OnInitialize();
@@ -35,12 +34,11 @@ namespace Game.Script.Game.Subsystem
                 _pathRequestList.Clear();
                 _pathId = 1;
             };
-  
+
             GameTickManager.Instance.AddTick(OnTick);
-            
         }
 
-        ulong AddPath(Vector3 start, Vector3 end)
+        public ulong AddPath(Vector3 start, Vector3 end)
         {
             var curPathId = _pathId;
             _pathId++;
@@ -49,7 +47,7 @@ namespace Game.Script.Game.Subsystem
             return _pathId++;
         }
 
-        void RemovePath(ulong pathId)
+        public void RemovePath(ulong pathId)
         {
             if (_pathResponses.ContainsKey(pathId))
             {
@@ -87,11 +85,11 @@ namespace Game.Script.Game.Subsystem
             }
         }
 
-        List<(int, int)> DoPath(Vector3 start, Vector3 end, MapScript mapScript)
+        public List<(int, int)> DoPath(Vector3 start, Vector3 end, MapScript mapScript)
         {
             (int startX, int startY) = mapScript.GetGridIndex(start);
             (int endX, int endY) = mapScript.GetGridIndex(end);
-            return GeneratePath(startX, startY, endX, endY, mapScript);
+            return GeneratePath(startX, startY, endX, endY);
         }
 
         private float calcHeuristicManhattan(int nodeX, int nodeY, int goalX, int goalY)
@@ -151,19 +149,38 @@ namespace Game.Script.Game.Subsystem
                         continue;
                     }
 
-                    if (!IsBlock(x, y))
+                    if (IsBlock(x, y))
                     {
                         continue;
                     }
 
-                    if (!walkableDiagonals && // If we are not allowing diagonal movement
-                        (x == xStart || x == xEnd) && (y == yStart || y == yEnd) && // If the node is a diagonal node
-                        IsBlock(xCordinate, y) && IsBlock(x, yCordinate)) // If the node is not reachable from the current node
+                    if (!walkableDiagonals)
                     {
-                        continue;
+                        if ((x == xStart) && (y == yStart || y == yEnd))
+                        {
+                            if (IsBlock(xCordinate, y))
+                                continue;
+                            if(IsBlock(x, yCordinate))
+                                continue;
+                        }
+
+                        if ((x == xEnd) && (y == yStart || y == yEnd))
+                        {
+                            if (IsBlock(xCordinate, y))
+                                continue;
+                            if(IsBlock(x, yCordinate))
+                                continue;
+                        }
                     }
 
-                    neighbourCells.Add((!IsBlock( x, y), (x, y)));
+                    // if (!walkableDiagonals && // If we are not allowing diagonal movement
+                    //     (x == xStart || x == xEnd) && (y == yStart || y == yEnd) && // If the node is a diagonal node
+                    //     IsBlock(xCordinate, y) && IsBlock(x, yCordinate)) // If the node is not reachable from the current node
+                    // {
+                    //     continue;
+                    // }
+
+                    neighbourCells.Add((!IsBlock(x, y), (x, y)));
                 }
             }
 

@@ -1,4 +1,6 @@
 ﻿using Game.Script.Game;
+using Game.Script.UI;
+using Game.Script.UI.Frames;
 using Mirror;
 
 namespace Game.Script.Level
@@ -19,6 +21,8 @@ namespace Game.Script.Level
                     NetworkManager.singleton.StartClient();
                     break;
             }
+
+            UIManager.Instance.Show<FightFrame>();
         }
     }
 }

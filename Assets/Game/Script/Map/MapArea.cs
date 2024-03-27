@@ -41,7 +41,7 @@ namespace Game.Script.Map
             {
                 if (MapBlocked)
                 {
-                    return false;
+                    return true;
                 }
                 return ActorBlocked;
             }
