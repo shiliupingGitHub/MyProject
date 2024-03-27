@@ -35,7 +35,7 @@ namespace Game.Script.Level
                 level.Leave();
             }
             UIManager.Instance.Clear();
-            UIManager.Instance.Show<LoadingFrame>();
+            UIManager.Instance.Show<LoadingFrame>(true, true);
             _levels[levelType].Enter();
             _curLevel = levelType;
         }

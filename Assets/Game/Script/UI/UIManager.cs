@@ -10,7 +10,8 @@ namespace Game.Script.UI
         private GameObject _uiRoot;
         private bool bInit;
         private List<Frame> queueFrames = new List<Frame>();
-        private Transform _frameRoot;
+        private Transform _baseRoot;
+        private Transform _topRoot;
         public void Init()
         {
             if (!bInit)
@@ -18,7 +19,8 @@ namespace Game.Script.UI
                 var rootTemplate = GameResMgr.Instance.LoadAssetSync<GameObject>("Assets/Game/Res/UI/UIRoot.prefab");
                 _uiRoot = Object.Instantiate(rootTemplate);
                 Object.DontDestroyOnLoad(_uiRoot);
-                _frameRoot = _uiRoot.transform.Find("Canvas");
+                _baseRoot = _uiRoot.transform.Find("Canvas/base");
+                _topRoot = _uiRoot.transform.Find("Canvas/top");
                 bInit = true;
             }
         }
@@ -51,7 +53,7 @@ namespace Game.Script.UI
             }
         }
         
-        public T Show<T>(bool bUseQueue = true) where  T : Frame
+        public T Show<T>(bool bUseQueue = true, bool top = false) where  T : Frame
         {
             T ret = null;
             if (bUseQueue)
@@ -71,9 +73,10 @@ namespace Game.Script.UI
             {
                 ret = System.Activator.CreateInstance<T>();
             
-                ret.Init(_frameRoot);
+                ret.Init(top?_topRoot:_baseRoot);
             }
             
+            ret.FrameGo.transform.SetAsLastSibling();
             queueFrames.Add(ret);
             ret.Show();
             
