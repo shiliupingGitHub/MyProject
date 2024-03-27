@@ -4,6 +4,7 @@ using System.Linq;
 using Game.Script.Map;
 using Mirror;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Game.Script.Common
 {
@@ -16,6 +17,8 @@ namespace Game.Script.Common
         private List<(int, int)> nowArea = new();
         private List<(int, int)> tempArea = new();
         protected System.Action positionChanged;
+        public Vector3 centerOffset = new Vector3(0.5f, 0.5f, 0);
+        public virtual Vector3 CenterOffset => centerOffset;
         protected virtual void Start()
         {
             cacheTransform = transform;
