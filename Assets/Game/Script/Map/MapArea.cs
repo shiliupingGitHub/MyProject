@@ -1,16 +1,13 @@
 ﻿using System.Collections.Generic;
-using Game.Script.Common;
-using UnityEngine;
-
 namespace Game.Script.Map
 {
     public class MapArea
     {
         public bool MapBlocked { get; set; } = false;
-        private List<Actor> _actors= new();
-        private List<Actor> _blockActors = new();
+        private List<Common.Actor> _actors= new();
+        private List<Common.Actor> _blockActors = new();
 
-        public void Enter(Actor actor, bool block)
+        public void Enter(Common.Actor actor, bool block)
         {
             if (!_actors.Contains(actor))
             {
@@ -26,7 +23,7 @@ namespace Game.Script.Map
             }
         }
         
-        public void Leave(Actor actor, bool block)
+        public void Leave(Common.Actor actor, bool block)
         {
             _actors.Remove(actor);
             if (block)

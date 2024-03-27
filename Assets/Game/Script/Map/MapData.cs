@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Cinemachine;
 using Game.Script.Common;
+using Game.Script.Map.Actor;
 using Game.Script.Res;
 using Mirror;
 using UnityEngine;
@@ -62,8 +63,8 @@ namespace Game.Script.Map
                     go.tag = "Preview";
                 }
 
-                var actor = go.GetComponent<Actor>();
-
+                var actor = go.GetComponent<MapActor>();
+                actor.Config = actorConfig;
                 if (actor != null)
                 {
                     actor.ActorType = ActorType.Preview;
@@ -128,8 +129,8 @@ namespace Game.Script.Map
                         go.tag = "Preview";
                     }
                     
-                    var actor = go.GetComponent<Actor>();
-
+                    var actor = go.GetComponent<MapActor>();
+                    actor.Config = actorConfig;
                     if (actor != null)
                     {
                         actor.ActorType = ActorType.Preview;
