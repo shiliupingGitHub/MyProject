@@ -9,7 +9,7 @@ using UnityEditor;
 
 namespace Game.Script.Character.Skill
 {
-#if UNITY_EDITOR
+
     [InitializeOnLoad]
     public static class SkillInitializer
     {
@@ -18,7 +18,6 @@ namespace Game.Script.Character.Skill
             SkillMgr.Instance.Init();
         }
     }
-#endif
     public class SkillMgr : Singleton<SkillMgr>
     {
         public Dictionary<SkillType, SkillAction> DefaultActions { get; } = new();

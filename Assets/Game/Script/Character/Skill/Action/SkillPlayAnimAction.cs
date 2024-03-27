@@ -9,9 +9,5 @@ namespace Game.Script.Character.Skill.Action
         [SerializeField]
         [Label("动作名")]
         public string aniName;
-
-        [Label("测试float")] public float testFloat;
-        [Label("测试int")] public float testInt;
-
     }
 }
