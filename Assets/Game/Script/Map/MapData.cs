@@ -64,9 +64,10 @@ namespace Game.Script.Map
                 }
 
                 var actor = go.GetComponent<MapActor>();
-                actor.Config = actorConfig;
+               
                 if (actor != null)
                 {
+                    actor.Config = actorConfig;
                     actor.ActorType = ActorType.Preview;
                 }
 
@@ -130,9 +131,10 @@ namespace Game.Script.Map
                     }
                     
                     var actor = go.GetComponent<MapActor>();
-                    actor.Config = actorConfig;
+                    
                     if (actor != null)
                     {
+                        actor.Config = actorConfig;
                         actor.ActorType = ActorType.Preview;
                     }
 

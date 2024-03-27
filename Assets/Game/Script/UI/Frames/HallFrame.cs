@@ -24,12 +24,14 @@ namespace Game.Script.UI.Frames
             base.Init(parent);
             _btnFight.onClick.AddListener(() =>
             {
-                NetworkManager.singleton.networkAddress = "localhost";
+                Game.Game.Instance.LoadNetWorkManager();
                 Game.Game.Instance.Mode = GameMode.Host;
+                NetworkManager.singleton.networkAddress = "localhost";
                 LevelManager.Instance.Enter(LevelType.Fight);
             });
             _btnJoin.onClick.AddListener(() =>
             {
+                Game.Game.Instance.LoadNetWorkManager();
                 if (!string.IsNullOrEmpty(_inputIp.text))
                 {
                     NetworkManager.singleton.networkAddress = _inputIp.text;

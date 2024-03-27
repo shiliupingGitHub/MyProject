@@ -4,7 +4,9 @@ using System.Reflection;
 using Game.Script.Character;
 using Game.Script.Common;
 using Game.Script.Map;
+using Game.Script.Res;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Game.Script.Game
 {
@@ -26,6 +28,8 @@ namespace Game.Script.Game
         private List<BaseController> _controllers = new();
         private GamePlayerController _myController;
         private MapScript _mapScript;
+        private const string KcpNetMgrPath = "Assets/Game/Res/Misc/KcpFightNetworkManager.prefab";
+        private GameObject networkMgrGo = null;
         public void RegisterController(BaseController controller)
         {
             if (!_controllers.Contains(controller))
@@ -33,6 +37,16 @@ namespace Game.Script.Game
                 _controllers.Add(controller);
             }
         }
+       public void LoadNetWorkManager()
+        {
+            if (networkMgrGo != null)
+            {
+                Object.Destroy(networkMgrGo);
+            }
+            var template = GameResMgr.Instance.LoadAssetSync<GameObject>(KcpNetMgrPath);
+            networkMgrGo = Object.Instantiate(template);
+        }
+        
         public MapScript MapScript
         {
             set

@@ -1,12 +1,16 @@
 ﻿using Game.Script.Game;
+using Game.Script.Res;
 using Game.Script.UI;
 using Game.Script.UI.Frames;
 using Mirror;
+using UnityEngine;
 
 namespace Game.Script.Level
 {
     public class FightLevel : Level
     {
+       
+      
         public override void Enter()
         {
             base.Enter();
@@ -18,8 +22,10 @@ namespace Game.Script.Level
                 }
                 break;
                 case GameMode.Client:
+                {
                     NetworkManager.singleton.StartClient();
-                    break;
+                }
+                break;
             }
 
             UIManager.Instance.Show<FightFrame>();
