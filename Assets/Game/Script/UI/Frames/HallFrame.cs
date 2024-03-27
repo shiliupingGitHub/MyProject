@@ -24,6 +24,7 @@ namespace Game.Script.UI.Frames
             base.Init(parent);
             _btnFight.onClick.AddListener(() =>
             {
+                NetworkManager.singleton.networkAddress = "localhost";
                 Game.GameInstance.Instance.Mode = GameMode.Host;
                 LevelManager.Instance.Enter(LevelType.Fight);
             });
