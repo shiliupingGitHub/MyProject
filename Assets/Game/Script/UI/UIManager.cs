@@ -33,6 +33,23 @@ namespace Game.Script.UI
             queueFrames.Clear();
         }
 
+        public void Hide<T>() where T : Frame
+        {
+            T curFrame = null;
+            foreach (var frame in queueFrames)
+            {
+                if (frame.GetType() == typeof(T))
+                {
+                    curFrame = frame as T;
+                    break;
+                }
+            }
+
+            if (curFrame != null)
+            {
+                curFrame.Hide();
+            }
+        }
         
         public T Show<T>(bool bUseQueue = true) where  T : Frame
         {

@@ -2,6 +2,8 @@
 using Game.Script.Common;
 using Game.Script.Game;
 using Game.Script.Res;
+using Game.Script.UI;
+using Game.Script.UI.Frames;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -55,6 +57,7 @@ namespace Game.Script.Map
                 Game.Game.Instance.MapScript.virtualCamera.Follow = tr;
                 Game.Game.Instance.MapScript.virtualCamera.LookAt = tr;
                 Game.Game.Instance.MapScript.virtualCamera.gameObject.SetActive(true);
+                UIManager.Instance.Hide<LoadingFrame>();
             }
         }
         public MapData New(int bkId)

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Game.Script.Common;
 using Game.Script.UI;
+using Game.Script.UI.Frames;
 
 namespace Game.Script.Level
 {
@@ -34,6 +35,7 @@ namespace Game.Script.Level
                 level.Leave();
             }
             UIManager.Instance.Clear();
+            UIManager.Instance.Show<LoadingFrame>();
             _levels[levelType].Enter();
             _curLevel = levelType;
         }

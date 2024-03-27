@@ -11,6 +11,7 @@ namespace Game.Script.Level
         {
             base.Enter();
             SceneManager.LoadScene(SceneName);
+            UIManager.Instance.Hide<LoadingFrame>();
             UIManager.Instance.Show<EditFrame>();
         }
     }
