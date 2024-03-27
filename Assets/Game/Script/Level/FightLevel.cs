@@ -10,7 +10,7 @@ namespace Game.Script.Level
         public override void Enter()
         {
             base.Enter();
-            switch (GameInstance.Instance.Mode)
+            switch (Game.Game.Instance.Mode)
             {
                 case GameMode.Host:
                 {

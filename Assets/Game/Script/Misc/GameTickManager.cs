@@ -35,7 +35,7 @@ namespace Game.Script.Misc
             {
                 action.Invoke();
             }
-            GameInstance.Instance.Tick();
+            Game.Game.Instance.Tick();
         }
 
         public void AddTick(System.Action action)

@@ -61,7 +61,7 @@ namespace Game.Script.Game.Subsystem
 
         void OnTick()
         {
-            if (GameInstance.Instance.MapScript == null)
+            if (Game.Instance.MapScript == null)
             {
                 return;
             }
@@ -74,7 +74,7 @@ namespace Game.Script.Game.Subsystem
                 {
                     var request = _pathRequestList[i];
 
-                    var path = DoPath(request.startPosition, request.endPosition, GameInstance.Instance.MapScript);
+                    var path = DoPath(request.startPosition, request.endPosition, Game.Instance.MapScript);
 
                     lock (this)
                     {
@@ -130,8 +130,8 @@ namespace Game.Script.Game.Subsystem
         {
             List<(bool, (int, int))> neighbourCells = new List<(bool, (int, int))>();
 
-            int heigth = GameInstance.Instance.MapScript.yGridNum;
-            int width = GameInstance.Instance.MapScript.xGridNum;
+            int heigth = Game.Instance.MapScript.yGridNum;
+            int width = Game.Instance.MapScript.xGridNum;
 
             int range = 1;
             int yStart = (int)MathF.Max(0, yCordinate - range);
@@ -194,8 +194,8 @@ namespace Game.Script.Game.Subsystem
             Func<int, int, int, int, float> heuristic = manhattanHeuristic ? calcHeuristicManhattan : calcHeuristicEuclidean;
 
             // Get the dimensions of the map
-            int mapHeight = GameInstance.Instance.MapScript.yGridNum;
-            int mapWidth = GameInstance.Instance.MapScript.xGridNum;
+            int mapHeight = Game.Instance.MapScript.yGridNum;
+            int mapWidth = Game.Instance.MapScript.xGridNum;
 
             // Define constants and arrays needed for the algorithm
             float sqrt2 = Mathf.Sqrt(2);

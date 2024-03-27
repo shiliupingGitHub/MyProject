@@ -72,7 +72,7 @@ namespace Game.Script.Map
         
         private void Awake()
         {
-            GameInstance.Instance.MapScript = this;
+            Game.Game.Instance.MapScript = this;
         }
 
 

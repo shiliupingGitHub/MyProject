@@ -10,13 +10,13 @@ namespace Game.Script.Character
     {
         public virtual void Awake()
         {
-            GameInstance.Instance.RegisterController(this);
+            Game.Game.Instance.RegisterController(this);
         }
 
         protected override void OnDestroy()  
         {
             base.OnDestroy();
-            GameInstance.Instance.UnRegisterController(this);
+            Game.Game.Instance.UnRegisterController(this);
         }
         
         public virtual void Tick(float deltaTime)

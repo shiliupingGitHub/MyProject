@@ -19,9 +19,9 @@ namespace Game.Script.UI.Frames
             base.Init(parent);
             btnTestPath.onClick.AddListener(() =>
             {
-                // var pathSystem = GameInstance.Instance.GetSubsystem<PathSubsystem>();
+                // var pathSystem = Game.Instance.GetSubsystem<PathSubsystem>();
                 //
-                // var points = pathSystem.DoPath(new Vector3(4.55f, 0.53f, 0), GameInstance.Instance.MyController.transform.position + new Vector3(0.5f, 0.5f, 0), GameInstance.Instance.MapScript);
+                // var points = pathSystem.DoPath(new Vector3(4.55f, 0.53f, 0), Game.Instance.MyController.transform.position + new Vector3(0.5f, 0.5f, 0), Game.Instance.MapScript);
                 //
                 // if (_lineRenderer == null)
                 // {
@@ -38,8 +38,8 @@ namespace Game.Script.UI.Frames
                 // {
                 //     foreach (var point in points)
                 //     {
-                //         var o = GameInstance.Instance.MapScript.transform.position;
-                //         var grid = GameInstance.Instance.MapScript.MyGrid;
+                //         var o = Game.Instance.MapScript.transform.position;
+                //         var grid = Game.Instance.MapScript.MyGrid;
                 //         var p = new Vector3(point.Item1 * grid.cellSize.x  +  grid.cellSize.x * 0.5f, point.Item2 * grid.cellSize.y  + grid.cellSize.y * 0.5f, -1);
                 //         p += o;
                 //         linePoints.Add(p);

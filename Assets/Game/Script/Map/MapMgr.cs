@@ -19,12 +19,12 @@ namespace Game.Script.Map
         
         public void Init()
         {
-            GameInstance.Instance.OnLocalPlayerLoad += (controller) =>
+            Game.Game.Instance.OnLocalPlayerLoad += (controller) =>
             {
                 CheckMap();
             } ;
 
-            GameInstance.Instance.OnMapBkLoad += script =>
+            Game.Game.Instance.OnMapBkLoad += script =>
             {
                 _mapScript = script;
                 CheckMap();
@@ -49,12 +49,12 @@ namespace Game.Script.Map
 
         void CheckMap()
         {
-            if (GameInstance.Instance.MapScript != null && GameInstance.Instance.MyController != null)
+            if (Game.Game.Instance.MapScript != null && Game.Game.Instance.MyController != null)
             {
-                var tr = GameInstance.Instance.MyController.transform;
-                GameInstance.Instance.MapScript.virtualCamera.Follow = tr;
-                GameInstance.Instance.MapScript.virtualCamera.LookAt = tr;
-                GameInstance.Instance.MapScript.virtualCamera.gameObject.SetActive(true);
+                var tr = Game.Game.Instance.MyController.transform;
+                Game.Game.Instance.MapScript.virtualCamera.Follow = tr;
+                Game.Game.Instance.MapScript.virtualCamera.LookAt = tr;
+                Game.Game.Instance.MapScript.virtualCamera.gameObject.SetActive(true);
             }
         }
         public MapData New(int bkId)

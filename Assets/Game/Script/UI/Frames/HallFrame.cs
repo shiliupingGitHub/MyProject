@@ -25,7 +25,7 @@ namespace Game.Script.UI.Frames
             _btnFight.onClick.AddListener(() =>
             {
                 NetworkManager.singleton.networkAddress = "localhost";
-                Game.GameInstance.Instance.Mode = GameMode.Host;
+                Game.Game.Instance.Mode = GameMode.Host;
                 LevelManager.Instance.Enter(LevelType.Fight);
             });
             _btnJoin.onClick.AddListener(() =>
@@ -38,12 +38,12 @@ namespace Game.Script.UI.Frames
                 {
                     NetworkManager.singleton.networkAddress = "localhost";
                 }
-                Game.GameInstance.Instance.Mode = GameMode.Client;
+                Game.Game.Instance.Mode = GameMode.Client;
                 LevelManager.Instance.Enter(LevelType.Fight);
             });
             _btnEdit.onClick.AddListener(() =>
             {
-                Game.GameInstance.Instance.Mode = GameMode.Edit;
+                Game.Game.Instance.Mode = GameMode.Edit;
                 LevelManager.Instance.Enter(LevelType.Edit);
             });
         }

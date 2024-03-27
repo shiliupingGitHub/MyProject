@@ -15,7 +15,7 @@ namespace Game.Script.Game
         Edit,
         Client,
     }
-    public class GameInstance : SingletonWithOnInstance<GameInstance>
+    public class Game : SingletonWithOnInstance<Game>
     {
 
         public System.Action<MapScript> OnMapBkLoad;

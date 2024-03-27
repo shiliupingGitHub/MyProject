@@ -46,7 +46,7 @@ namespace Game.Script.Character
         {
             base.OnStartAuthority();
 
-            GameInstance.Instance.MyController = this;
+            Game.Game.Instance.MyController = this;
         }
 
         void DoMove()

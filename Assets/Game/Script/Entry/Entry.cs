@@ -17,7 +17,7 @@ namespace Game.Script.Entry
         private void Start()
         {
             GameResMgr.Instance.Init();
-            GameInstance.Instance.Mode = EntryMode;
+            Game.Game.Instance.Mode = EntryMode;
             UIManager.Instance.Init();
             GameTickManager.Instance.Init();
             SkillMgr.Instance.Init();
