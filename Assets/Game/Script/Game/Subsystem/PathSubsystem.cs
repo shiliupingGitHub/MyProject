@@ -26,7 +26,9 @@ namespace Game.Script.Game.Subsystem
         public override void OnInitialize()
         {
             base.OnInitialize();
-            LevelManager.Instance.preLevelChange += (type, levelType) =>
+
+            var levelSubsystem = Game.Instance.GetSubsystem<LevelSubsystem>();
+            levelSubsystem.preLevelChange += (type, levelType) =>
             {
                 _pathResponses.Clear();
                 _pathRequestList.Clear();
@@ -97,9 +99,17 @@ namespace Game.Script.Game.Subsystem
 
         bool IsBlock(int x, int y)
         {
-            var area = MapMgr.Instance.GetArea(x, y);
+            var mapSubsystem = Game.Instance.GetSubsystem<MapSubsystem>();
 
-            return area?.Blocked ?? false;
+            if (null != mapSubsystem)
+            {
+                var area = mapSubsystem.GetArea(x, y);
+
+                return area?.Blocked ?? false;
+            }
+
+            return false;
+
         }
 
         // Calculates the Euclidean heuristic distance between two nodes

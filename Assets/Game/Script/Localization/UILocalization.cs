@@ -11,22 +11,25 @@ namespace Game.Script.UI.Extern
         private Text _text;
         private void Awake()
         {
+            var localizationSubsystem = Game.Game.Instance.GetSubsystem<LocalizationSubsystem>();
             _text = GetComponent<Text>();
             Localize();
-            LocalizationMgr.Instance.OnLanguageChanged += Localize;
+            localizationSubsystem.OnLanguageChanged += Localize;
         }
 
         void Localize()
         {
             if (null != _text)
             {
-                _text.text = LocalizationMgr.Instance.Get(Key);
+                var localizationSubsystem = Game.Game.Instance.GetSubsystem<LocalizationSubsystem>();
+                _text.text = localizationSubsystem.Get(Key);
             }
         }
 
         private void OnDestroy()
         {
-            LocalizationMgr.Instance.OnLanguageChanged += Localize;
+            var localizationSubsystem = Game.Game.Instance.GetSubsystem<LocalizationSubsystem>();
+            localizationSubsystem.OnLanguageChanged += Localize;
         }
     }
 }

@@ -12,7 +12,8 @@ namespace Game.Script.UI.Extern
         {
             _dropdown = GetComponent<Dropdown>();
             Localize();
-            LocalizationMgr.Instance.OnLanguageChanged += Localize;
+            var localizationSubsystem = Game.Game.Instance.GetSubsystem<LocalizationSubsystem>();
+            localizationSubsystem.OnLanguageChanged += Localize;
         }
 
         public void Localize()
@@ -21,9 +22,10 @@ namespace Game.Script.UI.Extern
             {
                 _dropdown.ClearOptions();
                 List<string> values = new();
+                var localizationSubsystem = Game.Game.Instance.GetSubsystem<LocalizationSubsystem>();
                 foreach (var key in Keys)
                 {
-                    values.Add(LocalizationMgr.Instance.Get(key));
+                    values.Add(localizationSubsystem.Get(key));
                 }
                 _dropdown.AddOptions(values);
             }
@@ -31,7 +33,8 @@ namespace Game.Script.UI.Extern
 
         private void OnDestroy()
         {
-            LocalizationMgr.Instance.OnLanguageChanged += Localize;
+            var localizationSubsystem = Game.Game.Instance.GetSubsystem<LocalizationSubsystem>();
+            localizationSubsystem.OnLanguageChanged += Localize;
         }
     }
 }

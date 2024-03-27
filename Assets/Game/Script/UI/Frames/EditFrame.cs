@@ -349,7 +349,8 @@ namespace Game.Script.UI.Frames
                 {
                     _curMapData.UnLoadSync();
                 }
-                _curMapData = MapMgr.Instance.New(ddBk.value + 1);
+                var mapSubsystem = Game.Game.Instance.GetSubsystem<MapSubsystem>();
+                _curMapData = mapSubsystem.New(ddBk.value + 1);
                 _curMapData.LoadSync();
                 EnableInput();
                 MapScript mapScript = GameObject.FindObjectOfType<MapScript>();

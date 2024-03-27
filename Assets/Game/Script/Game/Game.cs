@@ -110,11 +110,16 @@ namespace Game.Script.Game
                 {
                     if (System.Activator.CreateInstance(type) is GameSubsystem subsystem)
                     {
-                        subsystem.OnInitialize();
+                       
                         _subsystems.Add(type,subsystem);
                     }
                    
                 }
+            }
+
+            foreach (var subsystem in _subsystems)
+            {
+                subsystem.Value.OnInitialize();
             }
           
         }

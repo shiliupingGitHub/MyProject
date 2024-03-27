@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 using Game.Script.Common;
+using Game.Script.Game;
 using Game.Script.Res;
 using UnityEngine;
 
 namespace Game.Script.UI.Extern
 {
     
-    public class LocalizationMgr : Singleton<LocalizationMgr>
+    public class LocalizationSubsystem : GameSubsystem
     {
         private Dictionary<SystemLanguage, LanguageData> _languageDatas = new();
 
         public System.Action OnLanguageChanged;
         private SystemLanguage curLanguage = SystemLanguage.English;
-        public void Init()
+        public override void OnInitialize()
         {
             var languageGo =GameResMgr.Instance.LoadAssetSync<GameObject>("Assets/Game/Res/Localization/LocalizationConfig.prefab");
             var localizationConfig = languageGo.GetComponent<LocalizationConfig>();

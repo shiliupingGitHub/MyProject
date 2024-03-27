@@ -1,38 +1,34 @@
-﻿using System;
+﻿
 using Game.Script.Character.Skill;
 using Game.Script.Game;
 using Game.Script.Level;
-using Game.Script.Map;
 using Game.Script.Misc;
 using Game.Script.Res;
 using Game.Script.UI;
-using Game.Script.UI.Extern;
 using UnityEngine;
-
 namespace Game.Script.Entry
 {
     public class Entry : MonoBehaviour
     {
-        public GameMode EntryMode  = GameMode.Hall;
+        public GameMode entryMode  = GameMode.Hall;
         private void Start()
         {
             GameResMgr.Instance.Init();
-            Game.Game.Instance.Mode = EntryMode;
+            Game.Game.Instance.Mode = entryMode;
             UIManager.Instance.Init();
             GameTickManager.Instance.Init();
             SkillMgr.Instance.Init();
-            LocalizationMgr.Instance.Init();
-            MapMgr.Instance.Init();
-
-            switch (EntryMode)
+            var levelSubsystem = Game.Game.Instance.GetSubsystem<LevelSubsystem>();
+            
+            switch (entryMode)
             {
                 case GameMode.Hall:
                 {
-                    LevelManager.Instance.Enter(LevelType.Hall);
+                    levelSubsystem.Enter(LevelType.Hall);
                 }
                 break;
                 case GameMode.Edit:
-                    LevelManager.Instance.Enter(LevelType.Edit);
+                    levelSubsystem.Enter(LevelType.Edit);
                     break;
             }
            

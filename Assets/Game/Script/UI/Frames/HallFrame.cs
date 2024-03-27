@@ -24,10 +24,11 @@ namespace Game.Script.UI.Frames
             base.Init(parent);
             _btnFight.onClick.AddListener(() =>
             {
+                var levelSubsystem = Game.Game.Instance.GetSubsystem<LevelSubsystem>();
                 Game.Game.Instance.LoadNetWorkManager();
                 Game.Game.Instance.Mode = GameMode.Host;
                 NetworkManager.singleton.networkAddress = "localhost";
-                LevelManager.Instance.Enter(LevelType.Fight);
+                levelSubsystem.Enter(LevelType.Fight);
             });
             _btnJoin.onClick.AddListener(() =>
             {
@@ -41,12 +42,14 @@ namespace Game.Script.UI.Frames
                     NetworkManager.singleton.networkAddress = "localhost";
                 }
                 Game.Game.Instance.Mode = GameMode.Client;
-                LevelManager.Instance.Enter(LevelType.Fight);
+                var levelSubsystem = Game.Game.Instance.GetSubsystem<LevelSubsystem>();
+                levelSubsystem.Enter(LevelType.Fight);
             });
             _btnEdit.onClick.AddListener(() =>
             {
+                var levelSubsystem = Game.Game.Instance.GetSubsystem<LevelSubsystem>();
                 Game.Game.Instance.Mode = GameMode.Edit;
-                LevelManager.Instance.Enter(LevelType.Edit);
+                levelSubsystem.Enter(LevelType.Edit);
             });
         }
     }

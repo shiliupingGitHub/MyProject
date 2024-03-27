@@ -10,7 +10,7 @@ using UnityEngine.Tilemaps;
 
 namespace Game.Script.Map
 {
-    public class MapMgr : Singleton<MapMgr>
+    public class MapSubsystem : GameSubsystem
     {
         
         string AssetMapPath => "Assets/Game/Res/Map/Data/";
@@ -19,9 +19,10 @@ namespace Game.Script.Map
         private MapScript _mapScript;
 
         private Dictionary<uint, MapArea> _areas = new();
-        
-        public void Init()
+
+        public override void OnInitialize()
         {
+            base.OnInitialize();
             Game.Game.Instance.OnLocalPlayerLoad += (controller) =>
             {
                 CheckMap();

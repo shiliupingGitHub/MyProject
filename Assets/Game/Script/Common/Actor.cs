@@ -42,9 +42,10 @@ namespace Game.Script.Common
 
         void LeaveAllArea()
         {
+            var mapSubsystem = Game.Game.Instance.GetSubsystem<MapSubsystem>();
             foreach (var area in nowArea)
             {
-                var mapArea = MapMgr.Instance.GetArea(area.Item1, area.Item2);
+                var mapArea = mapSubsystem.GetArea(area.Item1, area.Item2);
 
                 if (mapArea != null)
                 {
@@ -56,9 +57,9 @@ namespace Game.Script.Common
 
         public virtual void UpdateArea()
         {
-            
+            var mapSubsystem = Game.Game.Instance.GetSubsystem<MapSubsystem>();
             var position = cacheTransform.position;
-            (var nowAreaIndex, var x, var y) =  MapMgr.Instance.CreateAreaIndex(position);
+            (var nowAreaIndex, var x, var y) =  mapSubsystem.CreateAreaIndex(position);
 
             if (nowAreaIndex != areaIndex)
             {
@@ -85,7 +86,7 @@ namespace Game.Script.Common
                     {
                         if (!nowArea.Contains(area))
                         {
-                            var mapArea = MapMgr.Instance.GetArea(area.Item1, area.Item2, true);
+                            var mapArea = mapSubsystem.GetArea(area.Item1, area.Item2, true);
                             mapArea.Enter(this, IsBlock);
                         }
                     }
@@ -94,7 +95,7 @@ namespace Game.Script.Common
                     {
                         if (!tempArea.Contains(area))
                         {
-                            var mapArea = MapMgr.Instance.GetArea(area.Item1, area.Item2);
+                            var mapArea = mapSubsystem.GetArea(area.Item1, area.Item2);
 
                             if (mapArea != null)
                             {

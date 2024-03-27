@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Script.Common;
+using Game.Script.Game;
 using Game.Script.UI;
 using Game.Script.UI.Frames;
 
@@ -12,7 +13,7 @@ namespace Game.Script.Level
         Fight,
         Edit,
     }
-    public class LevelManager : Singleton<LevelManager>
+    public class LevelSubsystem : GameSubsystem
     {
         public System.Action<LevelType, LevelType> preLevelChange;
         private readonly Dictionary<LevelType, Level> _levels = new Dictionary<LevelType, Level>()
