@@ -31,12 +31,13 @@ namespace Game.Script.Res
 
             if (null != template)
             {
-               var go=  GameObject.Instantiate(template);
+               var go=  Object.Instantiate(template);
                return go;
             }
             return null;
         }
-        public void OnCsvRead(string szName, System.Action<string, string, System.Action<List<CsvRow>>> readCallBack, System.Action<List<CsvRow>> userCallBack)
+
+        private void OnCsvRead(string szName, System.Action<string, string, System.Action<List<CsvRow>>> readCallBack, System.Action<List<CsvRow>> userCallBack)
         {
             var path = System.IO.Path.Combine("Assets/Game/Res/Config/" , szName + ".csv");
             var op =  Addressables.LoadAssetAsync<TextAsset>(path);

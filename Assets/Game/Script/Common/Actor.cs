@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Game.Script.Map;
+using Game.Script.Subsystem;
 using Mirror;
 using UnityEngine;
-using UnityEngine.Serialization;
+
 
 namespace Game.Script.Common
 {
@@ -14,36 +13,37 @@ namespace Game.Script.Common
         Shadow,
         Preview,
     }
+
     public class Actor : NetworkBehaviour
     {
-        public virtual Vector2Int[] Areas => null;
-        public virtual bool IsBlock => false;
-        private Transform cacheTransform;
-        private int areaIndex = -1;
-        private List<(int, int)> nowArea = new();
-        private List<(int, int)> tempArea = new();
+        protected virtual Vector2Int[] Areas => null;
+        protected virtual bool IsBlock => false;
+        private Transform _cacheTransform;
+        private int _areaIndex = -1;
+        private readonly List<(int, int)> _nowArea = new();
+        private readonly List<(int, int)> _tempArea = new();
         protected System.Action positionChanged;
         public Vector3 centerOffset = new Vector3(0.5f, 0.5f, 0);
         public virtual Vector3 CenterOffset => centerOffset;
 
         public ActorType ActorType { get; set; } = ActorType.Normal;
-        
+
         protected virtual void Start()
         {
-            cacheTransform = transform;
+            _cacheTransform = transform;
             UpdateArea();
             positionChanged += UpdateArea;
         }
 
         protected virtual void OnDestroy()
         {
-           LeaveAllArea();
+            LeaveAllArea();
         }
 
         void LeaveAllArea()
         {
-            var mapSubsystem = Game.Game.Instance.GetSubsystem<MapSubsystem>();
-            foreach (var area in nowArea)
+            var mapSubsystem = Game.Instance.GetSubsystem<MapSubsystem>();
+            foreach (var area in _nowArea)
             {
                 var mapArea = mapSubsystem.GetArea(area.Item1, area.Item2);
 
@@ -52,48 +52,49 @@ namespace Game.Script.Common
                     mapArea.Leave(this, IsBlock);
                 }
             }
-            nowArea.Clear();
+
+            _nowArea.Clear();
         }
 
-        public virtual void UpdateArea()
+        protected virtual void UpdateArea()
         {
-            var mapSubsystem = Game.Game.Instance.GetSubsystem<MapSubsystem>();
-            var position = cacheTransform.position;
-            (var nowAreaIndex, var x, var y) =  mapSubsystem.CreateAreaIndex(position);
+            var mapSubsystem = Game.Instance.GetSubsystem<MapSubsystem>();
+            var position = _cacheTransform.position;
+            var (nowAreaIndex, x, y) = mapSubsystem.CreateAreaIndex(position);
 
-            if (nowAreaIndex != areaIndex)
+            if (nowAreaIndex != _areaIndex)
             {
-                areaIndex = nowAreaIndex;
+                _areaIndex = nowAreaIndex;
 
-                if (areaIndex >= 0)
+                if (_areaIndex >= 0)
                 {
-                    tempArea.Clear();
+                    _tempArea.Clear();
                     if (Areas != null)
                     {
                         foreach (var block in Areas)
                         {
                             int gridX = x + block.x;
                             int gridY = y + block.y;
-                            tempArea.Add((gridX, gridY));
+                            _tempArea.Add((gridX, gridY));
                         }
                     }
                     else
                     {
-                        tempArea.Add((x, y));
+                        _tempArea.Add((x, y));
                     }
 
-                    foreach (var area in tempArea)
+                    foreach (var area in _tempArea)
                     {
-                        if (!nowArea.Contains(area))
+                        if (!_nowArea.Contains(area))
                         {
                             var mapArea = mapSubsystem.GetArea(area.Item1, area.Item2, true);
                             mapArea.Enter(this, IsBlock);
                         }
                     }
 
-                    foreach (var area in nowArea)
+                    foreach (var area in _nowArea)
                     {
-                        if (!tempArea.Contains(area))
+                        if (!_tempArea.Contains(area))
                         {
                             var mapArea = mapSubsystem.GetArea(area.Item1, area.Item2);
 
@@ -103,8 +104,9 @@ namespace Game.Script.Common
                             }
                         }
                     }
-                    nowArea.Clear();
-                    tempArea.CopyTo(nowArea);
+
+                    _nowArea.Clear();
+                    _tempArea.CopyTo(_nowArea);
                 }
                 else
                 {

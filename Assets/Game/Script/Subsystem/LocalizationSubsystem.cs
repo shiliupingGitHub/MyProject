@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
-using Game.Script.Common;
-using Game.Script.Game;
 using Game.Script.Res;
+using Game.Script.UI.Extern;
 using UnityEngine;
 
-namespace Game.Script.UI.Extern
+namespace Game.Script.Subsystem
 {
     
-    public class LocalizationSubsystem : GameSubsystem
+    public sealed class LocalizationSubsystem : GameSubsystem
     {
         private Dictionary<SystemLanguage, LanguageData> _languageDatas = new();
 
-        public System.Action OnLanguageChanged;
-        private SystemLanguage curLanguage = SystemLanguage.English;
+        public System.Action onLanguageChanged;
+        private SystemLanguage _curLanguage = SystemLanguage.English;
         public override void OnInitialize()
         {
             var languageGo =GameResMgr.Instance.LoadAssetSync<GameObject>("Assets/Game/Res/Localization/LocalizationConfig.prefab");
@@ -31,12 +30,12 @@ namespace Game.Script.UI.Extern
 
         public void SetLanguage(SystemLanguage language)
         {
-            if (curLanguage != language)
+            if (_curLanguage != language)
             {
-                curLanguage = language;
-                if (null != OnLanguageChanged)
+                _curLanguage = language;
+                if (null != onLanguageChanged)
                 {
-                    OnLanguageChanged.Invoke();
+                    onLanguageChanged.Invoke();
                 }
             }
         }
@@ -44,7 +43,7 @@ namespace Game.Script.UI.Extern
 
         public string Get(string key)
         {
-            if (_languageDatas.TryGetValue(curLanguage, out var data))
+            if (_languageDatas.TryGetValue(_curLanguage, out var data))
             {
                 if (data.dic.TryGetValue(key, out var ret))
                 {

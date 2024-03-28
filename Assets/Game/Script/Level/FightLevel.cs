@@ -1,9 +1,7 @@
-﻿using Game.Script.Game;
-using Game.Script.Res;
+﻿using Game.Script.Common;
 using Game.Script.UI;
 using Game.Script.UI.Frames;
 using Mirror;
-using UnityEngine;
 
 namespace Game.Script.Level
 {
@@ -14,7 +12,7 @@ namespace Game.Script.Level
         public override void Enter()
         {
             base.Enter();
-            switch (Game.Game.Instance.Mode)
+            switch (Common.Game.Instance.Mode)
             {
                 case GameMode.Host:
                 {

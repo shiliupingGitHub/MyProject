@@ -1,21 +1,17 @@
-
-using System;
 using Cinemachine;
 using UnityEngine;
 using Game.Script.Attribute;
-using Game.Script.Game;
 using Mirror;
 
 namespace Game.Script.Map
 {
-    
     [RequireComponent(typeof(Grid))]
     [RequireComponent(typeof(NetworkIdentity))]
     public class MapScript : MonoBehaviour
     {
-        [Label("X方向数量")]public int xGridNum = 100;
+        [Label("X方向数量")] public int xGridNum = 100;
 
-        [Label("Y方向数量")]public int yGridNum = 100;
+        [Label("Y方向数量")] public int yGridNum = 100;
 
         public bool showGrid = false;
 
@@ -23,6 +19,7 @@ namespace Game.Script.Map
         public Transform blockTilesRoot;
 
         private Grid _grid;
+
         public Grid MyGrid
         {
             get
@@ -46,7 +43,7 @@ namespace Game.Script.Map
             return (gridX, gridY);
         }
 
-       public Vector3 GetPosition(int x, int y)
+        public Vector3 GetPosition(int x, int y)
         {
             Vector3 ret = transform.position;
 
@@ -54,14 +51,14 @@ namespace Game.Script.Map
 
             return ret;
         }
-        
+
         public Vector3 ConvertToGridPosition(Vector3 worldPosition)
         {
-            if ( worldPosition.x < 0 || worldPosition.y <= 0)
+            if (worldPosition.x < 0 || worldPosition.y <= 0)
             {
                 return Vector3.zero;
             }
-            
+
             (var gridX, var gridY) = GetGrid(worldPosition);
             Vector3 ret = transform.position;
 
@@ -69,10 +66,10 @@ namespace Game.Script.Map
 
             return ret;
         }
-        
+
         private void Awake()
         {
-            Game.Game.Instance.MapScript = this;
+            Common.Game.Instance.MapScript = this;
         }
 
 
@@ -80,13 +77,12 @@ namespace Game.Script.Map
 
         public (int, int) GetGridIndex(Vector3 worldPos)
         {
-
             int retX = -1;
             int retY = -1;
 
-            Vector3 o = transform.position ;
+            Vector3 o = transform.position;
             var cellSize = MyGrid.cellSize;
-            
+
             var offset = (worldPos - o);
 
             offset.x /= cellSize.x;
@@ -96,11 +92,12 @@ namespace Game.Script.Map
             {
                 retX = Mathf.FloorToInt(offset.x);
             }
-            
+
             if (offset.y >= 0 && offset.y < yGridNum)
             {
                 retY = Mathf.FloorToInt(offset.y);
             }
+
             return (retX, retY);
         }
     }

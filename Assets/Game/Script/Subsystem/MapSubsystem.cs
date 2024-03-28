@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Game.Script.Common;
-using Game.Script.Game;
+using Game.Script.Map;
 using Game.Script.Res;
 using Game.Script.UI;
 using Game.Script.UI.Frames;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace Game.Script.Map
+namespace Game.Script.Subsystem
 {
     public class MapSubsystem : GameSubsystem
     {
@@ -18,17 +17,17 @@ namespace Game.Script.Map
         string MapExtension => ".txt";
         private MapScript _mapScript;
 
-        private Dictionary<uint, MapArea> _areas = new();
+        private readonly Dictionary<uint, MapArea> _areas = new();
 
         public override void OnInitialize()
         {
             base.OnInitialize();
-            Game.Game.Instance.OnLocalPlayerLoad += (controller) =>
+            Common.Game.Instance.localPlayerLoad += (_) =>
             {
                 CheckMap();
             } ;
 
-            Game.Game.Instance.OnMapBkLoad += script =>
+            Common.Game.Instance.mapBkLoad += script =>
             {
                 _mapScript = script;
                 CheckMap();
@@ -41,9 +40,7 @@ namespace Game.Script.Map
         {
             uint areaKey = CreateAreaIndex((uint)x, (uint)y);
 
-            MapArea ret = null;
-
-            if (!_areas.TryGetValue(areaKey, out ret))
+            if (!_areas.TryGetValue(areaKey, out var ret))
             {
                 ret = new MapArea();
                 _areas.Add(areaKey, ret);
@@ -53,12 +50,12 @@ namespace Game.Script.Map
 
         void CheckMap()
         {
-            if (Game.Game.Instance.MapScript != null && Game.Game.Instance.MyController != null)
+            if (Common.Game.Instance.MapScript != null && Common.Game.Instance.MyController != null)
             {
-                var tr = Game.Game.Instance.MyController.transform;
-                Game.Game.Instance.MapScript.virtualCamera.Follow = tr;
-                Game.Game.Instance.MapScript.virtualCamera.LookAt = tr;
-                Game.Game.Instance.MapScript.virtualCamera.gameObject.SetActive(true);
+                var tr = Common.Game.Instance.MyController.transform;
+                Common.Game.Instance.MapScript.virtualCamera.Follow = tr;
+                Common.Game.Instance.MapScript.virtualCamera.LookAt = tr;
+                Common.Game.Instance.MapScript.virtualCamera.gameObject.SetActive(true);
                 HideLoading();
             }
         }
@@ -70,9 +67,10 @@ namespace Game.Script.Map
         }
         public MapData New(int bkId)
         {
-            MapData mapData = new MapData();
-
-            mapData.bkId = bkId;
+            MapData mapData = new MapData
+            {
+                bkId = bkId
+            };
 
             return mapData;
         }
@@ -115,8 +113,7 @@ namespace Game.Script.Map
         void AddAreaMapBlock(uint x, uint y)
         {
             uint areaIndex = CreateAreaIndex(x, y);
-            MapArea area = null;
-            if (!_areas.TryGetValue(areaIndex, out area))
+            if (!_areas.TryGetValue(areaIndex, out var area))
             {
                 area = new MapArea();
                 _areas.Add(areaIndex, area);
@@ -137,9 +134,9 @@ namespace Game.Script.Map
             if(_mapScript.blockTilesRoot == null)
                 return;
 
-            var tilemaps = _mapScript.blockTilesRoot.GetComponentsInChildren<Tilemap>();
+            var tileMaps = _mapScript.blockTilesRoot.GetComponentsInChildren<Tilemap>();
 
-            foreach (var tilemap in tilemaps)
+            foreach (var tilemap in tileMaps)
             {
                 var bound = tilemap.cellBounds;
                 foreach (var pos in bound.allPositionsWithin)

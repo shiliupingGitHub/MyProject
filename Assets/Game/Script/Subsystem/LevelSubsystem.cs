@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using Game.Script.Common;
-using Game.Script.Game;
+using Game.Script.Level;
 using Game.Script.UI;
 using Game.Script.UI.Frames;
 
-namespace Game.Script.Level
+namespace Game.Script.Subsystem
 {
     public enum LevelType
     {
@@ -16,7 +15,7 @@ namespace Game.Script.Level
     public class LevelSubsystem : GameSubsystem
     {
         public System.Action<LevelType, LevelType> preLevelChange;
-        private readonly Dictionary<LevelType, Level> _levels = new Dictionary<LevelType, Level>()
+        private readonly Dictionary<LevelType, Level.Level> _levels = new Dictionary<LevelType, Level.Level>()
         {
             {LevelType.Hall, new HallLevel()},
             { LevelType.Fight , new FightLevel()},

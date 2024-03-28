@@ -4,163 +4,171 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-public class MapAreaRenderFeature : ScriptableRendererFeature
+namespace Game.Script.Render
 {
-    
-    class CustomRenderPass : ScriptableRenderPass
+    public class MapAreaRenderFeature : ScriptableRendererFeature
     {
-        // This method is called before executing the render pass.
-        // It can be used to configure render targets and their clear state. Also to create temporary render target textures.
-        // When empty this render pass will render to the active camera render target.
-        // You should never call CommandBuffer.SetRenderTarget. Instead call <c>ConfigureTarget</c> and <c>ConfigureClear</c>.
-        // The render pipeline will ensure target setup and clearing happens in a performant manner.
+    
+        class CustomRenderPass : ScriptableRenderPass
+        {
+            // This method is called before executing the render pass.
+            // It can be used to configure render targets and their clear state. Also to create temporary render target textures.
+            // When empty this render pass will render to the active camera render target.
+            // You should never call CommandBuffer.SetRenderTarget. Instead call <c>ConfigureTarget</c> and <c>ConfigureClear</c>.
+            // The render pipeline will ensure target setup and clearing happens in a performant manner.
         
-        private Mesh _gridMesh;
-        public Material drawMaterial = null;
-        public float lineSize = 0.1f;
-        public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
-        {
-        }
-
-        // Here you can implement the rendering logic.
-        // Use <c>ScriptableRenderContext</c> to issue drawing commands or execute command buffers
-        // https://docs.unity3d.com/ScriptReference/Rendering.ScriptableRenderContext.html
-        // You don't have to call ScriptableRenderContext.submit, the render pipeline will call it at specific points in the pipeline.
-        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
-        {
-            MapScript mapScript = GameObject.FindObjectOfType<MapScript>();
-
-            if (mapScript == null)
+            private Mesh _gridMesh;
+            public Material drawMaterial;
+            public float lineSize = 0.1f;
+            public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
             {
-                return;
             }
 
-            if (!mapScript.showGrid)
+            // Here you can implement the rendering logic.
+            // Use <c>ScriptableRenderContext</c> to issue drawing commands or execute command buffers
+            // https://docs.unity3d.com/ScriptReference/Rendering.ScriptableRenderContext.html
+            // You don't have to call ScriptableRenderContext.submit, the render pipeline will call it at specific points in the pipeline.
+            public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
             {
-                return;
-            }
+                MapScript mapScript = Object.FindObjectOfType<MapScript>();
 
-            if (renderingData.cameraData.camera.cullingMask == 32)
-            {
-                return;
-            }
+                if (mapScript == null)
+                {
+                    return;
+                }
 
-            if (null != drawMaterial)
-            {
-                CreateMesh(mapScript);
-                CommandBuffer cmd = CommandBufferPool.Get();
+                if (!mapScript.showGrid)
+                {
+                    return;
+                }
+
+                if (renderingData.cameraData.camera.cullingMask == 32)
+                {
+                    return;
+                }
+
+                if (null != drawMaterial)
+                {
+                    CreateMesh(mapScript);
+                    CommandBuffer cmd = CommandBufferPool.Get();
                 
-                cmd.DrawMesh(_gridMesh, Matrix4x4.identity, drawMaterial, 0);
-                context.ExecuteCommandBuffer(cmd);
-                CommandBufferPool.Release(cmd);
-            }
+                    cmd.DrawMesh(_gridMesh, Matrix4x4.identity, drawMaterial, 0);
+                    context.ExecuteCommandBuffer(cmd);
+                    CommandBufferPool.Release(cmd);
+                }
            
             
-        }
-
-        void CreateMesh(MapScript script)
-        {
-            if (null == _gridMesh)
-            {
-                _gridMesh = new Mesh();
             }
-            _gridMesh.Clear();
 
-            Grid grid = script.MyGrid;
-
-            if (null == grid)
+            void CreateMesh(MapScript script)
             {
-                return;
-            }
+                if (null == _gridMesh)
+                {
+                    _gridMesh = new Mesh();
+                }
+                _gridMesh.Clear();
+
+                Grid grid = script.MyGrid;
+
+                if (null == grid)
+                {
+                    return;
+                }
             
-            int index = 0;
-            Vector3 start = script.transform.position;
-            List<int> indices = new();
-            List<Vector3> vertices = new();
-            for (int x = 0; x <= script.xGridNum; x++)
-            {
-                var v0 = start + new Vector3(x * grid.cellSize.x, 0, 0);
-                vertices.Add(v0);
-                indices.Add(index);
-                index++;
+                int index = 0;
+                Vector3 start = script.transform.position;
+                List<int> indices = new();
+                List<Vector3> vertices = new();
+                for (int x = 0; x <= script.xGridNum; x++)
+                {
+                    var v0 = start + new Vector3(x * grid.cellSize.x, 0, 0);
+                    vertices.Add(v0);
+                    indices.Add(index);
+                    index++;
+
+                    var cellSize = grid.cellSize;
+                    var v1 = start + new Vector3(x * cellSize.x, script.yGridNum * cellSize.y, 0);
+                    vertices.Add(v1);
+                    indices.Add(index);
+                    index++;
+
+                    var size = grid.cellSize;
+                    var v2 = start + new Vector3(x * size.x + lineSize, script.yGridNum * size.y, 0);
+                    vertices.Add(v2);
+                    indices.Add(index);
+                    index++;
                 
-                var v1 = start + new Vector3(x * grid.cellSize.x, script.yGridNum * grid.cellSize.y, 0);
-                vertices.Add(v1);
-                indices.Add(index);
-                index++;
-                
-                var v2 = start + new Vector3(x * grid.cellSize.x + lineSize, script.yGridNum * grid.cellSize.y, 0);
-                vertices.Add(v2);
-                indices.Add(index);
-                index++;
-                
-                var v3 = start + new Vector3(x * grid.cellSize.x + lineSize, 0, 0);
-                vertices.Add(v3);
-                indices.Add(index);
-                index++;
+                    var v3 = start + new Vector3(x * grid.cellSize.x + lineSize, 0, 0);
+                    vertices.Add(v3);
+                    indices.Add(index);
+                    index++;
                 
           
-            }
+                }
             
-            for (int y = 0; y <= script.yGridNum; y++)
-            {
-                var v0 = start + new Vector3(0,  y * grid.cellSize.y, 0);
-                vertices.Add(v0);
-                indices.Add(index);
-                index++;
+                for (int y = 0; y <= script.yGridNum; y++)
+                {
+                    var v0 = start + new Vector3(0,  y * grid.cellSize.y, 0);
+                    vertices.Add(v0);
+                    indices.Add(index);
+                    index++;
+
+                    var cellSize = grid.cellSize;
+                    var v1 = start + new Vector3(script.xGridNum * cellSize.x , y * cellSize.y , 0);
+                    vertices.Add(v1);
+                    indices.Add(index);
+                    index++;
+
+
+                    var size = grid.cellSize;
+                    var v2 = start + new Vector3(script.xGridNum * size.x , y * size.y + lineSize , 0);
+                    vertices.Add(v2);
+                    indices.Add(index);
+                    index++;
                 
-                var v1 = start + new Vector3(script.xGridNum * grid.cellSize.x , y * grid.cellSize.y , 0);
-                vertices.Add(v1);
-                indices.Add(index);
-                index++;
-                
-                
-                var v2 = start + new Vector3(script.xGridNum * grid.cellSize.x , y * grid.cellSize.y + lineSize , 0);
-                vertices.Add(v2);
-                indices.Add(index);
-                index++;
-                
-                var v3 = start + new Vector3(0,  y * grid.cellSize.y + lineSize, 0);
-                vertices.Add(v3);
-                indices.Add(index);
-                index++;
+                    var v3 = start + new Vector3(0,  y * grid.cellSize.y + lineSize, 0);
+                    vertices.Add(v3);
+                    indices.Add(index);
+                    index++;
           
+                }
+
+                _gridMesh.SetVertices(vertices);
+                _gridMesh.SetIndices(indices, MeshTopology.Quads, 0);
+
+
             }
-
-            _gridMesh.SetVertices(vertices);
-            _gridMesh.SetIndices(indices, MeshTopology.Quads, 0);
-
-
-        }
         
 
-        // Cleanup any allocated resources that were created during the execution of this render pass.
-        public override void OnCameraCleanup(CommandBuffer cmd)
+            // Cleanup any allocated resources that were created during the execution of this render pass.
+            public override void OnCameraCleanup(CommandBuffer cmd)
+            {
+            }
+        }
+
+        CustomRenderPass _mScriptablePass;
+
+        public Material drawMaterial;
+        public float lineSize = 0.1f;
+        /// <inheritdoc/>
+        public override void Create()
         {
+            _mScriptablePass = new CustomRenderPass
+            {
+                drawMaterial = drawMaterial,
+                lineSize = lineSize,
+                renderPassEvent = RenderPassEvent.AfterRendering
+            };
         }
-    }
-
-    CustomRenderPass m_ScriptablePass;
-
-    public Material drawMaterial = null;
-    public float lineSize = 0.1f;
-    /// <inheritdoc/>
-    public override void Create()
-    {
-        m_ScriptablePass = new CustomRenderPass();
-        m_ScriptablePass.drawMaterial = drawMaterial;
-        m_ScriptablePass.lineSize = lineSize;
-        m_ScriptablePass.renderPassEvent = RenderPassEvent.AfterRendering;
-        
-    }
 
 
 
-    // Here you can inject one or multiple render passes in the renderer.
-    // This method is called when setting up the renderer once per-camera.
-    public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
-    {
-        renderer.EnqueuePass(m_ScriptablePass);
+        // Here you can inject one or multiple render passes in the renderer.
+        // This method is called when setting up the renderer once per-camera.
+        public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
+        {
+            renderer.EnqueuePass(_mScriptablePass);
+        }
     }
 }
 

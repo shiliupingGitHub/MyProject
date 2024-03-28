@@ -1,6 +1,5 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
-using Game.Script.Game;
 using UnityEngine;
 
 namespace Game.Script.Character

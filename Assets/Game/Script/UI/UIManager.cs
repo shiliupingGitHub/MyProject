@@ -8,37 +8,37 @@ namespace Game.Script.UI
     public class UIManager : Singleton<UIManager>
     {
         private GameObject _uiRoot;
-        private bool bInit;
-        private List<Frame> queueFrames = new List<Frame>();
+        private bool _bInit;
+        private readonly List<Frame> _queueFrames = new List<Frame>();
         private Transform _baseRoot;
         private Transform _topRoot;
         public void Init()
         {
-            if (!bInit)
+            if (!_bInit)
             {
                 var rootTemplate = GameResMgr.Instance.LoadAssetSync<GameObject>("Assets/Game/Res/UI/UIRoot.prefab");
                 _uiRoot = Object.Instantiate(rootTemplate);
                 Object.DontDestroyOnLoad(_uiRoot);
                 _baseRoot = _uiRoot.transform.Find("Canvas/base");
                 _topRoot = _uiRoot.transform.Find("Canvas/top");
-                bInit = true;
+                _bInit = true;
             }
         }
 
         public void Clear()
         {
-            foreach (var frame in queueFrames)
+            foreach (var frame in _queueFrames)
             {
                 frame.Destroy();
               
             }
-            queueFrames.Clear();
+            _queueFrames.Clear();
         }
 
         public void Hide<T>() where T : Frame
         {
             T curFrame = null;
-            foreach (var frame in queueFrames)
+            foreach (var frame in _queueFrames)
             {
                 if (frame.GetType() == typeof(T))
                 {
@@ -58,12 +58,12 @@ namespace Game.Script.UI
             T ret = null;
             if (bUseQueue)
             {
-                foreach (var frame in queueFrames)
+                foreach (var frame in _queueFrames)
                 {
                     if (frame.GetType() == typeof(T))
                     {
                         ret = frame as T;
-                        queueFrames.Remove(frame);
+                        _queueFrames.Remove(frame);
                         break;
                     }
                 }
@@ -77,7 +77,7 @@ namespace Game.Script.UI
             }
             
             ret.FrameGo.transform.SetAsLastSibling();
-            queueFrames.Add(ret);
+            _queueFrames.Add(ret);
             ret.Show();
             
             return ret;

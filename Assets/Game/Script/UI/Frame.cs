@@ -18,7 +18,7 @@ namespace Game.Script.UI
             if (!string.IsNullOrEmpty(ResPath))
             {
                 var asset = GameResMgr.Instance.LoadAssetSync<GameObject>(ResPath);
-                _gameObject = UnityEngine.Object.Instantiate(asset,parent);
+                _gameObject = Object.Instantiate(asset,parent);
                 InitField(_gameObject);
             }
         }

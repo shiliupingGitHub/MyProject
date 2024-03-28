@@ -1,6 +1,4 @@
-﻿using System;
-using Game.Script.Game;
-using Mirror;
+﻿
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -46,7 +44,7 @@ namespace Game.Script.Character
         {
             base.OnStartAuthority();
 
-            Game.Game.Instance.MyController = this;
+            Common.Game.Instance.MyController = this;
         }
 
         void DoMove()

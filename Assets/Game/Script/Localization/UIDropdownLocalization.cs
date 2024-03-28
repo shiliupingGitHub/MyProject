@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.Script.Subsystem;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,8 +13,8 @@ namespace Game.Script.UI.Extern
         {
             _dropdown = GetComponent<Dropdown>();
             Localize();
-            var localizationSubsystem = Game.Game.Instance.GetSubsystem<LocalizationSubsystem>();
-            localizationSubsystem.OnLanguageChanged += Localize;
+            var localizationSubsystem = Common.Game.Instance.GetSubsystem<LocalizationSubsystem>();
+            localizationSubsystem.onLanguageChanged += Localize;
         }
 
         public void Localize()
@@ -22,7 +23,7 @@ namespace Game.Script.UI.Extern
             {
                 _dropdown.ClearOptions();
                 List<string> values = new();
-                var localizationSubsystem = Game.Game.Instance.GetSubsystem<LocalizationSubsystem>();
+                var localizationSubsystem = Common.Game.Instance.GetSubsystem<LocalizationSubsystem>();
                 foreach (var key in Keys)
                 {
                     values.Add(localizationSubsystem.Get(key));
@@ -33,8 +34,8 @@ namespace Game.Script.UI.Extern
 
         private void OnDestroy()
         {
-            var localizationSubsystem = Game.Game.Instance.GetSubsystem<LocalizationSubsystem>();
-            localizationSubsystem.OnLanguageChanged += Localize;
+            var localizationSubsystem = Common.Game.Instance.GetSubsystem<LocalizationSubsystem>();
+            localizationSubsystem.onLanguageChanged += Localize;
         }
     }
 }

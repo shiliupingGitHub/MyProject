@@ -1,4 +1,4 @@
-﻿namespace Game.Script.Game
+﻿namespace Game.Script.Common
 {
     public interface ISubsystem
     {

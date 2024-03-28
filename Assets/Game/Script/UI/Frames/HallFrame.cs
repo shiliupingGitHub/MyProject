@@ -1,7 +1,7 @@
-﻿using System;
+﻿
 using Game.Script.Attribute;
-using Game.Script.Game;
-using Game.Script.Level;
+using Game.Script.Common;
+using Game.Script.Subsystem;
 using Mirror;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,31 +24,24 @@ namespace Game.Script.UI.Frames
             base.Init(parent);
             _btnFight.onClick.AddListener(() =>
             {
-                var levelSubsystem = Game.Game.Instance.GetSubsystem<LevelSubsystem>();
-                Game.Game.Instance.LoadNetWorkManager();
-                Game.Game.Instance.Mode = GameMode.Host;
+                var levelSubsystem = Common.Game.Instance.GetSubsystem<LevelSubsystem>();
+                Common.Game.Instance.LoadNetWorkManager();
+                Common.Game.Instance.Mode = GameMode.Host;
                 NetworkManager.singleton.networkAddress = "localhost";
                 levelSubsystem.Enter(LevelType.Fight);
             });
             _btnJoin.onClick.AddListener(() =>
             {
-                Game.Game.Instance.LoadNetWorkManager();
-                if (!string.IsNullOrEmpty(_inputIp.text))
-                {
-                    NetworkManager.singleton.networkAddress = _inputIp.text;
-                }
-                else
-                {
-                    NetworkManager.singleton.networkAddress = "localhost";
-                }
-                Game.Game.Instance.Mode = GameMode.Client;
-                var levelSubsystem = Game.Game.Instance.GetSubsystem<LevelSubsystem>();
+                Common.Game.Instance.LoadNetWorkManager();
+                NetworkManager.singleton.networkAddress = !string.IsNullOrEmpty(_inputIp.text) ? _inputIp.text : "localhost";
+                Common.Game.Instance.Mode = GameMode.Client;
+                var levelSubsystem = Common.Game.Instance.GetSubsystem<LevelSubsystem>();
                 levelSubsystem.Enter(LevelType.Fight);
             });
             _btnEdit.onClick.AddListener(() =>
             {
-                var levelSubsystem = Game.Game.Instance.GetSubsystem<LevelSubsystem>();
-                Game.Game.Instance.Mode = GameMode.Edit;
+                var levelSubsystem = Common.Game.Instance.GetSubsystem<LevelSubsystem>();
+                Common.Game.Instance.Mode = GameMode.Edit;
                 levelSubsystem.Enter(LevelType.Edit);
             });
         }

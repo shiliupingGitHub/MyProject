@@ -1,5 +1,4 @@
-﻿using Game.Script.Map;
-using Game.Script.Res;
+﻿using Game.Script.Subsystem;
 using Mirror;
 using Unity.Mathematics;
 using UnityEngine;
@@ -10,7 +9,6 @@ namespace Game.Script.Misc
     {
         public override void OnServerAddPlayer(NetworkConnectionToClient conn)
         {
-         
             GameObject player = Instantiate(playerPrefab, new Vector3(3, 1, 0), quaternion.identity);
 
             // instantiating a "Player" prefab gives it the name "Player(clone)"
@@ -25,10 +23,9 @@ namespace Game.Script.Misc
 
             if (sceneName.Contains("Fight"))
             {
-                var mapSubsystem = Game.Game.Instance.GetSubsystem<MapSubsystem>();
+                var mapSubsystem = Common.Game.Instance.GetSubsystem<MapSubsystem>();
                 mapSubsystem.LoadMap("map_test_1", true);
             }
         }
-        
     }
 }

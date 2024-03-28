@@ -1,5 +1,4 @@
 ﻿using Game.Script.Common;
-using Game.Script.Game;
 using Mirror;
 using UnityEngine;
 
@@ -10,13 +9,13 @@ namespace Game.Script.Character
     {
         public virtual void Awake()
         {
-            Game.Game.Instance.RegisterPawn(this);
+            Common.Game.Instance.RegisterPawn(this);
         }
 
         protected override void OnDestroy()  
         {
             base.OnDestroy();
-            Game.Game.Instance.UnRegisterPawn(this);
+            Common.Game.Instance.UnRegisterPawn(this);
         }
         
         public virtual void Tick(float deltaTime)

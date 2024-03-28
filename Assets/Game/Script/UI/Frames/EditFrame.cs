@@ -6,6 +6,7 @@ using Game.Script.Attribute;
 using Game.Script.Common;
 using Game.Script.Map;
 using Game.Script.Res;
+using Game.Script.Subsystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -360,7 +361,7 @@ namespace Game.Script.UI.Frames
                 {
                     _curMapData.UnLoadSync();
                 }
-                var mapSubsystem = Game.Game.Instance.GetSubsystem<MapSubsystem>();
+                var mapSubsystem = Common.Game.Instance.GetSubsystem<MapSubsystem>();
                 _curMapData = mapSubsystem.New(_ddBk.value + 1);
                 _curMapData.LoadSync();
                 EnableInput();
@@ -417,7 +418,7 @@ namespace Game.Script.UI.Frames
                         var data = _curMapData.Serialize();
                         string path = SavePath;
                         
-                        path = System.IO.Path.Combine(path, _inputSaveName.text + MapExtension);
+                        path = Path.Combine(path, _inputSaveName.text + MapExtension);
          
                         File.WriteAllText(path, data);
 #if UNITY_EDITOR

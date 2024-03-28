@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Collections.Generic;
 using Game.Script.Character;
-using Game.Script.Common;
 using Game.Script.Map;
 using Game.Script.Res;
+using Game.Script.Subsystem;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Game.Script.Game
+namespace Game.Script.Common
 {
     public enum GameMode
     {
@@ -20,16 +18,16 @@ namespace Game.Script.Game
     public class Game : SingletonWithOnInstance<Game>
     {
 
-        public System.Action<MapScript> OnMapBkLoad;
-        public System.Action<FightCharacter> OnLocalPlayerLoad;
+        public System.Action<MapScript> mapBkLoad;
+        public System.Action<FightCharacter> localPlayerLoad;
         public GameMode Mode { set; get; } = GameMode.Host;
 
-        private  Dictionary<System.Type, GameSubsystem> _subsystems = new();
-        private List<Pawn> _pawns = new();
+        private readonly Dictionary<System.Type, GameSubsystem> _subsystems = new();
+        private readonly List<Pawn> _pawns = new();
         private FightCharacter _myController;
         private MapScript _mapScript;
         private const string KcpNetMgrPath = "Assets/Game/Res/Misc/KcpFightNetworkManager.prefab";
-        private GameObject networkMgrGo = null;
+        private GameObject _networkMgrGo;
         public void RegisterPawn(Pawn pawn)
         {
             if (!_pawns.Contains(pawn))
@@ -39,12 +37,12 @@ namespace Game.Script.Game
         }
        public void LoadNetWorkManager()
         {
-            if (networkMgrGo != null)
+            if (_networkMgrGo != null)
             {
-                Object.Destroy(networkMgrGo);
+                Object.Destroy(_networkMgrGo);
             }
             var template = GameResMgr.Instance.LoadAssetSync<GameObject>(KcpNetMgrPath);
-            networkMgrGo = Object.Instantiate(template);
+            _networkMgrGo = Object.Instantiate(template);
         }
         
         public MapScript MapScript
@@ -53,15 +51,12 @@ namespace Game.Script.Game
             {
                 _mapScript = value;
 
-                if (OnMapBkLoad != null)
+                if (mapBkLoad != null)
                 {
-                    OnMapBkLoad.Invoke(_mapScript);
+                    mapBkLoad.Invoke(_mapScript);
                 }
             }
-            get
-            {
-                return _mapScript;
-            }
+            get => _mapScript;
         }
 
         public FightCharacter MyController
@@ -70,9 +65,9 @@ namespace Game.Script.Game
             {
                 _myController = value;
 
-                if (null != OnLocalPlayerLoad)
+                if (null != localPlayerLoad)
                 {
-                    OnLocalPlayerLoad.Invoke(_myController);
+                    localPlayerLoad.Invoke(_myController);
                 }
             }
             get => _myController;
@@ -94,8 +89,7 @@ namespace Game.Script.Game
         public T GetSubsystem<T>() where T: GameSubsystem
         {
             var type = typeof(T);
-            GameSubsystem ret = null;
-            _subsystems.TryGetValue(type, out ret);
+            _subsystems.TryGetValue(type, out var ret);
             return ret as T;
         }
 
