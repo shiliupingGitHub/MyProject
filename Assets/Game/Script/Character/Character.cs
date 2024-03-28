@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Script.Character
@@ -8,42 +7,40 @@ namespace Game.Script.Character
     {
         public List<global::Skill.Skill> skills = new();
 
-        private List<global::Skill.Skill> instanceSkills = new();
-        private global::Skill.Skill curSkill = null;
+        private readonly List<global::Skill.Skill> _instanceSkills = new();
+        private readonly global::Skill.Skill _curSkill = null;
 
         private Vector3 _lastPosition = new Vector3(-1000, -1000, 0);
-        private Transform _cacheTransform;
-        
-        public override void Awake()
+
+
+        protected override void Awake()
         {
             base.Awake();
-            _cacheTransform = transform;
             if (null != skills)
             {
                 foreach (var skill in skills)
                 {
-                    var instanceSkill = Instantiate<global::Skill.Skill>(skill);
-                    instanceSkills.Add(instanceSkill);
+                    var instanceSkill = Instantiate(skill);
+                    _instanceSkills.Add(instanceSkill);
                     instanceSkill.Init();
-                    
                 }
             }
         }
+
         public override void Tick(float deltaTime)
         {
             base.Tick(deltaTime);
 
-            if (null != curSkill)
+            if (null != _curSkill)
             {
-                curSkill.ExecuteSkill(deltaTime, this);
+                _curSkill.ExecuteSkill(deltaTime, this);
             }
 
-            if (_lastPosition != _cacheTransform.position)
+            if (_lastPosition != cacheTransform.position)
             {
-                _lastPosition = _cacheTransform.position;
+                _lastPosition = cacheTransform.position;
                 positionChanged?.Invoke();
             }
-            
         }
     }
 }

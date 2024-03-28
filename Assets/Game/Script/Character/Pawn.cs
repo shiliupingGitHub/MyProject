@@ -7,8 +7,9 @@ namespace Game.Script.Character
     [RequireComponent(typeof(NetworkTransformReliable))]
     public class Pawn : Actor
     {
-        public virtual void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             Common.Game.Instance.RegisterPawn(this);
         }
 

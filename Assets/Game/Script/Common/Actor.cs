@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Game.Script.Map;
 using Game.Script.Subsystem;
 using Mirror;
@@ -18,7 +19,7 @@ namespace Game.Script.Common
     {
         protected virtual Vector2Int[] Areas => null;
         protected virtual bool IsBlock => false;
-        private Transform _cacheTransform;
+        protected Transform cacheTransform;
         private int _areaIndex = -1;
         private readonly List<(int, int)> _nowArea = new();
         private readonly List<(int, int)> _tempArea = new();
@@ -30,9 +31,14 @@ namespace Game.Script.Common
 
         protected virtual void Start()
         {
-            _cacheTransform = transform;
+            
             UpdateArea();
             positionChanged += UpdateArea;
+        }
+
+        protected virtual void Awake()
+        {
+            cacheTransform = transform;
         }
 
         protected virtual void OnDestroy()
@@ -59,7 +65,7 @@ namespace Game.Script.Common
         protected virtual void UpdateArea()
         {
             var mapSubsystem = Game.Instance.GetSubsystem<MapSubsystem>();
-            var position = _cacheTransform.position;
+            var position = cacheTransform.position;
             var (nowAreaIndex, x, y) = mapSubsystem.CreateAreaIndex(position);
 
             if (nowAreaIndex != _areaIndex)
