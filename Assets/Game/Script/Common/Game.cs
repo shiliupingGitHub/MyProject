@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Game.Script.Character;
 using Game.Script.Map;
 using Game.Script.Res;
@@ -83,6 +84,15 @@ namespace Game.Script.Common
             }
         }
 
+         async void DoTick()
+        {
+            while (true)
+            {
+                Tick();
+                await Task.Delay(1);
+            }
+        }
+
         public void UnRegisterPawn(Pawn pawn)
         {
             _pawns.Remove(pawn);
@@ -117,7 +127,9 @@ namespace Game.Script.Common
             {
                 subsystem.Value.OnInitialize();
             }
-          
+
+            DoTick();
+
         }
     }
 }

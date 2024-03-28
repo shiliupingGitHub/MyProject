@@ -29,7 +29,7 @@ namespace Game.Script.AI.Action
 
         public override TaskStatus OnUpdate()
         {
-            return base.OnUpdate();
+            return TaskStatus.Success;
         }
     }
 }
