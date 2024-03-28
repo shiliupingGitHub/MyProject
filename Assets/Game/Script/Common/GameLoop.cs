@@ -16,6 +16,7 @@ namespace Game.Script.Common
         {
             
         }
+        
 
         private void Update()
         {

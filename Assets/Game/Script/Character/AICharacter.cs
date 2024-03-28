@@ -18,5 +18,6 @@ namespace Game.Script.Character
             _gameBehaviorTree.ExternalBehavior = etbt;
             _gameBehaviorTree.EnableBehavior();
         }
+        
     }
 }
