@@ -86,6 +86,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  centerOffset: {x: 0.5, y: 0.5, z: 0}
   skills:
   - {fileID: 11400000, guid: 84e3ddaaee53bf74493b44a67a3a1da3, type: 2}
   MoveUpAction: {fileID: -2468474444503369740, guid: 16f4a2f894cb2fe45820759235d1629f,

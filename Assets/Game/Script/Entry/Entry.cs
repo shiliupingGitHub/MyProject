@@ -3,7 +3,6 @@ using Game.Script.Character.Skill;
 using Game.Script.Game;
 using Game.Script.Level;
 using Game.Script.Misc;
-using Game.Script.Res;
 using Game.Script.UI;
 using UnityEngine;
 namespace Game.Script.Entry
@@ -13,7 +12,6 @@ namespace Game.Script.Entry
         public GameMode entryMode  = GameMode.Hall;
         private void Start()
         {
-            GameResMgr.Instance.Init();
             Game.Game.Instance.Mode = entryMode;
             UIManager.Instance.Init();
             GameTickManager.Instance.Init();

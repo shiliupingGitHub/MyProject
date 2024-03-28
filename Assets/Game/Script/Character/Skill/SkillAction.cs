@@ -13,6 +13,6 @@ namespace Game.Script.Character.Skill
         {
             _executeTime = time;
         }
-        public virtual void Execute(BaseController controller){}
+        public virtual void Execute(Pawn controller){}
     }
 }

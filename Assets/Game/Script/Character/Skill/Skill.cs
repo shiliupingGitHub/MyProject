@@ -70,7 +70,7 @@ namespace Skill
             _skillStatus = SkillStatus.Executing;
         }
 
-        public bool ExecuteSkill(float deltaTime, BaseController controller)
+        public bool ExecuteSkill(float deltaTime, Pawn controller)
         {
 
             if (_skillStatus != SkillStatus.Executing)

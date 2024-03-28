@@ -2,18 +2,25 @@
 using CSVHelper;
 using Game.Script.Common;
 using Mirror;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace Game.Script.Res
 {
+    [InitializeOnLoad]
+    public static class GameResInitializer
+    {
+        static GameResInitializer()
+        {
+            GameResMgr.Instance.Init();
+        }
+    }
     public class GameResMgr : Singleton<GameResMgr>
     {
 
         public void Init()
         {
-           var op = Addressables.InitializeAsync();
-           op.WaitForCompletion();
             CsvHelper.mLoader += OnCsvRead;
             NetworkClient.OnSpawnHook += OnSpawnNetGo;
         }

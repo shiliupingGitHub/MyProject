@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game.Script.Character
 {
-    public class BaseSkillController : BaseController
+    public class Character : Pawn
     {
         public List<global::Skill.Skill> skills = new();
 

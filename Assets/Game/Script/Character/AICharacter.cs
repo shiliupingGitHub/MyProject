@@ -4,7 +4,7 @@ using Game.Script.AI;
 
 namespace Game.Script.Character
 {
-    public class AIController : BaseSkillController
+    public class AICharacter : Character
     {
         private GameBehaviorTree _gameBehaviorTree;
         public ExternalBehavior _externalBehaviorTree;

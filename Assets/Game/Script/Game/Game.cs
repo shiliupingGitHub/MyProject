@@ -21,20 +21,20 @@ namespace Game.Script.Game
     {
 
         public System.Action<MapScript> OnMapBkLoad;
-        public System.Action<GamePlayerController> OnLocalPlayerLoad;
+        public System.Action<FightCharacter> OnLocalPlayerLoad;
         public GameMode Mode { set; get; } = GameMode.Host;
 
         private  Dictionary<System.Type, GameSubsystem> _subsystems = new();
-        private List<BaseController> _controllers = new();
-        private GamePlayerController _myController;
+        private List<Pawn> _pawns = new();
+        private FightCharacter _myController;
         private MapScript _mapScript;
         private const string KcpNetMgrPath = "Assets/Game/Res/Misc/KcpFightNetworkManager.prefab";
         private GameObject networkMgrGo = null;
-        public void RegisterController(BaseController controller)
+        public void RegisterPawn(Pawn pawn)
         {
-            if (!_controllers.Contains(controller))
+            if (!_pawns.Contains(pawn))
             {
-                _controllers.Add(controller);
+                _pawns.Add(pawn);
             }
         }
        public void LoadNetWorkManager()
@@ -64,7 +64,7 @@ namespace Game.Script.Game
             }
         }
 
-        public GamePlayerController MyController
+        public FightCharacter MyController
         {
             set
             {
@@ -80,15 +80,15 @@ namespace Game.Script.Game
 
         public void Tick()
         {
-            foreach (var controller in _controllers)
+            foreach (var pawn in _pawns)
             {
-                controller.Tick(Time.unscaledDeltaTime);
+                pawn.Tick(Time.unscaledDeltaTime);
             }
         }
 
-        public void UnRegisterController(BaseController controller)
+        public void UnRegisterPawn(Pawn pawn)
         {
-            _controllers.Remove(controller);
+            _pawns.Remove(pawn);
         }
 
         public T GetSubsystem<T>() where T: GameSubsystem

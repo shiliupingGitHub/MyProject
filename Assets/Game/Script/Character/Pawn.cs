@@ -6,17 +6,17 @@ using UnityEngine;
 namespace Game.Script.Character
 {
     [RequireComponent(typeof(NetworkTransformReliable))]
-    public class BaseController : Actor
+    public class Pawn : Actor
     {
         public virtual void Awake()
         {
-            Game.Game.Instance.RegisterController(this);
+            Game.Game.Instance.RegisterPawn(this);
         }
 
         protected override void OnDestroy()  
         {
             base.OnDestroy();
-            Game.Game.Instance.UnRegisterController(this);
+            Game.Game.Instance.UnRegisterPawn(this);
         }
         
         public virtual void Tick(float deltaTime)
