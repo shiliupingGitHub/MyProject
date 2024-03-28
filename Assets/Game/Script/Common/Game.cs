@@ -26,7 +26,7 @@ namespace Game.Script.Common
         private readonly List<Pawn> _pawns = new();
         private FightCharacter _myController;
         private MapBk _mapBk;
-        private const string KcpNetMgrPath = "Assets/Game/Res/Misc/KcpFightNetworkManager.prefab";
+        private const string KcpNetMgrPath = "Assets/Game/Res/Net/KcpFightNetworkManager.prefab";
         private GameObject _networkMgrGo;
         
         public void RegisterPawn(Pawn pawn)
