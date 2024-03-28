@@ -18,14 +18,14 @@ namespace Game.Script.Common
     public class Game : SingletonWithOnInstance<Game>
     {
 
-        public System.Action<MapScript> mapBkLoad;
+        public System.Action<MapBk> mapBkLoad;
         public System.Action<FightCharacter> localPlayerLoad;
         public GameMode Mode { set; get; } = GameMode.Host;
 
         private readonly Dictionary<System.Type, GameSubsystem> _subsystems = new();
         private readonly List<Pawn> _pawns = new();
         private FightCharacter _myController;
-        private MapScript _mapScript;
+        private MapBk _mapBk;
         private const string KcpNetMgrPath = "Assets/Game/Res/Misc/KcpFightNetworkManager.prefab";
         private GameObject _networkMgrGo;
         
@@ -47,18 +47,18 @@ namespace Game.Script.Common
             _networkMgrGo = Object.Instantiate(template);
         }
         
-        public MapScript MapScript
+        public MapBk MapBk
         {
             set
             {
-                _mapScript = value;
+                _mapBk = value;
 
                 if (mapBkLoad != null)
                 {
-                    mapBkLoad.Invoke(_mapScript);
+                    mapBkLoad.Invoke(_mapBk);
                 }
             }
-            get => _mapScript;
+            get => _mapBk;
         }
 
         public FightCharacter MyController

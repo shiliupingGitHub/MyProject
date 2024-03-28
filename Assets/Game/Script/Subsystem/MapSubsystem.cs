@@ -15,7 +15,7 @@ namespace Game.Script.Subsystem
         string AssetMapPath => "Assets/Game/Res/Map/Data/";
 
         string MapExtension => ".txt";
-        private MapScript _mapScript;
+        private MapBk _mapBk;
 
         private readonly Dictionary<uint, MapArea> _areas = new();
 
@@ -29,7 +29,7 @@ namespace Game.Script.Subsystem
 
             Common.Game.Instance.mapBkLoad += script =>
             {
-                _mapScript = script;
+                _mapBk = script;
                 CheckMap();
                 GenerateInitAreas();
             };
@@ -50,12 +50,12 @@ namespace Game.Script.Subsystem
 
         void CheckMap()
         {
-            if (Common.Game.Instance.MapScript != null && Common.Game.Instance.MyController != null)
+            if (Common.Game.Instance.MapBk != null && Common.Game.Instance.MyController != null)
             {
                 var tr = Common.Game.Instance.MyController.transform;
-                Common.Game.Instance.MapScript.virtualCamera.Follow = tr;
-                Common.Game.Instance.MapScript.virtualCamera.LookAt = tr;
-                Common.Game.Instance.MapScript.virtualCamera.gameObject.SetActive(true);
+                Common.Game.Instance.MapBk.virtualCamera.Follow = tr;
+                Common.Game.Instance.MapBk.virtualCamera.LookAt = tr;
+                Common.Game.Instance.MapBk.virtualCamera.gameObject.SetActive(true);
                 HideLoading();
             }
         }
@@ -86,16 +86,16 @@ namespace Game.Script.Subsystem
         }
         public (int, int, int) CreateAreaIndex(Vector3 position)
         {
-            if (_mapScript == null)
+            if (_mapBk == null)
             {
                 return (-1, -1, -1);
             }
 
             
-            Vector3 relative = position - _mapScript.transform.position;
+            Vector3 relative = position - _mapBk.transform.position;
 
-            int x = Mathf.FloorToInt(relative.x / _mapScript.MyGrid.cellSize.x);
-            int y = Mathf.FloorToInt(relative.y / _mapScript.MyGrid.cellSize.y);
+            int x = Mathf.FloorToInt(relative.x / _mapBk.MyGrid.cellSize.x);
+            int y = Mathf.FloorToInt(relative.y / _mapBk.MyGrid.cellSize.y);
 
             if (x < 0)
             {
@@ -126,15 +126,15 @@ namespace Game.Script.Subsystem
         {
             _areas.Clear();
 
-            if (_mapScript == null)
+            if (_mapBk == null)
             {
                 return;
             }
             
-            if(_mapScript.blockTilesRoot == null)
+            if(_mapBk.blockTilesRoot == null)
                 return;
 
-            var tileMaps = _mapScript.blockTilesRoot.GetComponentsInChildren<Tilemap>();
+            var tileMaps = _mapBk.blockTilesRoot.GetComponentsInChildren<Tilemap>();
 
             foreach (var tilemap in tileMaps)
             {
@@ -146,9 +146,9 @@ namespace Game.Script.Subsystem
                     if (null != sp)
                     {
                         if (pos.x >= 0
-                            && pos.x < _mapScript.xGridNum
+                            && pos.x < _mapBk.xGridNum
                             && pos.y >= 0
-                            && pos.y < _mapScript.yGridNum
+                            && pos.y < _mapBk.yGridNum
                            )
                         {
                             AddAreaMapBlock((uint)pos.x, (uint)pos.y);

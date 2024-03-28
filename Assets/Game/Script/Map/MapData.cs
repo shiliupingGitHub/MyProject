@@ -47,9 +47,9 @@ namespace Game.Script.Map
 
         public bool AddActor(Vector3 position, ActorConfig actorConfig, bool preview = true, bool net = false)
         {
-            MapScript mapScript = GameObject.FindObjectOfType<MapScript>();
+            MapBk mapBk = GameObject.FindObjectOfType<MapBk>();
 
-            if (mapScript == null)
+            if (mapBk == null)
                 return false;
 
             
@@ -73,7 +73,7 @@ namespace Game.Script.Map
 
                 ActorData actorData = new();
                 actorData.go = go;
-                (int x, int y) = mapScript.GetGridIndex(position);
+                (int x, int y) = mapBk.GetGridIndex(position);
                 actorData.x = x;
                 actorData.y = y;
                 actorData.id = actorConfig.id;
@@ -101,7 +101,7 @@ namespace Game.Script.Map
 
                 if (Preview)
                 {
-                    var mapScript = _bkMapGo.GetComponent<MapScript>();
+                    var mapScript = _bkMapGo.GetComponent<MapBk>();
                     
                     mapScript.virtualCamera.gameObject.SetActive(false);
                     var brain =  mapScript.GetComponentInChildren<CinemachineBrain>();
@@ -113,9 +113,9 @@ namespace Game.Script.Map
 
         public void LoadActorsSync(bool preview = true, bool net = false)
         {
-            MapScript mapScript = Object.FindObjectOfType<MapScript>();
+            MapBk mapBk = Object.FindObjectOfType<MapBk>();
 
-            if (mapScript == null)
+            if (mapBk == null)
                 return ;
             foreach (var actorData in _actors)
             {
@@ -138,7 +138,7 @@ namespace Game.Script.Map
                         actor.ActorType = ActorType.Preview;
                     }
 
-                    go.transform.position = mapScript.GetPosition(actorData.x, actorData.y);
+                    go.transform.position = mapBk.GetPosition(actorData.x, actorData.y);
                     actorData.go = go;
 
                     if (net)

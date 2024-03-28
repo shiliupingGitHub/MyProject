@@ -90,11 +90,11 @@ namespace Game.Script.UI.Frames
                 {
                     var worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-                    MapScript mapScript = Object.FindObjectOfType<MapScript>();
+                    MapBk mapBk = Object.FindObjectOfType<MapBk>();
 
-                    if (null != mapScript)
+                    if (null != mapBk)
                     {
-                        _curSelectShadow.transform.position =  mapScript.ConvertToGridPosition(worldPosition);
+                        _curSelectShadow.transform.position =  mapBk.ConvertToGridPosition(worldPosition);
                     }
                 }
             }
@@ -333,15 +333,15 @@ namespace Game.Script.UI.Frames
 
         private string MapExtension => ".txt";
 
-        void SetCameraCenter(MapScript mapScript)
+        void SetCameraCenter(MapBk mapBk)
         {
-            Grid grid = mapScript.MyGrid;
+            Grid grid = mapBk.MyGrid;
 
             if (grid != null)
             {
-                Vector3 center = mapScript.transform.position;
+                Vector3 center = mapBk.transform.position;
                 var cellSize = grid.cellSize;
-                center += new Vector3(cellSize.x * mapScript.xGridNum * 0.5f, cellSize.y * mapScript.yGridNum * 0.5f, 0);
+                center += new Vector3(cellSize.x * mapBk.xGridNum * 0.5f, cellSize.y * mapBk.yGridNum * 0.5f, 0);
 
                 if (Camera.main != null)
                 {
@@ -366,10 +366,10 @@ namespace Game.Script.UI.Frames
                 _curMapData = mapSubsystem.New(_ddBk.value + 1);
                 _curMapData.LoadSync();
                 EnableInput();
-                MapScript mapScript = Object.FindObjectOfType<MapScript>();
-                if (mapScript != null)
+                MapBk mapBk = Object.FindObjectOfType<MapBk>();
+                if (mapBk != null)
                 {
-                    SetCameraCenter(mapScript);
+                    SetCameraCenter(mapBk);
                     GameSetting.Instance.ShowGrid = true;
                 }
                 
@@ -396,12 +396,12 @@ namespace Game.Script.UI.Frames
                     {
                         _curMapData = mapData;
                         _curMapData.LoadSync();
-                        MapScript mapScript = Object.FindObjectOfType<MapScript>();
+                        MapBk mapBk = Object.FindObjectOfType<MapBk>();
 
-                        if (mapScript != null)
+                        if (mapBk != null)
                         {
                             EnableInput();
-                            SetCameraCenter(mapScript);
+                            SetCameraCenter(mapBk);
                             GameSetting.Instance.ShowGrid = true;
                             _inputSaveName.text = fileName;
                         }

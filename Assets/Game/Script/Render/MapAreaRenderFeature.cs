@@ -33,9 +33,9 @@ namespace Game.Script.Render
             // You don't have to call ScriptableRenderContext.submit, the render pipeline will call it at specific points in the pipeline.
             public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
             {
-                MapScript mapScript = Object.FindObjectOfType<MapScript>();
+                MapBk mapBk = Object.FindObjectOfType<MapBk>();
 
-                if (mapScript == null)
+                if (mapBk == null)
                 {
                     return;
                 }
@@ -52,7 +52,7 @@ namespace Game.Script.Render
 
                 if (null != drawMaterial)
                 {
-                    CreateMesh(mapScript);
+                    CreateMesh(mapBk);
 
                     if (null != _gridMesh)
                     {
@@ -68,7 +68,7 @@ namespace Game.Script.Render
             
             }
 
-            void CreateMesh(MapScript script)
+            void CreateMesh(MapBk bk)
             {
                 if (null == _gridMesh)
                 {
@@ -76,23 +76,23 @@ namespace Game.Script.Render
                 }
                 _gridMesh.Clear();
 
-                Grid grid = script.MyGrid;
+                Grid grid = bk.MyGrid;
 
                 if (null == grid)
                 {
                     return;
                 }
 
-                if (_curGridX == script.xGridNum && _curGridY == script.yGridNum)
+                if (_curGridX == bk.xGridNum && _curGridY == bk.yGridNum)
                 {
                     return;
                 }
             
                 int index = 0;
-                Vector3 start = script.transform.position;
+                Vector3 start = bk.transform.position;
                 List<int> indices = new();
                 List<Vector3> vertices = new();
-                for (int x = 0; x <= script.xGridNum; x++)
+                for (int x = 0; x <= bk.xGridNum; x++)
                 {
                     var v0 = start + new Vector3(x * grid.cellSize.x, 0, 0);
                     vertices.Add(v0);
@@ -100,13 +100,13 @@ namespace Game.Script.Render
                     index++;
 
                     var cellSize = grid.cellSize;
-                    var v1 = start + new Vector3(x * cellSize.x, script.yGridNum * cellSize.y, 0);
+                    var v1 = start + new Vector3(x * cellSize.x, bk.yGridNum * cellSize.y, 0);
                     vertices.Add(v1);
                     indices.Add(index);
                     index++;
 
                     var size = grid.cellSize;
-                    var v2 = start + new Vector3(x * size.x + lineSize, script.yGridNum * size.y, 0);
+                    var v2 = start + new Vector3(x * size.x + lineSize, bk.yGridNum * size.y, 0);
                     vertices.Add(v2);
                     indices.Add(index);
                     index++;
@@ -119,7 +119,7 @@ namespace Game.Script.Render
           
                 }
             
-                for (int y = 0; y <= script.yGridNum; y++)
+                for (int y = 0; y <= bk.yGridNum; y++)
                 {
                     var v0 = start + new Vector3(0,  y * grid.cellSize.y, 0);
                     vertices.Add(v0);
@@ -127,14 +127,14 @@ namespace Game.Script.Render
                     index++;
 
                     var cellSize = grid.cellSize;
-                    var v1 = start + new Vector3(script.xGridNum * cellSize.x , y * cellSize.y , 0);
+                    var v1 = start + new Vector3(bk.xGridNum * cellSize.x , y * cellSize.y , 0);
                     vertices.Add(v1);
                     indices.Add(index);
                     index++;
 
 
                     var size = grid.cellSize;
-                    var v2 = start + new Vector3(script.xGridNum * size.x , y * size.y + lineSize , 0);
+                    var v2 = start + new Vector3(bk.xGridNum * size.x , y * size.y + lineSize , 0);
                     vertices.Add(v2);
                     indices.Add(index);
                     index++;

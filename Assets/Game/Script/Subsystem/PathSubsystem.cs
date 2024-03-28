@@ -68,7 +68,7 @@ namespace Game.Script.Subsystem
 
         void OnTick()
         {
-            if (Common.Game.Instance.MapScript == null)
+            if (Common.Game.Instance.MapBk == null)
             {
                 return;
             }
@@ -81,7 +81,7 @@ namespace Game.Script.Subsystem
                 {
                     var request = _pathRequestList[i];
 
-                    var path = DoPath(request.startPosition, request.endPosition, Common.Game.Instance.MapScript);
+                    var path = DoPath(request.startPosition, request.endPosition, Common.Game.Instance.MapBk);
 
                     lock (this)
                     {
@@ -92,10 +92,10 @@ namespace Game.Script.Subsystem
             }
         }
 
-        private List<(int, int)> DoPath(Vector3 start, Vector3 end, MapScript mapScript)
+        private List<(int, int)> DoPath(Vector3 start, Vector3 end, MapBk mapBk)
         {
-            (int startX, int startY) = mapScript.GetGridIndex(start);
-            (int endX, int endY) = mapScript.GetGridIndex(end);
+            (int startX, int startY) = mapBk.GetGridIndex(start);
+            (int endX, int endY) = mapBk.GetGridIndex(end);
             return GeneratePath(startX, startY, endX, endY);
         }
 
@@ -145,8 +145,8 @@ namespace Game.Script.Subsystem
         {
             List<(bool, (int, int))> neighbourCells = new List<(bool, (int, int))>();
 
-            int heigth = Common.Game.Instance.MapScript.yGridNum;
-            int width = Common.Game.Instance.MapScript.xGridNum;
+            int heigth = Common.Game.Instance.MapBk.yGridNum;
+            int width = Common.Game.Instance.MapBk.xGridNum;
 
             int range = 1;
             int yStart = (int)MathF.Max(0, yCordinate - range);
@@ -209,8 +209,8 @@ namespace Game.Script.Subsystem
             Func<int, int, int, int, float> heuristic = manhattanHeuristic ? CalcHeuristicManhattan : CalcHeuristicEuclidean;
 
             // Get the dimensions of the map
-            int mapHeight = Common.Game.Instance.MapScript.yGridNum;
-            int mapWidth = Common.Game.Instance.MapScript.xGridNum;
+            int mapHeight = Common.Game.Instance.MapBk.yGridNum;
+            int mapWidth = Common.Game.Instance.MapBk.xGridNum;
 
             // Define constants and arrays needed for the algorithm
             float sqrt2 = Mathf.Sqrt(2);

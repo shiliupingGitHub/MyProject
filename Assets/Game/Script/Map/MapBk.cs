@@ -7,7 +7,7 @@ namespace Game.Script.Map
 {
     [RequireComponent(typeof(Grid))]
     [RequireComponent(typeof(NetworkIdentity))]
-    public class MapScript : MonoBehaviour
+    public class MapBk : MonoBehaviour
     {
         [Label("X方向数量")] public int xGridNum = 100;
 
@@ -67,7 +67,7 @@ namespace Game.Script.Map
 
         private void Awake()
         {
-            Common.Game.Instance.MapScript = this;
+            Common.Game.Instance.MapBk = this;
         }
 
 
