@@ -20,6 +20,8 @@ namespace Game.Script.Render
             private Mesh _gridMesh;
             public Material drawMaterial;
             public float lineSize = 0.1f;
+            private int _curGridX = 0;
+            private int _curGridY = 0;
             public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
             {
             }
@@ -50,11 +52,16 @@ namespace Game.Script.Render
                 if (null != drawMaterial)
                 {
                     CreateMesh(mapScript);
-                    CommandBuffer cmd = CommandBufferPool.Get();
+
+                    if (null != _gridMesh)
+                    {
+                        CommandBuffer cmd = CommandBufferPool.Get();
                 
-                    cmd.DrawMesh(_gridMesh, Matrix4x4.identity, drawMaterial, 0);
-                    context.ExecuteCommandBuffer(cmd);
-                    CommandBufferPool.Release(cmd);
+                        cmd.DrawMesh(_gridMesh, Matrix4x4.identity, drawMaterial, 0);
+                        context.ExecuteCommandBuffer(cmd);
+                        CommandBufferPool.Release(cmd);
+                    }
+       
                 }
            
             
@@ -71,6 +78,11 @@ namespace Game.Script.Render
                 Grid grid = script.MyGrid;
 
                 if (null == grid)
+                {
+                    return;
+                }
+
+                if (_curGridX == script.xGridNum && _curGridY == script.yGridNum)
                 {
                     return;
                 }
