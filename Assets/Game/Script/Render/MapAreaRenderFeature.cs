@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Game.Script.Map;
+using Game.Script.Setting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -39,7 +40,7 @@ namespace Game.Script.Render
                     return;
                 }
 
-                if (!mapScript.showGrid)
+                if (!GameSetting.Instance.ShowGrid)
                 {
                     return;
                 }

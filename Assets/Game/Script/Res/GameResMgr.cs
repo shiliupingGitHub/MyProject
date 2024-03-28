@@ -8,6 +8,7 @@ using UnityEngine.AddressableAssets;
 
 namespace Game.Script.Res
 {
+   
     [InitializeOnLoad]
     public static class GameResInitializer
     {
@@ -21,8 +22,8 @@ namespace Game.Script.Res
 
         public void Init()
         {
-            CsvHelper.mLoader += OnCsvRead;
-            NetworkClient.OnSpawnHook += OnSpawnNetGo;
+            CsvHelper.mLoader = OnCsvRead;
+            NetworkClient.OnSpawnHook = OnSpawnNetGo;
         }
 
         GameObject OnSpawnNetGo(SpawnMessage message)

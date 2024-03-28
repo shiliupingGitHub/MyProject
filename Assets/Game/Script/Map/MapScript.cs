@@ -12,9 +12,7 @@ namespace Game.Script.Map
         [Label("X方向数量")] public int xGridNum = 100;
 
         [Label("Y方向数量")] public int yGridNum = 100;
-
-        public bool showGrid = false;
-
+        
         public CinemachineVirtualCamera virtualCamera;
         public Transform blockTilesRoot;
 

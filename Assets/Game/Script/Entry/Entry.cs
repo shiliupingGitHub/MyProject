@@ -12,7 +12,6 @@ namespace Game.Script.Entry
         private void Start()
         {
             Common.Game.Instance.Mode = entryMode;
-            UIManager.Instance.Init();
             var levelSubsystem = Common.Game.Instance.GetSubsystem<LevelSubsystem>();
             switch (entryMode)
             {

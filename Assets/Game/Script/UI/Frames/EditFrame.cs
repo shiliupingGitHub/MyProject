@@ -6,6 +6,7 @@ using Game.Script.Attribute;
 using Game.Script.Common;
 using Game.Script.Map;
 using Game.Script.Res;
+using Game.Script.Setting;
 using Game.Script.Subsystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -369,7 +370,7 @@ namespace Game.Script.UI.Frames
                 if (mapScript != null)
                 {
                     SetCameraCenter(mapScript);
-                    mapScript.showGrid = true;
+                    GameSetting.Instance.ShowGrid = true;
                 }
                 
             });
@@ -401,7 +402,7 @@ namespace Game.Script.UI.Frames
                         {
                             EnableInput();
                             SetCameraCenter(mapScript);
-                            mapScript.showGrid = true;
+                            GameSetting.Instance.ShowGrid = true;
                             _inputSaveName.text = fileName;
                         }
                     }

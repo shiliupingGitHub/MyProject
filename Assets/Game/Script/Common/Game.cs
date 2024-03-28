@@ -28,6 +28,7 @@ namespace Game.Script.Common
         private MapScript _mapScript;
         private const string KcpNetMgrPath = "Assets/Game/Res/Misc/KcpFightNetworkManager.prefab";
         private GameObject _networkMgrGo;
+        
         public void RegisterPawn(Pawn pawn)
         {
             if (!_pawns.Contains(pawn))
@@ -35,6 +36,7 @@ namespace Game.Script.Common
                 _pawns.Add(pawn);
             }
         }
+        
        public void LoadNetWorkManager()
         {
             if (_networkMgrGo != null)

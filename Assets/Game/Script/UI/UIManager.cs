@@ -12,7 +12,13 @@ namespace Game.Script.UI
         private readonly List<Frame> _queueFrames = new List<Frame>();
         private Transform _baseRoot;
         private Transform _topRoot;
-        public void Init()
+        
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        static void RuntimeLoad()
+        {
+            Instance.Init();
+        }
+         void Init()
         {
             if (!_bInit)
             {
