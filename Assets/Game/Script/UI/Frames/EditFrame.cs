@@ -1,10 +1,10 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Game.Script.Attribute;
 using Game.Script.Common;
 using Game.Script.Map;
-using Game.Script.Misc;
 using Game.Script.Res;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,49 +17,62 @@ namespace Game.Script.UI.Frames
     {
         protected override string ResPath => "Assets/Game/Res/UI/EditFrame.prefab";
         [UIPath("ddBk")]
-        private Dropdown ddBk;
+        private Dropdown _ddBk;
 
         private MapData _curMapData;
         private const float ZoomFactor = 400;
         private const float OrthographicSizeMin = 0.5f;
         private const float OrthographicSizeMax = 20;
         private const float MoveFactor = 0.01f;
-        private bool bEnabledInput = false;
-        private Dictionary<string, InputActionReference> _inputActionReferences = new();
-        private bool bIsDraging = false;
-        private bool bAddTick = false;
-        private Vector3 lastDragPosition = Vector3.zero;
-        private ActorConfig curSelectActorConfig;
-        private GameObject curSelectShadow;
+        private bool _bEnabledInput;
+        private readonly Dictionary<string, InputActionReference> _inputActionReferences = new();
+        private bool _bDrag;
+        private bool _bAddTick;
+        private Vector3 _lastDragPosition = Vector3.zero;
+        private ActorConfig _curSelectActorConfig;
+        private GameObject _curSelectShadow;
+        private bool _bTicking ;
         [UIPath("InputSaveName")]
-        private InputField inputSaveName;
-        [UIPath("Load/ddSaveMaps")] private Dropdown ddSaveMaps;
-        [UIPath("btnNew")] private Button btnNew;
-        [UIPath("Load/btnLoad")] private Button btnLoad;
-        [UIPath("btnSave")] private Button btnSave;
-        [UIPath("ActorTemplate")] private GameObject actorTemplate;
-        [UIPath("svActors/Viewport/Content")] private Transform contentRoot;
+        private InputField _inputSaveName;
+        [UIPath("Load/ddSaveMaps")] private Dropdown _ddSaveMaps;
+        [UIPath("btnNew")] private Button _btnNew;
+        [UIPath("Load/btnLoad")] private Button _btnLoad;
+        [UIPath("btnSave")] private Button _btnSave;
+        [UIPath("ActorTemplate")] private GameObject _actorTemplate;
+        [UIPath("svActors/Viewport/Content")] private Transform _contentRoot;
+
+       
         void AddToTick()
         {
-            if (!bAddTick)
+            if (!_bAddTick)
             {
-                GameTickManager.Instance.AddTick(Tick);
-                bAddTick = true;
+                _bTicking = true;
+                _bAddTick = true;
+                DoTick();
             }
         }
 
         void RemoveTick()
         {
-            if (bAddTick)
+            if (_bAddTick)
             {
-                GameTickManager.Instance.RemoveTick(Tick);
-                bAddTick = false;
+                _bTicking = false;
+                _bAddTick = false;
+            }
+        }
+
+        async void DoTick()
+        {
+            while (_bTicking)
+            {
+                Tick();
+                await Task.Delay(1);
             }
         }
 
         void Tick()
         {
-            if (bIsDraging)
+            if (_bDrag)
             {
                 TickDrag();
             }
@@ -69,17 +82,19 @@ namespace Game.Script.UI.Frames
 
         void TickShadow()
         {
-            if (curSelectShadow != null)
+            if (_curSelectShadow != null)
             {
-                var worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-                MapScript mapScript = GameObject.FindObjectOfType<MapScript>();
-
-                if (null != mapScript)
+                if (Camera.main != null)
                 {
-                    curSelectShadow.transform.position =  mapScript.ConvertToGridPosition(worldPosition);
+                    var worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+                    MapScript mapScript = Object.FindObjectOfType<MapScript>();
+
+                    if (null != mapScript)
+                    {
+                        _curSelectShadow.transform.position =  mapScript.ConvertToGridPosition(worldPosition);
+                    }
                 }
-                
             }
         }
 
@@ -90,15 +105,20 @@ namespace Game.Script.UI.Frames
                 if (inputDrag.action.IsPressed())
                 {
                     var newPosition = Input.mousePosition;
-                    var delta = newPosition - lastDragPosition;
+                    var delta = newPosition - _lastDragPosition;
 
                     delta.z = 0;
 
-                    var cameraPosition = Camera.main.transform.position;
+                    if (Camera.main != null)
+                    {
+                        var transform = Camera.main.transform;
+                        var cameraPosition = transform.position;
 
-                    cameraPosition -= delta * MoveFactor;
-                    Camera.main.transform.position = cameraPosition;
-                    lastDragPosition = newPosition;
+                        cameraPosition -= delta * MoveFactor;
+                        transform.position = cameraPosition;
+                    }
+
+                    _lastDragPosition = newPosition;
 
                 }
             }
@@ -106,22 +126,15 @@ namespace Game.Script.UI.Frames
         void OnZoom(InputAction.CallbackContext callbackContext)
         {
             var delta = callbackContext.ReadValue<Vector2>();
-            var orthographicSize = Camera.main.orthographicSize;
+            if (Camera.main != null)
+            {
+                var orthographicSize = Camera.main.orthographicSize;
             
-            orthographicSize -= delta.y / ZoomFactor;
-            orthographicSize = Mathf.Clamp(orthographicSize, OrthographicSizeMin, OrthographicSizeMax);
-            Camera.main.orthographicSize = orthographicSize;
+                orthographicSize -= delta.y / ZoomFactor;
+                orthographicSize = Mathf.Clamp(orthographicSize, OrthographicSizeMin, OrthographicSizeMax);
+                Camera.main.orthographicSize = orthographicSize;
+            }
         }
-
-        void OnMove(InputAction.CallbackContext callbackContext)
-        {
-            var delta = callbackContext.ReadValue<Vector2>();
-            var curPosition = Camera.main.transform.position;
-
-            curPosition += new Vector3(delta.x * MoveFactor, delta.y * MoveFactor);
-            Camera.main.transform.position = curPosition;
-        }
-        
         void InitInput()
         {
             // hookActions.Add("Zoom", OnZoom);
@@ -141,32 +154,32 @@ namespace Game.Script.UI.Frames
             }
             if (_inputActionReferences.TryGetValue("EditDrag", out var inputDrag))
             {
-                inputDrag.action.started += delegate(InputAction.CallbackContext callbackContext)
+                inputDrag.action.started += delegate
                 {
-                    bIsDraging = true;
-                    lastDragPosition = Input.mousePosition;
+                    _bDrag = true;
+                    _lastDragPosition = Input.mousePosition;
                 };
                 
-                inputDrag.action.canceled += delegate(InputAction.CallbackContext callbackContext)
+                inputDrag.action.canceled += delegate
                 {
-                    bIsDraging = false;
+                    _bDrag = false;
                 };
             }
 
             if (_inputActionReferences.TryGetValue("EditAddActor", out var inputAddActor))
             {
-                inputAddActor.action.started += delegate(InputAction.CallbackContext callbackContext)
+                inputAddActor.action.started += delegate
                 {
-                    if (null != curSelectShadow && null != curSelectActorConfig && null != _curMapData)
+                    if (null != _curSelectShadow && null != _curSelectActorConfig && null != _curMapData)
                     {
-                        _curMapData.AddActor(curSelectShadow.transform.position,curSelectActorConfig);
+                        _curMapData.AddActor(_curSelectShadow.transform.position,_curSelectActorConfig);
                     }
                 };
             }
 
             if (_inputActionReferences.TryGetValue("CancelEditActor", out var inputCancelEditActor))
             {
-                inputCancelEditActor.action.started += delegate(InputAction.CallbackContext callbackContext)
+                inputCancelEditActor.action.started += delegate
                 {
                    SetSelectActor(null);
                 };
@@ -175,28 +188,28 @@ namespace Game.Script.UI.Frames
 
         void EnableInput()
         {
-            if (!bEnabledInput)
+            if (!_bEnabledInput)
             {
 
                 foreach (var input in _inputActionReferences)
                 {
                     input.Value.action.Enable();
                 }
-                bEnabledInput = true;
+                _bEnabledInput = true;
             }
            
         }
 
         void DisableInput()
         {
-            if (bEnabledInput)
+            if (_bEnabledInput)
             {
                 foreach (var input in _inputActionReferences)
                 {
                     input.Value.action.Disable();
                 }
 
-                bEnabledInput = false;
+                _bEnabledInput = false;
             }
             
         }
@@ -214,7 +227,7 @@ namespace Game.Script.UI.Frames
             var actorConfigs = ActorConfig.dic;
             foreach (var actorConfig in actorConfigs)
             {
-                var actorGo = Object.Instantiate(actorTemplate, contentRoot) as GameObject;
+                var actorGo = Object.Instantiate(_actorTemplate, _contentRoot);
                 actorGo.transform.localScale = Vector3.one;
                 actorGo.name = actorConfig.Value.id.ToString();
                 var text = actorGo.transform.Find("Name").GetComponent<Text>();
@@ -235,11 +248,11 @@ namespace Game.Script.UI.Frames
 
         void SetSelectActor(ActorConfig actorConfig)
         {
-            if (null != curSelectShadow)
+            if (null != _curSelectShadow)
             {
-                GameObject.Destroy(curSelectShadow);
-                curSelectShadow = null;
-                curSelectActorConfig = null;
+                Object.Destroy(_curSelectShadow);
+                _curSelectShadow = null;
+                _curSelectActorConfig = null;
             }
 
             if (actorConfig != null)
@@ -248,11 +261,11 @@ namespace Game.Script.UI.Frames
 
                 if (template)
                 {
-                    curSelectShadow = GameObject.Instantiate(template) as GameObject;
-                    curSelectActorConfig = actorConfig;
-                    curSelectShadow.tag = "Shadow";
+                    _curSelectShadow = Object.Instantiate(template);
+                    _curSelectActorConfig = actorConfig;
+                    _curSelectShadow.tag = "Shadow";
 
-                    var actor = curSelectShadow.GetComponent<Actor>();
+                    var actor = _curSelectShadow.GetComponent<Actor>();
 
                     if (null != actor)
                     {
@@ -267,16 +280,16 @@ namespace Game.Script.UI.Frames
         {
             var mapConfigs = MapBKConfig.dic;
 
-            List<string> mapDDContent = new();
-            ddBk.ClearOptions();
+            List<string> mapDdContent = new();
+            _ddBk.ClearOptions();
             for (int i = 1; i <= mapConfigs.Count; i++)
             {
                 var mapConfig = mapConfigs[i];
                 
-                mapDDContent.Add(mapConfig.name);
+                mapDdContent.Add(mapConfig.name);
                 
             }
-            ddBk.AddOptions(mapDDContent);
+            _ddBk.AddOptions(mapDdContent);
         }
 
         void InitSavedMaps()
@@ -286,7 +299,7 @@ namespace Game.Script.UI.Frames
 
         void RefreshSaveMaps()
         {
-            ddSaveMaps.ClearOptions();
+            _ddSaveMaps.ClearOptions();
             List<string> allMaps = new();
             var path = SavePath;
             var files = Directory.GetFiles(path);
@@ -299,30 +312,24 @@ namespace Game.Script.UI.Frames
                     allMaps.Add(fileName);
                 }
             }
-            ddSaveMaps.AddOptions(allMaps);
+            _ddSaveMaps.AddOptions(allMaps);
         }
 
-        public string SavePath
+        private string SavePath
         {
             get
             {
-                string path = System.IO.Path.Combine(Application.persistentDataPath, "Map");
+                string path = Path.Combine(Application.persistentDataPath, "Map");
                 if (Application.isEditor)
                 {
-                    path = System.IO.Path.Combine(Application.dataPath, "Game/Res/Map/Data");
+                    path = Path.Combine(Application.dataPath, "Game/Res/Map/Data");
                 }
 
                 return path;
             }
         }
 
-        public string MapExtension
-        {
-            get
-            {
-                return ".txt";
-            }
-        }
+        private string MapExtension => ".txt";
 
         void SetCameraCenter(MapScript mapScript)
         {
@@ -331,29 +338,33 @@ namespace Game.Script.UI.Frames
             if (grid != null)
             {
                 Vector3 center = mapScript.transform.position;
-                center += new Vector3(grid.cellSize.x * mapScript.xGridNum * 0.5f, grid.cellSize.y * mapScript.yGridNum * 0.5f, 0);
+                var cellSize = grid.cellSize;
+                center += new Vector3(cellSize.x * mapScript.xGridNum * 0.5f, cellSize.y * mapScript.yGridNum * 0.5f, 0);
 
-                Vector3 cameraPosition = Camera.main.transform.position;
-                cameraPosition.x = center.x;
-                cameraPosition.y = center.y;
-                Camera.main.transform.position = cameraPosition;
-
+                if (Camera.main != null)
+                {
+                    var transform = Camera.main.transform;
+                    Vector3 cameraPosition = transform.position;
+                    cameraPosition.x = center.x;
+                    cameraPosition.y = center.y;
+                    transform.position = cameraPosition;
+                }
             }
         }
         public override void Init(Transform parent)
         {
             base.Init(parent);
-            btnNew.GetComponent<Button>().onClick.AddListener(() =>
+            _btnNew.GetComponent<Button>().onClick.AddListener(() =>
             {
                 if (_curMapData != null)
                 {
                     _curMapData.UnLoadSync();
                 }
                 var mapSubsystem = Game.Game.Instance.GetSubsystem<MapSubsystem>();
-                _curMapData = mapSubsystem.New(ddBk.value + 1);
+                _curMapData = mapSubsystem.New(_ddBk.value + 1);
                 _curMapData.LoadSync();
                 EnableInput();
-                MapScript mapScript = GameObject.FindObjectOfType<MapScript>();
+                MapScript mapScript = Object.FindObjectOfType<MapScript>();
                 if (mapScript != null)
                 {
                     SetCameraCenter(mapScript);
@@ -362,7 +373,7 @@ namespace Game.Script.UI.Frames
                 
             });
             
-            btnLoad.onClick.AddListener(() =>
+            _btnLoad.onClick.AddListener(() =>
             {
                 if (_curMapData != null)
                 {
@@ -370,7 +381,7 @@ namespace Game.Script.UI.Frames
                     _curMapData = null;
                 }
 
-                var fileName = ddSaveMaps.captionText.text;
+                var fileName = _ddSaveMaps.captionText.text;
 
                 var path = Path.Combine(SavePath, fileName + MapExtension);
 
@@ -383,30 +394,30 @@ namespace Game.Script.UI.Frames
                     {
                         _curMapData = mapData;
                         _curMapData.LoadSync();
-                        MapScript mapScript = GameObject.FindObjectOfType<MapScript>();
+                        MapScript mapScript = Object.FindObjectOfType<MapScript>();
 
                         if (mapScript != null)
                         {
                             EnableInput();
                             SetCameraCenter(mapScript);
                             mapScript.showGrid = true;
-                            inputSaveName.text = fileName;
+                            _inputSaveName.text = fileName;
                         }
                     }
                 }
 
             });
             
-            btnSave.GetComponent<Button>().onClick.AddListener(() =>
+            _btnSave.GetComponent<Button>().onClick.AddListener(() =>
             {
-                if (_curMapData != null && null != inputSaveName)
+                if (_curMapData != null && null != _inputSaveName)
                 {
-                    if (!string.IsNullOrEmpty(inputSaveName.text))
+                    if (!string.IsNullOrEmpty(_inputSaveName.text))
                     {
                         var data = _curMapData.Serialize();
                         string path = SavePath;
                         
-                        path = System.IO.Path.Combine(path, inputSaveName.text + MapExtension);
+                        path = System.IO.Path.Combine(path, _inputSaveName.text + MapExtension);
          
                         File.WriteAllText(path, data);
 #if UNITY_EDITOR

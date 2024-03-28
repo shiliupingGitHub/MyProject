@@ -34,8 +34,16 @@ namespace Game.Script.Game.Subsystem
                 _pathRequestList.Clear();
                 _pathId = 1;
             };
+            DoTick();
+        }
 
-            GameTickManager.Instance.AddTick(OnTick);
+        async void DoTick()
+        {
+            while (true)
+            {
+                OnTick();
+                await Task.Delay(1);
+            }
         }
 
         public ulong AddPath(Vector3 start, Vector3 end)

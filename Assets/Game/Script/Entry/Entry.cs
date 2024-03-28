@@ -14,9 +14,7 @@ namespace Game.Script.Entry
         {
             Game.Game.Instance.Mode = entryMode;
             UIManager.Instance.Init();
-            GameTickManager.Instance.Init();
             var levelSubsystem = Game.Game.Instance.GetSubsystem<LevelSubsystem>();
-            
             switch (entryMode)
             {
                 case GameMode.Hall:
