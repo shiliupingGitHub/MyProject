@@ -57,6 +57,7 @@ namespace Game.Script.Common
             }
             var template = GameResMgr.Instance.LoadAssetSync<GameObject>(KcpNetMgrPath);
             _networkMgrGo = Object.Instantiate(template);
+            _networkMgrGo.name = "NetworkMgr";
         }
         
         public MapBk MapBk
