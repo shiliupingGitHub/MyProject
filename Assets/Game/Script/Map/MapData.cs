@@ -45,6 +45,30 @@ namespace Game.Script.Map
            return JsonUtility.FromJson<MapData>(data);
         }
 
+        public void RemoveActor(Vector3 position)
+        {
+            MapBk mapBk = GameObject.FindObjectOfType<MapBk>();
+
+            if (mapBk == null)
+                return ;
+            
+            (int x, int y) = mapBk.GetGridIndex(position);
+
+            List<ActorData> removes = new();
+            foreach (var actor in _actors)
+            {
+                if (actor.x == x && actor.y == y)
+                {
+                    removes.Add(actor);
+                }
+            }
+
+            foreach (var remove in removes)
+            {
+                _actors.Remove(remove);
+                Object.Destroy(remove.go);
+            }
+        }
         public bool AddActor(Vector3 position, ActorConfig actorConfig, bool preview = true, bool net = false)
         {
             MapBk mapBk = GameObject.FindObjectOfType<MapBk>();

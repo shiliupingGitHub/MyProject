@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Game.Script.Attribute;
@@ -18,8 +17,7 @@ namespace Game.Script.UI.Frames
     public class EditFrame : Frame
     {
         protected override string ResPath => "Assets/Game/Res/UI/EditFrame.prefab";
-        [UIPath("ddBk")]
-        private Dropdown _ddBk;
+        [UIPath("ddBk")] private Dropdown _ddBk;
 
         private MapData _curMapData;
         private const float ZoomFactor = 400;
@@ -33,9 +31,8 @@ namespace Game.Script.UI.Frames
         private Vector3 _lastDragPosition = Vector3.zero;
         private ActorConfig _curSelectActorConfig;
         private GameObject _curSelectShadow;
-        private bool _bTicking ;
-        [UIPath("InputSaveName")]
-        private InputField _inputSaveName;
+        private bool _bTicking;
+        [UIPath("InputSaveName")] private InputField _inputSaveName;
         [UIPath("Load/ddSaveMaps")] private Dropdown _ddSaveMaps;
         [UIPath("btnNew")] private Button _btnNew;
         [UIPath("Load/btnLoad")] private Button _btnLoad;
@@ -43,7 +40,7 @@ namespace Game.Script.UI.Frames
         [UIPath("ActorTemplate")] private GameObject _actorTemplate;
         [UIPath("svActors/Viewport/Content")] private Transform _contentRoot;
 
-       
+
         void AddToTick()
         {
             if (!_bAddTick)
@@ -78,8 +75,8 @@ namespace Game.Script.UI.Frames
             {
                 TickDrag();
             }
+
             TickShadow();
-            
         }
 
         void TickShadow()
@@ -94,7 +91,7 @@ namespace Game.Script.UI.Frames
 
                     if (null != mapBk)
                     {
-                        _curSelectShadow.transform.position =  mapBk.ConvertToGridPosition(worldPosition);
+                        _curSelectShadow.transform.position = mapBk.ConvertToGridPosition(worldPosition);
                     }
                 }
             }
@@ -121,22 +118,23 @@ namespace Game.Script.UI.Frames
                     }
 
                     _lastDragPosition = newPosition;
-
                 }
             }
         }
+
         void OnZoom(InputAction.CallbackContext callbackContext)
         {
             var delta = callbackContext.ReadValue<Vector2>();
             if (Camera.main != null)
             {
                 var orthographicSize = Camera.main.orthographicSize;
-            
+
                 orthographicSize -= delta.y / ZoomFactor;
                 orthographicSize = Mathf.Clamp(orthographicSize, OrthographicSizeMin, OrthographicSizeMax);
                 Camera.main.orthographicSize = orthographicSize;
             }
         }
+
         void InitInput()
         {
             // hookActions.Add("Zoom", OnZoom);
@@ -154,6 +152,7 @@ namespace Game.Script.UI.Frames
             {
                 inputZoom.action.performed += OnZoom;
             }
+
             if (_inputActionReferences.TryGetValue("EditDrag", out var inputDrag))
             {
                 inputDrag.action.started += delegate
@@ -161,11 +160,8 @@ namespace Game.Script.UI.Frames
                     _bDrag = true;
                     _lastDragPosition = Input.mousePosition;
                 };
-                
-                inputDrag.action.canceled += delegate
-                {
-                    _bDrag = false;
-                };
+
+                inputDrag.action.canceled += delegate { _bDrag = false; };
             }
 
             if (_inputActionReferences.TryGetValue("EditAddActor", out var inputAddActor))
@@ -174,17 +170,25 @@ namespace Game.Script.UI.Frames
                 {
                     if (null != _curSelectShadow && null != _curSelectActorConfig && null != _curMapData)
                     {
-                        _curMapData.AddActor(_curSelectShadow.transform.position,_curSelectActorConfig);
+                        _curMapData.AddActor(_curSelectShadow.transform.position, _curSelectActorConfig);
+                    }
+                    else
+                    {
+                        if (Input.GetKey(KeyCode.LeftShift))
+                        {
+                            if (null != _curMapData)
+                            {
+                                var worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                                _curMapData.RemoveActor(worldPosition);
+                            }
+                        }
                     }
                 };
             }
 
             if (_inputActionReferences.TryGetValue("CancelEditActor", out var inputCancelEditActor))
             {
-                inputCancelEditActor.action.started += delegate
-                {
-                   SetSelectActor(null);
-                };
+                inputCancelEditActor.action.started += delegate { SetSelectActor(null); };
             }
         }
 
@@ -192,14 +196,13 @@ namespace Game.Script.UI.Frames
         {
             if (!_bEnabledInput)
             {
-
                 foreach (var input in _inputActionReferences)
                 {
                     input.Value.action.Enable();
                 }
+
                 _bEnabledInput = true;
             }
-           
         }
 
         void DisableInput()
@@ -213,7 +216,6 @@ namespace Game.Script.UI.Frames
 
                 _bEnabledInput = false;
             }
-            
         }
 
         protected override void OnDestroy()
@@ -221,7 +223,6 @@ namespace Game.Script.UI.Frames
             DisableInput();
             base.OnDestroy();
             RemoveTick();
-            
         }
 
         void InitActors()
@@ -239,11 +240,7 @@ namespace Game.Script.UI.Frames
 
                 if (btn != null)
                 {
-                    btn.onClick.AddListener(() =>
-                    {
-                       
-                        SetSelectActor(actorConfig.Value);
-                    });
+                    btn.onClick.AddListener(() => { SetSelectActor(actorConfig.Value); });
                 }
             }
         }
@@ -275,7 +272,6 @@ namespace Game.Script.UI.Frames
                     }
                 }
             }
-            
         }
 
         void InitBks()
@@ -287,10 +283,10 @@ namespace Game.Script.UI.Frames
             for (int i = 1; i <= mapConfigs.Count; i++)
             {
                 var mapConfig = mapConfigs[i];
-                
+
                 mapDdContent.Add(mapConfig.name);
-                
             }
+
             _ddBk.AddOptions(mapDdContent);
         }
 
@@ -314,6 +310,7 @@ namespace Game.Script.UI.Frames
                     allMaps.Add(fileName);
                 }
             }
+
             _ddSaveMaps.AddOptions(allMaps);
         }
 
@@ -353,6 +350,7 @@ namespace Game.Script.UI.Frames
                 }
             }
         }
+
         public override void Init(Transform parent)
         {
             base.Init(parent);
@@ -362,6 +360,7 @@ namespace Game.Script.UI.Frames
                 {
                     _curMapData.UnLoadSync();
                 }
+
                 var mapSubsystem = Common.Game.Instance.GetSubsystem<MapSubsystem>();
                 _curMapData = mapSubsystem.New(_ddBk.value + 1);
                 _curMapData.LoadSync();
@@ -372,9 +371,8 @@ namespace Game.Script.UI.Frames
                     SetCameraCenter(mapBk);
                     GameSetting.Instance.ShowGrid = true;
                 }
-                
             });
-            
+
             _btnLoad.onClick.AddListener(() =>
             {
                 if (_curMapData != null)
@@ -407,9 +405,8 @@ namespace Game.Script.UI.Frames
                         }
                     }
                 }
-
             });
-            
+
             _btnSave.GetComponent<Button>().onClick.AddListener(() =>
             {
                 if (_curMapData != null && null != _inputSaveName)
@@ -418,9 +415,9 @@ namespace Game.Script.UI.Frames
                     {
                         var data = _curMapData.Serialize();
                         string path = SavePath;
-                        
+
                         path = Path.Combine(path, _inputSaveName.text + MapExtension);
-         
+
                         File.WriteAllText(path, data);
 #if UNITY_EDITOR
                         UnityEditor.AssetDatabase.Refresh();
@@ -428,9 +425,8 @@ namespace Game.Script.UI.Frames
                         RefreshSaveMaps();
                     }
                 }
-               
             });
-            
+
             InitBks();
             InitSavedMaps();
             InitActors();
