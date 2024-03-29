@@ -12,7 +12,7 @@ namespace Game.Script.Map
         [Label("X方向数量")] public int xGridNum = 100;
 
         [Label("Y方向数量")] public int yGridNum = 100;
-        
+
         public CinemachineVirtualCamera virtualCamera;
         public Transform blockTilesRoot;
 
@@ -73,7 +73,7 @@ namespace Game.Script.Map
 
         public Vector3 Offset => transform.position;
 
-        public (int, int) GetGridIndex(Vector3 worldPos, bool useFloor = true)
+        public (int, int) GetGridIndex(Vector3 worldPos)
         {
             int retX = -1;
             int retY = -1;
@@ -88,32 +88,16 @@ namespace Game.Script.Map
 
             if (offset.x >= 0 && offset.x < xGridNum)
             {
-                if (useFloor)
-                {
-                    retX = Mathf.FloorToInt(offset.x);
-                }
-                else
-                {
-                    retX = Mathf.RoundToInt(offset.x - cellSize.x);
-                }
-                
+                retX = Mathf.FloorToInt(offset.x);
             }
 
             if (offset.y >= 0 && offset.y < yGridNum)
             {
-                if (useFloor)
-                {
-                    retY = Mathf.FloorToInt(offset.y);
-                }
-                else
-                {
-                    retY = Mathf.RoundToInt(offset.y - cellSize.y);
-                }
-               
+                retY = Mathf.FloorToInt(offset.y);
             }
 
             retX = Mathf.Clamp(retX, 0, xGridNum - 1);
-            retY = Mathf.Clamp(retY ,0, yGridNum - 1);
+            retY = Mathf.Clamp(retY, 0, yGridNum - 1);
 
             return (retX, retY);
         }
