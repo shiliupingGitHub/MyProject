@@ -17,6 +17,7 @@ namespace Game.Script.AI.Action
         }
 
         public SharedGameObject target;
+        public float acceptRadius = 1.0f;
         private MoveStatus _moveStatus = MoveStatus.None;
         private ulong _pathId;
 
@@ -71,7 +72,7 @@ namespace Game.Script.AI.Action
 
                     var character = GetComponent<AICharacter>();
 
-                    character.SetPath(path);
+                    character.SetPath(path, acceptRadius, target.Value);
                     pathSystem.RemovePath(_pathId);
                     _moveStatus = MoveStatus.Moving;
                 }
