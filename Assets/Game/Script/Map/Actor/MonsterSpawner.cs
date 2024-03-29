@@ -19,7 +19,8 @@ namespace Game.Script.Map.Actor
                 foreach (var spawn in spawns)
                 {
                     var go = Object.Instantiate(spawn);
-                    go.transform.position = transform.position;
+                    var cellSize = Common.Game.Instance.MapBk.MyGrid.cellSize;
+                    go.transform.position = transform.position + new Vector3(cellSize.x, cellSize.y, 0);
                     NetworkServer.Spawn(go);
                 }
             }

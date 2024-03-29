@@ -52,8 +52,8 @@ namespace Game.Script.Subsystem
             var curPathId = _pathId;
             _pathId++;
             
-            (int sX, int sY) = Common.Game.Instance.MapBk.GetGridIndex(start);
-            (int eX, int eY) = Common.Game.Instance.MapBk.GetGridIndex(end);
+            (int sX, int sY) = Common.Game.Instance.MapBk.GetGridIndex(start, false);
+            (int eX, int eY) = Common.Game.Instance.MapBk.GetGridIndex(end, false);
 
             _pathRequestList.Add(new PathRequest() { startPosition = start, endPosition = end, pathId = curPathId , startX = sX, startY = sY, endX = eX, endY = eY});
             return curPathId;
@@ -80,8 +80,8 @@ namespace Game.Script.Subsystem
         {
             Vector3 ret = offset;
             
-            // ret.x += cellX * 0.5f;
-            // ret.y += cellY * 0.5f;
+            ret.x += cellX * 0.5f;
+            ret.y += cellY * 0.5f;
 
             ret.x += p.Item1 * cellX;
             ret.y += p.Item2 * cellY;
@@ -208,7 +208,7 @@ namespace Game.Script.Subsystem
 
                     if (!walkableDiagonals)
                     {
-                        if ((x == xStart) && (y == yStart || y == yEnd))
+                        if ((x == xCordinate - range) && (y == yCordinate - range || y == yCordinate + range))
                         {
                             if (IsBlock(xCordinate, y))
                                 continue;
@@ -216,7 +216,7 @@ namespace Game.Script.Subsystem
                                 continue;
                         }
 
-                        if ((x == xEnd) && (y == yStart || y == yEnd))
+                        if ((x == xCordinate - range) && (y == yCordinate - range || y == yCordinate + range))
                         {
                             if (IsBlock(xCordinate, y))
                                 continue;
@@ -224,13 +224,6 @@ namespace Game.Script.Subsystem
                                 continue;
                         }
                     }
-
-                    // if (!walkableDiagonals && // If we are not allowing diagonal movement
-                    //     (x == xStart || x == xEnd) && (y == yStart || y == yEnd) && // If the node is a diagonal node
-                    //     IsBlock(xCordinate, y) && IsBlock(x, yCordinate)) // If the node is not reachable from the current node
-                    // {
-                    //     continue;
-                    // }
 
                     neighbourCells.Add((!IsBlock(x, y), (x, y)));
                 }

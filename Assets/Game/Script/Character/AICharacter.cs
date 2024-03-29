@@ -13,10 +13,18 @@ namespace Game.Script.Character
     [RequireComponent(typeof(Rigidbody2D))]
     public class AICharacter : Character
     {
+        public enum PathState
+        {
+            None,
+            Moving,
+            Success,
+            Fail,
+        }
         private GameBehaviorTree _gameBehaviorTree;
         public ExternalBehavior externalBehaviorTree;
        public float moveSpeed = 100;
-        private Rigidbody2D _rigidbody; 
+        private Rigidbody2D _rigidbody;
+        public PathState CurPathState { get; set; } = PathState.None;
         public override void OnStartServer()
         {
             base.OnStartServer();
@@ -33,11 +41,16 @@ namespace Game.Script.Character
         protected override Vector2Int[] Areas => new[]{Vector2Int.zero};
         private List<Vector3> _path;
         private int _curPathIndex = -1;
+        private float _curAcceptRadius = 1f;
 
-        public void SetPath(List<Vector3> path)
+        private GameObject _targetGo = null;
+        public void SetPath(List<Vector3> path, float acceptRadius = 1.2f, GameObject targetGo = null)
         {
             _curPathIndex = 0;
             _path = path;
+            CurPathState = PathState.Moving;
+            _curAcceptRadius = 1;
+            _targetGo = targetGo;
         }
         protected override void Awake()
         {
@@ -48,16 +61,23 @@ namespace Game.Script.Character
             
         
         }
-
-
-
+        
         protected override void OnDestroy()
         {
             base.OnDestroy();
 
             GameLoop.Remove(OnUpdate);
-            
-            
+        }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            _curPathIndex = -1;
+            _path = null;
+            if (CurPathState == PathState.Moving)
+            {
+                  CurPathState =  other.gameObject == _targetGo? PathState.Success : PathState.Fail;
+                _rigidbody.velocity = Vector3.zero;
+            }
         }
 
         void OnUpdate(float deltaTime)
@@ -82,6 +102,7 @@ namespace Game.Script.Character
             if (_curPathIndex >= _path.Count)
             {
                 _rigidbody.velocity = Vector3.zero;
+                CurPathState = PathState.Success;
                 return;
             }
 
@@ -89,18 +110,31 @@ namespace Game.Script.Character
             var curPosition = transform.position ;
             var dir = targetPosition - curPosition;
 
-            if (dir.sqrMagnitude < 0.1)
+            if (dir.sqrMagnitude < 0.01)
             {
                 _rigidbody.velocity = Vector3.zero;
                 _curPathIndex++;
             }
             else
             {
-                var dis = Vector3.Distance(targetPosition, curPosition);
-                float pathSpeed = dis / deltaTime;
-                float speed = Mathf.Min(pathSpeed, moveSpeed);
+                
+                var endPosition = _path[^1];
+                if (_curAcceptRadius >= Vector3.Distance(curPosition, endPosition))
+                {
+                    CurPathState = PathState.Success;
+                    _rigidbody.velocity = Vector3.zero;
+                    _path = null;
+                    _curPathIndex = -1;
+                }
+                else
+                {
+                    var dis = Vector3.Distance(targetPosition, curPosition);
+                    float pathSpeed = dis / deltaTime;
+                    float speed = Mathf.Min(pathSpeed, moveSpeed);
 
-                _rigidbody.velocity = dir.normalized * speed;
+                    _rigidbody.velocity = dir.normalized * speed;
+                }
+               
             }
      
             

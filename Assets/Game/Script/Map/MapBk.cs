@@ -73,7 +73,7 @@ namespace Game.Script.Map
 
         public Vector3 Offset => transform.position;
 
-        public (int, int) GetGridIndex(Vector3 worldPos)
+        public (int, int) GetGridIndex(Vector3 worldPos, bool useFloor = true)
         {
             int retX = -1;
             int retY = -1;
@@ -88,13 +88,32 @@ namespace Game.Script.Map
 
             if (offset.x >= 0 && offset.x < xGridNum)
             {
-                retX = Mathf.FloorToInt(offset.x);
+                if (useFloor)
+                {
+                    retX = Mathf.FloorToInt(offset.x);
+                }
+                else
+                {
+                    retX = Mathf.RoundToInt(offset.x);
+                }
+                
             }
 
             if (offset.y >= 0 && offset.y < yGridNum)
             {
-                retY = Mathf.FloorToInt(offset.y);
+                if (useFloor)
+                {
+                    retY = Mathf.FloorToInt(offset.y);
+                }
+                else
+                {
+                    retY = Mathf.RoundToInt(offset.y);
+                }
+               
             }
+
+            retX = Mathf.Clamp(retX, 0, xGridNum - 1);
+            retY = Mathf.Clamp(retY ,0, yGridNum - 1);
 
             return (retX, retY);
         }

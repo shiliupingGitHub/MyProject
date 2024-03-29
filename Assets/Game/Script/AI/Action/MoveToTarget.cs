@@ -38,6 +38,18 @@ namespace Game.Script.AI.Action
             }
         }
 
+        TaskStatus ConvertPathState(AICharacter.PathState state)
+        {
+            switch (state)
+            {
+                case AICharacter.PathState.Success:
+                    return TaskStatus.Success;
+                case AICharacter.PathState.Fail:
+                    return TaskStatus.Failure;
+            }
+            return TaskStatus.Running;
+        }
+
         public override TaskStatus OnUpdate()
         {
             switch (_moveStatus)
@@ -58,14 +70,19 @@ namespace Game.Script.AI.Action
                         return TaskStatus.Failure;
 
                     var character = GetComponent<AICharacter>();
-                    
+
                     character.SetPath(path);
                     pathSystem.RemovePath(_pathId);
                     _moveStatus = MoveStatus.Moving;
-
-
                 }
                     return TaskStatus.Running;
+                case MoveStatus.Moving:
+                {
+                    var character = GetComponent<AICharacter>();
+
+                    return ConvertPathState(character.CurPathState);
+                }
+                
                 default:
                     return TaskStatus.Running;
             }
