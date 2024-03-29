@@ -30,6 +30,7 @@ namespace Game.Script.Character
         public override void Tick(float deltaTime)
         {
             base.Tick(deltaTime);
+            UpdateArea();
 
             if (null != _curSkill)
             {
