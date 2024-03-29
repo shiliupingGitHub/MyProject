@@ -10,7 +10,11 @@ namespace Game.Script.Common
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void RuntimeLoad()
         {
-            Instance.Init();
+            if (Application.isPlaying)
+            {
+                Instance.Init();
+            }
+            
         }
         void Init()
         {
@@ -20,10 +24,17 @@ namespace Game.Script.Common
 
         private void Update()
         {
+            
             if (null != doUpdate)
             {
-                doUpdate.Invoke(Time.unscaledTime);
+                doUpdate.Invoke(Time.unscaledDeltaTime);
             }
+        }
+
+        private void OnDestroy()
+        {
+            doUpdate = null;
+            doFixedUpdate = null;
         }
 
         private void FixedUpdate()

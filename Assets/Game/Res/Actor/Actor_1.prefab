@@ -137,6 +137,7 @@ MonoBehaviour:
   centerOffset: {x: 0.5, y: 0.5, z: 0}
   PreviewGo: {fileID: 1965439166731268665}
   GameGo: {fileID: 0}
+  isNet: 0
   spawns:
   - {fileID: 5248929476824234659, guid: 9d5e343a5f497f04c8df735174e2786e, type: 3}
 --- !u!114 &7952890919558577385

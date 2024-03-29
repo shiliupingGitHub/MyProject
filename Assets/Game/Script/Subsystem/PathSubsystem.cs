@@ -11,17 +11,19 @@ namespace Game.Script.Subsystem
     {
         public Vector3 startPosition;
         public Vector3 endPosition;
+        public int startX;
+        public int startY;
+        public int endX;
+        public int endY;
         public ulong pathId;
     }
 
     public class PathSubsystem : GameSubsystem
     {
-        private readonly Dictionary<ulong, List<(int, int)>> _pathResponses = new();
+        private readonly Dictionary<ulong, List<Vector3>> _pathResponses = new();
         private readonly List<PathRequest> _pathRequestList = new();
         private ulong _pathId = 1;
         private const int PathNumPerFrame = 20;
-
-
         public override void OnInitialize()
         {
             base.OnInitialize();
@@ -49,9 +51,12 @@ namespace Game.Script.Subsystem
         {
             var curPathId = _pathId;
             _pathId++;
+            
+            (int sX, int sY) = Common.Game.Instance.MapBk.GetGridIndex(start);
+            (int eX, int eY) = Common.Game.Instance.MapBk.GetGridIndex(end);
 
-            _pathRequestList.Add(new PathRequest() { startPosition = start, endPosition = end, pathId = curPathId });
-            return _pathId++;
+            _pathRequestList.Add(new PathRequest() { startPosition = start, endPosition = end, pathId = curPathId , startX = sX, startY = sY, endX = eX, endY = eY});
+            return curPathId;
         }
 
         public void RemovePath(ulong pathId)
@@ -66,6 +71,24 @@ namespace Game.Script.Subsystem
             }
         }
 
+        public List<Vector3> GetPath(ulong pathId)
+        {
+            return _pathResponses.GetValueOrDefault(pathId);
+        }
+
+        Vector3 ConvertPointToWorldPosition((int, int) p, Vector3 offset, float cellX, float cellY)
+        {
+            Vector3 ret = offset;
+            
+            // ret.x += cellX * 0.5f;
+            // ret.y += cellY * 0.5f;
+
+            ret.x += p.Item1 * cellX;
+            ret.y += p.Item2 * cellY;
+            
+            
+            return ret;
+        }
         void OnTick()
         {
             if (Common.Game.Instance.MapBk == null)
@@ -74,18 +97,32 @@ namespace Game.Script.Subsystem
             }
 
             int num = Mathf.Min(PathNumPerFrame, _pathRequestList.Count);
-
+            var offset = Common.Game.Instance.MapBk.Offset;
+            var cellSize = Common.Game.Instance.MapBk.MyGrid.cellSize;
+            var cellX = cellSize.x;
+            var cellY = cellSize.y;
             if (num > 0)
             {
-                Parallel.For(0, num - 1, (i, _) =>
+                Parallel.For(0, num, (i, _) =>
                 {
                     var request = _pathRequestList[i];
+                    var path = GeneratePath(request.startX, request.startY, request.endX, request.endY);
+                    
+                    List<Vector3> finalPath = new();
 
-                    var path = DoPath(request.startPosition, request.endPosition, Common.Game.Instance.MapBk);
-
+                    if (null != path && path.Count > 0)
+                    {
+                        finalPath.Add(request.startPosition);
+                        foreach (var p in path)
+                        {
+                            var position = ConvertPointToWorldPosition(p, offset, cellX, cellY);
+                            finalPath.Add(position);
+                        }
+                        finalPath.Add(request.endPosition);
+                    }
                     lock (this)
                     {
-                        _pathResponses.Add(request.pathId, path);
+                        _pathResponses.Add(request.pathId, finalPath);
                     }
                 });
                 _pathRequestList.RemoveRange(0, num);

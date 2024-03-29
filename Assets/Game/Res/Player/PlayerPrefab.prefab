@@ -97,7 +97,7 @@ MonoBehaviour:
     type: 3}
   MoveRightAction: {fileID: 7607208071823929490, guid: 16f4a2f894cb2fe45820759235d1629f,
     type: 3}
-  MoveSpeed: 100
+  MoveSpeed: 1
 --- !u!114 &-4765520782401287893
 MonoBehaviour:
   m_ObjectHideFlags: 0

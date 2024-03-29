@@ -135,13 +135,13 @@ namespace Game.Script.Map
                     if (actor != null)
                     {
                         actor.Config = actorConfig;
-                        actor.ActorType = ActorType.Preview;
+                        actor.ActorType = preview?ActorType.Preview:ActorType.Normal;
                     }
 
                     go.transform.position = mapBk.GetPosition(actorData.x, actorData.y);
                     actorData.go = go;
 
-                    if (net)
+                    if (net && actor.isNet)
                     {
                         if (go.TryGetComponent(out NetworkIdentity identity))
                         {

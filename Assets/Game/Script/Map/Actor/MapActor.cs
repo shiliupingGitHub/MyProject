@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Game.Script.Map.Actor
 {
@@ -7,7 +8,7 @@ namespace Game.Script.Map.Actor
         public ActorConfig Config { get; set; }
         public GameObject PreviewGo;
         public GameObject GameGo;
-
+        public bool isNet = false;
         protected override void Start()
         {
             base.Start();

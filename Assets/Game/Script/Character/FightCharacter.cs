@@ -10,7 +10,7 @@ namespace Game.Script.Character
         public InputActionReference MoveDownAction;
         public InputActionReference MoveLeftAction;
         public InputActionReference MoveRightAction;
-        public float MoveSpeed = 1;
+        public float MoveSpeed = 100;
         
         private Vector3 moveDir = Vector3.zero;
         private bool bInitCamera = false;
@@ -52,7 +52,7 @@ namespace Game.Script.Character
             var dir = moveDir;
             dir.Normalize();
             
-            _rigidbody.velocity = dir * MoveSpeed * Time.deltaTime;
+            _rigidbody.velocity = dir * MoveSpeed;
 
         }
 

@@ -1,12 +1,12 @@
 ﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
+using Game.Script.Character;
+using Game.Script.Subsystem;
 
 namespace Game.Script.AI.Action
 {
     public class MoveToTarget : BehaviorDesigner.Runtime.Tasks.Action
     {
-        public SharedGameObject target;
-
         enum MoveStatus
         {
             None,
@@ -16,20 +16,59 @@ namespace Game.Script.AI.Action
             Moving,
         }
 
+        public SharedGameObject target;
         private MoveStatus _moveStatus = MoveStatus.None;
+        private ulong _pathId;
+
         public override void OnStart()
         {
             base.OnStart();
 
             if (target.Value != null)
             {
-                
+                var pathSystem = Common.Game.Instance.GetSubsystem<PathSubsystem>();
+                var end = target.Value.transform.position;
+                var start = gameObject.transform.position;
+                _pathId = pathSystem.AddPath(start, end);
+                _moveStatus = MoveStatus.Path;
+            }
+            else
+            {
+                _moveStatus = MoveStatus.Fail;
             }
         }
 
         public override TaskStatus OnUpdate()
         {
-            return TaskStatus.Success;
+            switch (_moveStatus)
+            {
+                case MoveStatus.Fail:
+                {
+                    return TaskStatus.Failure;
+                }
+                case MoveStatus.Path:
+                {
+                    var pathSystem = Common.Game.Instance.GetSubsystem<PathSubsystem>();
+                    var path = pathSystem.GetPath(_pathId);
+
+                    if (path == null)
+                        return TaskStatus.Running;
+
+                    if (path.Count == 0)
+                        return TaskStatus.Failure;
+
+                    var character = GetComponent<AICharacter>();
+                    
+                    character.SetPath(path);
+                    pathSystem.RemovePath(_pathId);
+                    _moveStatus = MoveStatus.Moving;
+
+
+                }
+                    return TaskStatus.Running;
+                default:
+                    return TaskStatus.Running;
+            }
         }
     }
 }
