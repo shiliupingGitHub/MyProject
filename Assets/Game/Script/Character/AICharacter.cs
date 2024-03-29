@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using BehaviorDesigner.Runtime;
 using Game.Script.AI;
@@ -15,7 +16,7 @@ namespace Game.Script.Character
         private GameBehaviorTree _gameBehaviorTree;
         public ExternalBehavior externalBehaviorTree;
        public float moveSpeed = 100;
-        private Rigidbody2D _rigidbody;
+        private Rigidbody2D _rigidbody; 
         public override void OnStartServer()
         {
             base.OnStartServer();
@@ -41,21 +42,21 @@ namespace Game.Script.Character
         protected override void Awake()
         {
             base.Awake();
-            if (Application.isPlaying)
-            {
-                GameLoop.Instance.doUpdate += OnUpdate;
-                _rigidbody = GetComponent<Rigidbody2D>();
-            }
+       
+            GameLoop.Add(OnUpdate);
+            _rigidbody = GetComponent<Rigidbody2D>();
+            
         
         }
+
+
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            if (Application.isPlaying)
-            {
-                GameLoop.Instance.doUpdate -= OnUpdate;
-            }
+
+            GameLoop.Remove(OnUpdate);
+            
             
         }
 

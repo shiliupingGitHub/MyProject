@@ -3,25 +3,20 @@ using UnityEngine;
 
 namespace Game.Script.Common
 {
+    
     public class GameLoop : UnitySingleton<GameLoop>
     {
         public System.Action<float> doUpdate;
-        public System.Action<float> doFixedUpdate;
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        [RuntimeInitializeOnLoadMethod]
         static void RuntimeLoad()
         {
-            if (Application.isPlaying)
-            {
-                Instance.Init();
-            }
-            
+            Instance.Init();
         }
+
         void Init()
         {
-            
+            doUpdate = null;
         }
-        
-
         private void Update()
         {
             
@@ -31,18 +26,22 @@ namespace Game.Script.Common
             }
         }
 
-        private void OnDestroy()
+        public static void Add(System.Action<float> action)
         {
-            doUpdate = null;
-            doFixedUpdate = null;
-        }
-
-        private void FixedUpdate()
-        {
-            if (null != doFixedUpdate)
+            if (_instance)
             {
-                doFixedUpdate.Invoke(Time.unscaledTime);
+                _instance.doUpdate += action;
             }
         }
+
+        public static void Remove(System.Action<float> action)
+        {
+            if (_instance)
+            {
+                _instance.doUpdate -= action;
+            }
+        }
+
+        
     }
 }
