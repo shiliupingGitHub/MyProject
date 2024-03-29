@@ -25,6 +25,7 @@ namespace Game.Script.Character
        public float moveSpeed = 100;
         private Rigidbody2D _rigidbody;
         public PathState CurPathState { get; set; } = PathState.None;
+        public GameBehaviorTree BehaviorTree => _gameBehaviorTree;
         public override void OnStartServer()
         {
             base.OnStartServer();
@@ -52,6 +53,18 @@ namespace Game.Script.Character
             _curAcceptRadius = 1;
             _targetGo = targetGo;
         }
+
+        protected override void Start()
+        {
+            base.Start();
+
+            if (Common.Game.Instance.addMonster != null)
+            {
+                Common.Game.Instance.addMonster.Invoke(this, isServer);
+            }
+        }
+        
+
         protected override void Awake()
         {
             base.Awake();
@@ -67,6 +80,11 @@ namespace Game.Script.Character
             base.OnDestroy();
 
             GameLoop.Remove(OnUpdate);
+            
+            if (Common.Game.Instance.removeMonster != null)
+            {
+                Common.Game.Instance.removeMonster.Invoke(this, isServer);
+            }
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -135,21 +153,6 @@ namespace Game.Script.Character
                     _rigidbody.velocity = dir.normalized * speed;
                 }
                
-            }
-     
-            
-
-
-
-        }
-
-        public override void Tick(float deltaTime)
-        {
-            base.Tick(deltaTime);
-
-            if (Common.Game.Instance.MyController != null)
-            {
-                _gameBehaviorTree.SetVariableValue("Target", Common.Game.Instance.MyController.gameObject);
             }
         }
     }

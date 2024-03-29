@@ -21,6 +21,8 @@ namespace Game.Script.Common
 
         public System.Action<MapBk> mapBkLoad;
         public System.Action<FightCharacter> localPlayerLoad;
+        public System.Action<AICharacter, bool> addMonster;
+        public System.Action<AICharacter, bool> removeMonster;
         public GameMode Mode { set; get; } = GameMode.Host;
 
         private readonly Dictionary<System.Type, GameSubsystem> _subsystems = new();
@@ -29,6 +31,7 @@ namespace Game.Script.Common
         private MapBk _mapBk;
         private const string KcpNetMgrPath = "Assets/Game/Res/Net/KcpFightNetworkManager.prefab";
         private GameObject _networkMgrGo;
+        private float _lastTickTime = 0;
         
         public void RegisterPawn(Pawn pawn)
         {
@@ -78,10 +81,22 @@ namespace Game.Script.Common
 
         public void Tick()
         {
-            foreach (var pawn in _pawns)
+            if (_lastTickTime == 0)
             {
-                pawn.Tick(Time.unscaledDeltaTime);
+                _lastTickTime = Time.unscaledTime;
             }
+            else
+            {
+                float curTime = Time.unscaledTime;
+                float delta = curTime - _lastTickTime;
+                foreach (var pawn in _pawns)
+                {
+                    pawn.Tick(delta);
+                }
+
+                _lastTickTime = curTime;
+            }
+            
         }
 
          async void DoTick()
