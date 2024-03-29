@@ -46,7 +46,7 @@ namespace Game.Script.Character
         private GameObject _targetGo = null;
         public void SetPath(List<Vector3> path, float acceptRadius = 1.2f, GameObject targetGo = null)
         {
-            _curPathIndex = 0;
+            _curPathIndex = 2;
             _path = path;
             CurPathState = PathState.Moving;
             _curAcceptRadius = 1;
@@ -129,7 +129,7 @@ namespace Game.Script.Character
                 else
                 {
                     var dis = Vector3.Distance(targetPosition, curPosition);
-                    float pathSpeed = dis / deltaTime;
+                    float pathSpeed = dis / Time.fixedDeltaTime;
                     float speed = Mathf.Min(pathSpeed, moveSpeed);
 
                     _rigidbody.velocity = dir.normalized * speed;

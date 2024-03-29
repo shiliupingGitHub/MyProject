@@ -52,8 +52,9 @@ namespace Game.Script.Subsystem
             var curPathId = _pathId;
             _pathId++;
             
-            (int sX, int sY) = Common.Game.Instance.MapBk.GetGridIndex(start, false);
-            (int eX, int eY) = Common.Game.Instance.MapBk.GetGridIndex(end, false);
+            
+            (int sX, int sY) = Common.Game.Instance.MapBk.GetGridIndex(start);
+            (int eX, int eY) = Common.Game.Instance.MapBk.GetGridIndex(end);
 
             _pathRequestList.Add(new PathRequest() { startPosition = start, endPosition = end, pathId = curPathId , startX = sX, startY = sY, endX = eX, endY = eY});
             return curPathId;
@@ -216,7 +217,7 @@ namespace Game.Script.Subsystem
                                 continue;
                         }
 
-                        if ((x == xCordinate - range) && (y == yCordinate - range || y == yCordinate + range))
+                        if ((x == xCordinate + range) && (y == yCordinate - range || y == yCordinate + range))
                         {
                             if (IsBlock(xCordinate, y))
                                 continue;

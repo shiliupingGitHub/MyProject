@@ -94,7 +94,7 @@ namespace Game.Script.Map
                 }
                 else
                 {
-                    retX = Mathf.RoundToInt(offset.x);
+                    retX = Mathf.RoundToInt(offset.x - cellSize.x);
                 }
                 
             }
@@ -107,7 +107,7 @@ namespace Game.Script.Map
                 }
                 else
                 {
-                    retY = Mathf.RoundToInt(offset.y);
+                    retY = Mathf.RoundToInt(offset.y - cellSize.y);
                 }
                
             }
