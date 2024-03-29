@@ -39,6 +39,17 @@ namespace Game.Script.AI.Action
             }
         }
 
+        public override void OnEnd()
+        {
+            base.OnEnd();
+            if (_pathId > 0)
+            {
+                var pathSystem = Common.Game.Instance.GetSubsystem<PathSubsystem>();
+                
+                pathSystem.RemovePath(_pathId);
+            }
+        }
+
         TaskStatus ConvertPathState(AICharacter.PathState state)
         {
             switch (state)
@@ -74,6 +85,7 @@ namespace Game.Script.AI.Action
 
                     character.SetPath(path, acceptRadius, target.Value);
                     pathSystem.RemovePath(_pathId);
+                    _pathId = 0;
                     _moveStatus = MoveStatus.Moving;
                 }
                     return TaskStatus.Running;
