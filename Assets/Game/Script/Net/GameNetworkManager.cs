@@ -27,5 +27,13 @@ namespace Game.Script.Misc
                 mapSubsystem.LoadMap("map_test_1", true);
             }
         }
+
+        public override void OnClientDisconnect()
+        {
+            base.OnClientDisconnect();
+            var levelSystem = Common.Game.Instance.GetSubsystem<LevelSubsystem>();
+            levelSystem.Enter(LevelType.Hall);
+            
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using BehaviorDesigner.Runtime;
 using Game.Script.Character;
+using UnityEngine;
 
 namespace Game.Script.AI.Logic
 {
@@ -11,11 +12,28 @@ namespace Game.Script.AI.Logic
             {
                 if (character.BehaviorTree != null)
                 {
-                    var targetVar = character.BehaviorTree.GetVariable("Target") as SharedGameObject;
-
-                    if (null != targetVar && targetVar.Value == null)
+                    if (character.BehaviorTree.GetVariable("Target") is SharedGameObject targetVar && targetVar.Value == null)
                     {
-                        character.BehaviorTree.SetVariableValue("Target", Common.Game.Instance.MyController.gameObject);
+                        var curDisSqt = float.MaxValue;
+                        var mePosition = character.transform.position;
+                        FightCharacter player = null;
+                        foreach (var fight in Common.Game.Instance.Fights)
+                        {
+                            var fightPosition = fight.transform.position;
+                            var tempSqt = (fightPosition - mePosition).sqrMagnitude;
+                            if (tempSqt < curDisSqt)
+                            {
+                                curDisSqt = tempSqt;
+                                player = fight;
+
+                            }
+                        }
+
+                        if (player != null)
+                        {
+                            character.BehaviorTree.SetVariableValue("Target", player.gameObject);
+                        }
+                       
                     }
                 }
                 
