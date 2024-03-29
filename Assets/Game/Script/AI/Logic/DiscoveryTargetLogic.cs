@@ -1,4 +1,5 @@
-﻿using Game.Script.Character;
+﻿using BehaviorDesigner.Runtime;
+using Game.Script.Character;
 
 namespace Game.Script.AI.Logic
 {
@@ -10,7 +11,12 @@ namespace Game.Script.AI.Logic
             {
                 if (character.BehaviorTree != null)
                 {
-                    character.BehaviorTree.SetVariableValue("Target", Common.Game.Instance.MyController.gameObject);
+                    var targetVar = character.BehaviorTree.GetVariable("Target") as SharedGameObject;
+
+                    if (null != targetVar && targetVar.Value == null)
+                    {
+                        character.BehaviorTree.SetVariableValue("Target", Common.Game.Instance.MyController.gameObject);
+                    }
                 }
                 
             }

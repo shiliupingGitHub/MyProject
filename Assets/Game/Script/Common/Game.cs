@@ -25,6 +25,8 @@ namespace Game.Script.Common
         public System.Action<AICharacter, bool> removeMonster;
         public GameMode Mode { set; get; } = GameMode.Host;
 
+        public List<FightCharacter> Fights { get; } = new();
+
         private readonly Dictionary<System.Type, GameSubsystem> _subsystems = new();
         private readonly List<Pawn> _pawns = new();
         private FightCharacter _myController;
@@ -32,13 +34,19 @@ namespace Game.Script.Common
         private const string KcpNetMgrPath = "Assets/Game/Res/Net/KcpFightNetworkManager.prefab";
         private GameObject _networkMgrGo;
         private float _lastTickTime = 0;
-        
+
         public void RegisterPawn(Pawn pawn)
         {
             if (!_pawns.Contains(pawn))
             {
                 _pawns.Add(pawn);
+                if (pawn is FightCharacter character)
+                {
+                    Fights.Add(character);
+                }
             }
+
+           
         }
         
        public void LoadNetWorkManager()
@@ -111,6 +119,10 @@ namespace Game.Script.Common
         public void UnRegisterPawn(Pawn pawn)
         {
             _pawns.Remove(pawn);
+            if (pawn is FightCharacter character)
+            {
+                Fights.Remove(character);
+            }
         }
 
         public T GetSubsystem<T>() where T: GameSubsystem
