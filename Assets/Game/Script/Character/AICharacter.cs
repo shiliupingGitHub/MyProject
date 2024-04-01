@@ -203,7 +203,7 @@ namespace Game.Script.Character
             var curPosition = transform.position;
             var dir = targetPosition - curPosition;
 
-            if (dir.sqrMagnitude < 0.01)
+            if (dir.sqrMagnitude < 0.1)
             {
                 _rigidbody.velocity = Vector3.zero;
                 _curPathIndex++;
@@ -226,7 +226,7 @@ namespace Game.Script.Character
                 else
                 {
                     var dis = Vector3.Distance(targetPosition, curPosition);
-                    float pathSpeed = dis / Time.fixedDeltaTime;
+                    float pathSpeed = dis / deltaTime;
                     float speed = Mathf.Min(pathSpeed, moveSpeed);
 
                     _rigidbody.velocity = dir.normalized * speed;
