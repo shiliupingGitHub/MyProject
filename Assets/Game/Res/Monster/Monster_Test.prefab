@@ -175,7 +175,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 84e3ddaaee53bf74493b44a67a3a1da3, type: 2}
   externalBehaviorTree: {fileID: 11400000, guid: a47db7b25a25d444daf40fc760dab93b,
     type: 2}
-  moveSpeed: 1
+  moveSpeed: 0.5
 --- !u!114 &8541539398798180198
 MonoBehaviour:
   m_ObjectHideFlags: 0
