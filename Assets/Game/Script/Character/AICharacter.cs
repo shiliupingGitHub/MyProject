@@ -47,6 +47,8 @@ namespace Game.Script.Character
 
         private GameObject _targetGo = null;
         private TaskCompletionSource<PathState> _pathTcl;
+        private Vector3 _lastPosition;
+        private float _lastChangePositionTime;
 
         public Task<PathState> SetPath(List<Vector3> path, float acceptRadius = 1.2f, GameObject targetGo = null)
         {
@@ -56,6 +58,8 @@ namespace Game.Script.Character
             CurPathState = PathState.Moving;
             _curAcceptRadius = 1;
             _targetGo = targetGo;
+            _lastPosition = transform.position;
+            _lastChangePositionTime = Time.unscaledTime;
 
 
             return _pathTcl.Task;
@@ -97,12 +101,13 @@ namespace Game.Script.Character
             if (CurPathState == PathState.Moving)
             {
                 CurPathState = other.gameObject == _targetGo ? PathState.Success : PathState.Fail;
-                _rigidbody.velocity = Vector3.zero;
+            }
 
-                if (null != _pathTcl)
-                {
-                    _pathTcl.SetResult(CurPathState);
-                }
+            _rigidbody.velocity = Vector3.zero;
+
+            if (null != _pathTcl)
+            {
+                _pathTcl.SetResult(CurPathState);
             }
 
             _curPathIndex = -1;
@@ -110,10 +115,58 @@ namespace Game.Script.Character
             _pathTcl = null;
         }
 
+        private void OnCollisionStay2D(Collision2D other)
+        {
+            if (CurPathState == PathState.Moving)
+            {
+                CurPathState = other.gameObject == _targetGo ? PathState.Success : PathState.Fail;
+                _rigidbody.velocity = Vector3.zero;
 
+                if (null != _pathTcl)
+                {
+                    _pathTcl.SetResult(CurPathState);
+                }
+
+                _curPathIndex = -1;
+                _path = null;
+                _pathTcl = null;
+            }
+        }
         void OnFixedUpdate(float deltaTime)
         {
             DoMove(deltaTime);
+            DoCheckMove();
+        }
+
+   
+        
+        void DoCheckMove()
+        {
+            if (CurPathState != PathState.Moving)
+            {
+                return;
+            }
+            if (transform.position == _lastPosition)
+            {
+                if (Time.unscaledTime - _lastChangePositionTime > 0.5f)
+                {
+                    _rigidbody.velocity = Vector3.zero;
+
+                    if (null != _pathTcl)
+                    {
+                        _pathTcl.SetResult(CurPathState);
+                    }
+
+                    _curPathIndex = -1;
+                    _path = null;
+                    _pathTcl = null;
+                }
+            }
+            else
+            {
+                _lastPosition = transform.position;
+                _lastChangePositionTime = Time.unscaledTime;
+            }
         }
 
 
@@ -136,9 +189,12 @@ namespace Game.Script.Character
                 _rigidbody.velocity = Vector3.zero;
                 CurPathState = PathState.Success;
 
+                _curPathIndex = -1;
+                _path = null;
                 if (null != _pathTcl)
                 {
                     _pathTcl.SetResult(CurPathState);
+                    _pathTcl = null;
                 }
 
                 return;
@@ -165,6 +221,7 @@ namespace Game.Script.Character
                     if (null != _pathTcl)
                     {
                         _pathTcl.SetResult(CurPathState);
+                        _pathTcl = null;
                     }
                 }
                 else
