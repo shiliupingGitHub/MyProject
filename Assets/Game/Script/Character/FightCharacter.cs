@@ -1,4 +1,5 @@
-﻿using Game.Script.Common;
+﻿using System;
+using Game.Script.Common;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -33,6 +34,12 @@ namespace Game.Script.Character
             {
                 DoMove();
             }
+        }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            int a = 0;
+            int b = a;
         }
 
         protected override void Start()
