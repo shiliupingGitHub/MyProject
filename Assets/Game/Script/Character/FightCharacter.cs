@@ -1,4 +1,4 @@
-﻿
+﻿using Game.Script.Common;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,21 +11,23 @@ namespace Game.Script.Character
         public InputActionReference MoveLeftAction;
         public InputActionReference MoveRightAction;
         public float MoveSpeed = 100;
-        
+
         private Vector3 moveDir = Vector3.zero;
         private bool bInitCamera = false;
         private bool bCheckCamera = false;
         private Camera _camera;
         private Rigidbody2D _rigidbody;
-        private void Update()
+
+        private void OnUpdate(float deltaTime)
         {
             if (isLocalPlayer)
             {
-               SetUpCamera();
+                SetUpCamera();
             }
         }
 
-        private void FixedUpdate()
+
+        void OnFixedUpdate(float deltaTime)
         {
             if (isLocalPlayer)
             {
@@ -37,6 +39,17 @@ namespace Game.Script.Character
         {
             base.Start();
             _rigidbody = GetComponent<Rigidbody2D>();
+
+            GameLoop.Add(OnUpdate);
+            GameLoop.AddFixed(OnFixedUpdate);
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            GameLoop.Remove(OnUpdate);
+            GameLoop.RemoveFixed(OnFixedUpdate);
         }
 
 
@@ -51,9 +64,8 @@ namespace Game.Script.Character
         {
             var dir = moveDir;
             dir.Normalize();
-            
-            _rigidbody.velocity = dir * MoveSpeed;
 
+            _rigidbody.velocity = dir * MoveSpeed;
         }
 
         void SetUpInput()
@@ -62,42 +74,18 @@ namespace Game.Script.Character
             MoveDownAction.action.Enable();
             MoveLeftAction.action.Enable();
             MoveRightAction.action.Enable();
-            
-            MoveUpAction.action.started += context =>
-            {
-                moveDir.y += 1;
-            };
-            MoveUpAction.action.canceled += context =>
-            {
-                moveDir.y -= 1;
-            };
-            
-            MoveDownAction.action.started += context =>
-            {
-                moveDir.y -= 1;
-            };
-            MoveDownAction.action.canceled += context =>
-            {
-                moveDir.y += 1;
-            };
-            
-            MoveLeftAction.action.started += context =>
-            {
-                moveDir.x -= 1;
-            };
-            MoveLeftAction.action.canceled += context =>
-            {
-                moveDir.x += 1;
-            };
-            
-            MoveRightAction.action.started += context =>
-            {
-                moveDir.x += 1;
-            };
-            MoveRightAction.action.canceled += context =>
-            {
-                moveDir.x -= 1;
-            };
+
+            MoveUpAction.action.started += context => { moveDir.y += 1; };
+            MoveUpAction.action.canceled += context => { moveDir.y -= 1; };
+
+            MoveDownAction.action.started += context => { moveDir.y -= 1; };
+            MoveDownAction.action.canceled += context => { moveDir.y += 1; };
+
+            MoveLeftAction.action.started += context => { moveDir.x -= 1; };
+            MoveLeftAction.action.canceled += context => { moveDir.x += 1; };
+
+            MoveRightAction.action.started += context => { moveDir.x += 1; };
+            MoveRightAction.action.canceled += context => { moveDir.x -= 1; };
         }
 
         void SetUpCamera()
@@ -118,7 +106,6 @@ namespace Game.Script.Character
                     }
                 }
             }
-            
         }
 
         public override void OnStartLocalPlayer()
@@ -127,6 +114,5 @@ namespace Game.Script.Character
             SetUpInput();
             bCheckCamera = true;
         }
-        
     }
 }

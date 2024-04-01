@@ -1996,10 +1996,10 @@ MonoBehaviour:
   m_ShowCameraFrustum: 1
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 2
-  m_BlendUpdateMethod: 1
+  m_UpdateMethod: 0
+  m_BlendUpdateMethod: 0
   m_DefaultBlend:
-    m_Style: 1
+    m_Style: 6
     m_Time: 2
     m_CustomCurve:
       serializedVersion: 2
@@ -2709,7 +2709,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xGridNum: 10
   yGridNum: 5
-  showGrid: 0
   virtualCamera: {fileID: 7400671550206152319}
   blockTilesRoot: {fileID: 8052287441676754182}
 --- !u!114 &5281505634500781809
