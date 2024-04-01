@@ -79,7 +79,7 @@ namespace Game.Script.Character
         {
             base.Awake();
 
-            GameLoop.AddFixed(OnFixedUpdate);
+            GameLoop.Add(OnUpdate);
             _rigidbody = GetComponent<Rigidbody2D>();
         }
 
@@ -87,7 +87,7 @@ namespace Game.Script.Character
         {
             base.OnDestroy();
 
-            GameLoop.RemoveFixed(OnFixedUpdate);
+            GameLoop.Remove(OnUpdate);
 
             if (Common.Game.Instance.removeMonster != null)
             {
@@ -131,7 +131,7 @@ namespace Game.Script.Character
                 _pathTcl = null;
             }
         }
-        void OnFixedUpdate(float deltaTime)
+        void OnUpdate(float deltaTime)
         {
             DoMove(deltaTime);
             DoCheckMove();

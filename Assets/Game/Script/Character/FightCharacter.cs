@@ -24,6 +24,7 @@ namespace Game.Script.Character
             if (isLocalPlayer)
             {
                 SetUpCamera();
+                DoMove();
             }
         }
 
@@ -32,7 +33,7 @@ namespace Game.Script.Character
         {
             if (isLocalPlayer)
             {
-                DoMove();
+                
             }
         }
 
@@ -48,7 +49,6 @@ namespace Game.Script.Character
             _rigidbody = GetComponent<Rigidbody2D>();
 
             GameLoop.Add(OnUpdate);
-            GameLoop.AddFixed(OnFixedUpdate);
         }
 
         protected override void OnDestroy()
@@ -56,7 +56,6 @@ namespace Game.Script.Character
             base.OnDestroy();
 
             GameLoop.Remove(OnUpdate);
-            GameLoop.RemoveFixed(OnFixedUpdate);
         }
 
 
