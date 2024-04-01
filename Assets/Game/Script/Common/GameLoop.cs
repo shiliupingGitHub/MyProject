@@ -6,9 +6,19 @@ namespace Game.Script.Common
     
     public class GameLoop : UnitySingleton<GameLoop>
     {
+        public bool drawFps = true;
         public System.Action<float> doUpdate;
         public System.Action<float> doFixedUpdate;
         private System.Action _gameAction;
+        private int _frame;
+        // 上一次计算帧率的时间
+        private float _lastTime;
+        // 平均每一帧的时间
+        private float _frameDeltaTime;
+        // 间隔多长时间(秒)计算一次帧率
+        private float _Fps;
+        private const float _timeInterval = 0.5f;
+        
         [RuntimeInitializeOnLoadMethod]
         static void RuntimeLoad()
         {
@@ -35,6 +45,44 @@ namespace Game.Script.Common
                 }
 
                 _gameAction = null;
+            }
+
+            Physics2D.Simulate(Time.unscaledDeltaTime);
+            Physics2D.SyncTransforms();
+            FrameCalculate();
+        }
+
+        private void FrameCalculate()
+        {
+            _frame++;
+            if (Time.realtimeSinceStartup - _lastTime < _timeInterval)
+            {
+                return;
+            }
+
+            float time = Time.realtimeSinceStartup - _lastTime;
+            _Fps = _frame / time;
+            _frameDeltaTime = time / _frame;
+
+            _lastTime = Time.realtimeSinceStartup;
+            _frame = 0;
+        }
+
+        private void Start()
+        {
+            _lastTime = Time.realtimeSinceStartup;
+            //Application.targetFrameRate = 60;
+            QualitySettings.vSyncCount = 1;
+
+        }
+
+        private void OnGUI()
+        {
+            if (drawFps)
+            {
+                string msg = string.Format("Fps:{0}  FpsDeltaTime:{1}", _Fps, _frameDeltaTime);
+                GUI.Label(new Rect(0, 0, 300, 50), msg);
+              
             }
         }
 

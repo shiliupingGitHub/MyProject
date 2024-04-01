@@ -38,6 +38,7 @@ namespace Game.Script.Subsystem
             UIManager.Instance.Show<LoadingFrame>(true, true);
             _levels[levelType].Enter();
             _curLevel = levelType;
+            System.GC.Collect();
         }
     }
 }

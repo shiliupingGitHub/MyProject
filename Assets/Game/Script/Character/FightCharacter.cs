@@ -1,4 +1,5 @@
 ﻿using System;
+using Cinemachine;
 using Game.Script.Common;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -18,6 +19,7 @@ namespace Game.Script.Character
         private bool bCheckCamera = false;
         private Camera _camera;
         private Rigidbody2D _rigidbody;
+        private CinemachineBrain _cinemachineBrain;
 
         private void OnUpdate(float deltaTime)
         {
@@ -72,6 +74,11 @@ namespace Game.Script.Character
             dir.Normalize();
 
             _rigidbody.velocity = dir * MoveSpeed;
+            if (null == _cinemachineBrain)
+            {
+                _cinemachineBrain = Camera.main.GetComponent<CinemachineBrain>();
+            }
+            _cinemachineBrain.ManualUpdate();
         }
 
         void SetUpInput()
