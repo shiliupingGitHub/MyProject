@@ -7,6 +7,7 @@ namespace Game.Script.Common
     public class GameLoop : UnitySingleton<GameLoop>
     {
         public System.Action<float> doUpdate;
+        public System.Action<float> doFixedUpdate;
         private System.Action _gameAction;
         [RuntimeInitializeOnLoadMethod]
         static void RuntimeLoad()
@@ -37,6 +38,14 @@ namespace Game.Script.Common
             }
         }
 
+        private void FixedUpdate()
+        {
+            if (null != doFixedUpdate)
+            {
+                doFixedUpdate.Invoke(Time.fixedUnscaledDeltaTime);
+            }
+        }
+
         public void RunGameThead(System.Action action)
         {
             lock (this)
@@ -58,6 +67,22 @@ namespace Game.Script.Common
             if (_instance)
             {
                 _instance.doUpdate -= action;
+            }
+        }
+        
+        public static void AddFixed(System.Action<float> action)
+        {
+            if (_instance)
+            {
+                _instance.doFixedUpdate += action;
+            }
+        }
+
+        public static void RemoveFixed(System.Action<float> action)
+        {
+            if (_instance)
+            {
+                _instance.doFixedUpdate -= action;
             }
         }
 

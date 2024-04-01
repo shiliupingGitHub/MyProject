@@ -1,12 +1,10 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BehaviorDesigner.Runtime;
 using Game.Script.AI;
 using Game.Script.Common;
 using UnityEngine;
-
 
 
 namespace Game.Script.Character
@@ -21,12 +19,14 @@ namespace Game.Script.Character
             Success,
             Fail,
         }
+
         private GameBehaviorTree _gameBehaviorTree;
         public ExternalBehavior externalBehaviorTree;
-       public float moveSpeed = 100;
+        public float moveSpeed = 100;
         private Rigidbody2D _rigidbody;
         public PathState CurPathState { get; set; } = PathState.None;
         public GameBehaviorTree BehaviorTree => _gameBehaviorTree;
+
         public override void OnStartServer()
         {
             base.OnStartServer();
@@ -40,13 +40,14 @@ namespace Game.Script.Character
         }
 
         protected override bool IsBlock => true;
-        protected override Vector2Int[] Areas => new[]{Vector2Int.zero};
+        protected override Vector2Int[] Areas => new[] { Vector2Int.zero };
         private List<Vector3> _path;
         private int _curPathIndex = -1;
         private float _curAcceptRadius = 1f;
 
         private GameObject _targetGo = null;
         private TaskCompletionSource<PathState> _pathTcl;
+
         public Task<PathState> SetPath(List<Vector3> path, float acceptRadius = 1.2f, GameObject targetGo = null)
         {
             _pathTcl = new TaskCompletionSource<PathState>();
@@ -55,6 +56,7 @@ namespace Game.Script.Character
             CurPathState = PathState.Moving;
             _curAcceptRadius = 1;
             _targetGo = targetGo;
+
 
             return _pathTcl.Task;
         }
@@ -68,24 +70,22 @@ namespace Game.Script.Character
                 Common.Game.Instance.addMonster.Invoke(this, isServer);
             }
         }
-        
+
 
         protected override void Awake()
         {
             base.Awake();
-       
-            GameLoop.Add(OnUpdate);
+
+            GameLoop.AddFixed(OnFixedUpdate);
             _rigidbody = GetComponent<Rigidbody2D>();
-            
-        
         }
-        
+
         protected override void OnDestroy()
         {
             base.OnDestroy();
 
-            GameLoop.Remove(OnUpdate);
-            
+            GameLoop.RemoveFixed(OnFixedUpdate);
+
             if (Common.Game.Instance.removeMonster != null)
             {
                 Common.Game.Instance.removeMonster.Invoke(this, isServer);
@@ -94,24 +94,28 @@ namespace Game.Script.Character
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            _curPathIndex = -1;
-            _path = null;
             if (CurPathState == PathState.Moving)
             {
-                  CurPathState =  other.gameObject == _targetGo? PathState.Success : PathState.Fail;
+                CurPathState = other.gameObject == _targetGo ? PathState.Success : PathState.Fail;
                 _rigidbody.velocity = Vector3.zero;
-                
+
                 if (null != _pathTcl)
                 {
                     _pathTcl.SetResult(CurPathState);
                 }
             }
+
+            _curPathIndex = -1;
+            _path = null;
+            _pathTcl = null;
         }
 
-        void OnUpdate(float deltaTime)
+
+        void OnFixedUpdate(float deltaTime)
         {
             DoMove(deltaTime);
         }
+
 
         void DoMove(float deltaTime)
         {
@@ -136,11 +140,12 @@ namespace Game.Script.Character
                 {
                     _pathTcl.SetResult(CurPathState);
                 }
+
                 return;
             }
 
             var targetPosition = _path[_curPathIndex];
-            var curPosition = transform.position ;
+            var curPosition = transform.position;
             var dir = targetPosition - curPosition;
 
             if (dir.sqrMagnitude < 0.01)
@@ -150,7 +155,6 @@ namespace Game.Script.Character
             }
             else
             {
-                
                 var endPosition = _path[^1];
                 if (_curAcceptRadius >= Vector3.Distance(curPosition, endPosition))
                 {
@@ -171,7 +175,6 @@ namespace Game.Script.Character
 
                     _rigidbody.velocity = dir.normalized * speed;
                 }
-               
             }
         }
     }
