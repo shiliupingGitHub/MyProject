@@ -56,12 +56,11 @@ namespace Game.Script.Character
             _curPathIndex = 2;
             _path = path;
             CurPathState = PathState.Moving;
-            _curAcceptRadius = 1;
+            _curAcceptRadius = acceptRadius;
             _targetGo = targetGo;
             _lasChangePosition = transform.position;
             _lastChangePositionTime = Time.unscaledTime;
-
-
+            
             return _pathTcl.Task;
         }
 
