@@ -1,4 +1,5 @@
-﻿using BehaviorDesigner.Runtime;
+﻿using System.Collections.Generic;
+using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using Game.Script.Character;
 using Game.Script.Subsystem;
@@ -28,7 +29,6 @@ namespace Game.Script.AI.Action
 
             if (target.Value != null)
             {
-               
                 _moveStatus = MoveStatus.Path;
                 var end = target.Value.transform.position;
                 var start = gameObject.transform.position;
@@ -43,23 +43,43 @@ namespace Game.Script.AI.Action
         async void FindPath(Vector3 start, Vector3 end)
         {
             var pathSystem = Common.Game.Instance.GetSubsystem<PathSubsystem>();
-           var path = await pathSystem.AddPath(start, end, ref _pathId);
-           
-           if (path.Count == 0)
-           {
-               _moveStatus = MoveStatus.Fail;
-               return;
-           }
-           var character = GetComponent<AICharacter>();
-           _pathId = 0;
-           _moveStatus = MoveStatus.Moving;
-           character.SetPath(path, acceptRadius, target.Value);
-         
+            var path = await pathSystem.AddPath(start, end, ref _pathId);
+            DoPath(path);
+        }
+
+        async void DoPath(List<Vector3> path)
+        {
+            if (_moveStatus != MoveStatus.Path)
+            {
+                return;
+            }
+
+            if (path.Count == 0)
+            {
+                _moveStatus = MoveStatus.Fail;
+                return;
+            }
+
+            var character = GetComponent<AICharacter>();
+            _pathId = 0;
+            _moveStatus = MoveStatus.Moving;
+            var result = await character.SetPath(path, acceptRadius, target.Value);
+
+            DoResult(result);
+        }
+
+        void DoResult(AICharacter.PathState result)
+        {
+            if (_moveStatus == MoveStatus.Moving)
+            {
+                _moveStatus = ConvertPathState(result);
+            }
         }
 
         public override void OnEnd()
         {
             base.OnEnd();
+            _moveStatus = MoveStatus.None;
             if (_pathId > 0)
             {
                 var pathSystem = Common.Game.Instance.GetSubsystem<PathSubsystem>();
@@ -67,16 +87,15 @@ namespace Game.Script.AI.Action
             }
         }
 
-        TaskStatus ConvertPathState(AICharacter.PathState state)
+        MoveStatus ConvertPathState(AICharacter.PathState state)
         {
             switch (state)
             {
-                case AICharacter.PathState.Success:
-                    return TaskStatus.Success;
                 case AICharacter.PathState.Fail:
-                    return TaskStatus.Failure;
+                    return MoveStatus.Fail;
             }
-            return TaskStatus.Running;
+
+            return MoveStatus.Success;
         }
 
         public override TaskStatus OnUpdate()
@@ -87,13 +106,11 @@ namespace Game.Script.AI.Action
                 {
                     return TaskStatus.Failure;
                 }
-                case MoveStatus.Moving:
+                case MoveStatus.Success:
                 {
-                    var character = GetComponent<AICharacter>();
-
-                    return ConvertPathState(character.CurPathState);
+                    return TaskStatus.Success;
                 }
-                
+
                 default:
                     return TaskStatus.Running;
             }

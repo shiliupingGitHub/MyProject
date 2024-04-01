@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using BehaviorDesigner.Runtime;
 using Game.Script.AI;
 using Game.Script.Common;
@@ -45,13 +46,17 @@ namespace Game.Script.Character
         private float _curAcceptRadius = 1f;
 
         private GameObject _targetGo = null;
-        public void SetPath(List<Vector3> path, float acceptRadius = 1.2f, GameObject targetGo = null)
+        private TaskCompletionSource<PathState> _pathTcl;
+        public Task<PathState> SetPath(List<Vector3> path, float acceptRadius = 1.2f, GameObject targetGo = null)
         {
+            _pathTcl = new TaskCompletionSource<PathState>();
             _curPathIndex = 2;
             _path = path;
             CurPathState = PathState.Moving;
             _curAcceptRadius = 1;
             _targetGo = targetGo;
+
+            return _pathTcl.Task;
         }
 
         protected override void Start()
@@ -95,6 +100,11 @@ namespace Game.Script.Character
             {
                   CurPathState =  other.gameObject == _targetGo? PathState.Success : PathState.Fail;
                 _rigidbody.velocity = Vector3.zero;
+                
+                if (null != _pathTcl)
+                {
+                    _pathTcl.SetResult(CurPathState);
+                }
             }
         }
 
@@ -121,6 +131,11 @@ namespace Game.Script.Character
             {
                 _rigidbody.velocity = Vector3.zero;
                 CurPathState = PathState.Success;
+
+                if (null != _pathTcl)
+                {
+                    _pathTcl.SetResult(CurPathState);
+                }
                 return;
             }
 
@@ -143,6 +158,10 @@ namespace Game.Script.Character
                     _rigidbody.velocity = Vector3.zero;
                     _path = null;
                     _curPathIndex = -1;
+                    if (null != _pathTcl)
+                    {
+                        _pathTcl.SetResult(CurPathState);
+                    }
                 }
                 else
                 {
