@@ -2,6 +2,7 @@
 using BehaviorDesigner.Runtime.Tasks;
 using Game.Script.Character;
 using Game.Script.Subsystem;
+using UnityEngine;
 
 namespace Game.Script.AI.Action
 {
@@ -27,16 +28,33 @@ namespace Game.Script.AI.Action
 
             if (target.Value != null)
             {
-                var pathSystem = Common.Game.Instance.GetSubsystem<PathSubsystem>();
+               
+                _moveStatus = MoveStatus.Path;
                 var end = target.Value.transform.position;
                 var start = gameObject.transform.position;
-                _pathId = pathSystem.AddPath(start, end);
-                _moveStatus = MoveStatus.Path;
+                FindPath(start, end);
             }
             else
             {
                 _moveStatus = MoveStatus.Fail;
             }
+        }
+
+        async void FindPath(Vector3 start, Vector3 end)
+        {
+            var pathSystem = Common.Game.Instance.GetSubsystem<PathSubsystem>();
+           var path = await pathSystem.AddPath(start, end, ref _pathId);
+           
+           if (path.Count == 0)
+           {
+               _moveStatus = MoveStatus.Fail;
+               return;
+           }
+           var character = GetComponent<AICharacter>();
+           _pathId = 0;
+           _moveStatus = MoveStatus.Moving;
+           character.SetPath(path, acceptRadius, target.Value);
+         
         }
 
         public override void OnEnd()
@@ -45,7 +63,6 @@ namespace Game.Script.AI.Action
             if (_pathId > 0)
             {
                 var pathSystem = Common.Game.Instance.GetSubsystem<PathSubsystem>();
-                
                 pathSystem.RemovePath(_pathId);
             }
         }
@@ -70,25 +87,6 @@ namespace Game.Script.AI.Action
                 {
                     return TaskStatus.Failure;
                 }
-                case MoveStatus.Path:
-                {
-                    var pathSystem = Common.Game.Instance.GetSubsystem<PathSubsystem>();
-                    var path = pathSystem.GetPath(_pathId);
-
-                    if (path == null)
-                        return TaskStatus.Running;
-
-                    if (path.Count == 0)
-                        return TaskStatus.Failure;
-
-                    var character = GetComponent<AICharacter>();
-
-                    character.SetPath(path, acceptRadius, target.Value);
-                    pathSystem.RemovePath(_pathId);
-                    _pathId = 0;
-                    _moveStatus = MoveStatus.Moving;
-                }
-                    return TaskStatus.Running;
                 case MoveStatus.Moving:
                 {
                     var character = GetComponent<AICharacter>();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Game.Script.Common;
 using Game.Script.Map;
 using Priority_Queue;
 using UnityEngine;
@@ -16,11 +17,11 @@ namespace Game.Script.Subsystem
         public int endX;
         public int endY;
         public ulong pathId;
+        public TaskCompletionSource<List<Vector3>>  tls;
     }
 
     public class PathSubsystem : GameSubsystem
     {
-        private readonly Dictionary<ulong, List<Vector3>> _pathResponses = new();
         private readonly List<PathRequest> _pathRequestList = new();
         private ulong _pathId = 1;
         private const int PathNumPerFrame = 20;
@@ -31,7 +32,13 @@ namespace Game.Script.Subsystem
             var levelSubsystem = Common.Game.Instance.GetSubsystem<LevelSubsystem>();
             levelSubsystem.preLevelChange += (_, _) =>
             {
-                _pathResponses.Clear();
+                foreach (var request in _pathRequestList)
+                {
+                    if (request.tls != null)
+                    {
+                        request.tls.SetCanceled();
+                    }
+                }
                 _pathRequestList.Clear();
                 _pathId = 1;
             };
@@ -47,36 +54,32 @@ namespace Game.Script.Subsystem
             }
         }
 
-        public ulong AddPath(Vector3 start, Vector3 end)
+        public Task<List<Vector3>> AddPath(Vector3 start, Vector3 end,  ref ulong pathId)
         {
-            var curPathId = _pathId;
+             pathId = _pathId;
             _pathId++;
-            
+
+            TaskCompletionSource<List<Vector3>> curtls = new();
             
             (int sX, int sY) = Common.Game.Instance.MapBk.GetGridIndex(start);
             (int eX, int eY) = Common.Game.Instance.MapBk.GetGridIndex(end);
 
-            _pathRequestList.Add(new PathRequest() { startPosition = start, endPosition = end, pathId = curPathId , startX = sX, startY = sY, endX = eX, endY = eY});
-            return curPathId;
+            _pathRequestList.Add(new PathRequest() { tls = curtls,startPosition = start, endPosition = end, pathId = pathId , startX = sX, startY = sY, endX = eX, endY = eY});
+            return curtls.Task;
         }
 
         public void RemovePath(ulong pathId)
         {
-            if (_pathResponses.ContainsKey(pathId))
-            {
-                _pathResponses.Remove(pathId);
-            }
-            else
-            {
-                _pathRequestList.RemoveAll(x => x.pathId == pathId);
-            }
-        }
+            var request = _pathRequestList.Find(x => x.pathId == pathId);
 
-        public List<Vector3> GetPath(ulong pathId)
-        {
-            return _pathResponses.GetValueOrDefault(pathId);
+            if (request.tls != null)
+            {
+                request.tls.SetCanceled();
+                _pathRequestList.Remove(request);
+            }
+            
         }
-
+        
         Vector3 ConvertPointToWorldPosition((int, int) p, Vector3 offset, float cellX, float cellY)
         {
             Vector3 ret = offset;
@@ -121,10 +124,13 @@ namespace Game.Script.Subsystem
                         }
                         finalPath.Add(request.endPosition);
                     }
-                    lock (this)
+                    
+                    GameLoop.Instance.RunGameThead(() =>
                     {
-                        _pathResponses.Add(request.pathId, finalPath);
-                    }
+                        request.tls.SetResult(finalPath);
+                    });
+                    
+                    
                 });
                 _pathRequestList.RemoveRange(0, num);
             }
