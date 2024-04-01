@@ -47,7 +47,7 @@ namespace Game.Script.Character
 
         private GameObject _targetGo = null;
         private TaskCompletionSource<PathState> _pathTcl;
-        private Vector3 _lastPosition;
+        private Vector3 _lasChangePosition;
         private float _lastChangePositionTime;
 
         public Task<PathState> SetPath(List<Vector3> path, float acceptRadius = 1.2f, GameObject targetGo = null)
@@ -58,7 +58,7 @@ namespace Game.Script.Character
             CurPathState = PathState.Moving;
             _curAcceptRadius = 1;
             _targetGo = targetGo;
-            _lastPosition = transform.position;
+            _lasChangePosition = transform.position;
             _lastChangePositionTime = Time.unscaledTime;
 
 
@@ -146,7 +146,7 @@ namespace Game.Script.Character
             {
                 return;
             }
-            if (transform.position == _lastPosition)
+            if (transform.position == _lasChangePosition)
             {
                 if (Time.unscaledTime - _lastChangePositionTime > 0.5f)
                 {
@@ -164,7 +164,7 @@ namespace Game.Script.Character
             }
             else
             {
-                _lastPosition = transform.position;
+                _lasChangePosition = transform.position;
                 _lastChangePositionTime = Time.unscaledTime;
             }
         }
