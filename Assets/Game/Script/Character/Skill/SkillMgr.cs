@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.Script.Common;
+using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -9,7 +10,7 @@ using UnityEditor;
 
 namespace Game.Script.Character.Skill
 {
-
+#if UNITY_EDITOR
     [InitializeOnLoad]
     public static class SkillInitializer
     {
@@ -18,13 +19,21 @@ namespace Game.Script.Character.Skill
             SkillMgr.Instance.Init();
         }
     }
+#endif
     public class SkillMgr : Singleton<SkillMgr>
     {
         public Dictionary<SkillType, SkillAction> DefaultActions { get; } = new();
         public Dictionary<SkillType, System.Type> ActionTypes { get; } = new();
         public Dictionary<SkillType, string> Descriptions = new();
 
-        public List<string>   GetSortDes()
+#if UNITY_EDITOR
+ [RuntimeInitializeOnLoadMethod]
+    static void RuntimeLoad()
+        {
+        SkillMgr.Instance.Init();
+}
+#endif
+        public List<string> GetSortDes()
         {
             List<string> ret = new();
 
@@ -35,16 +44,15 @@ namespace Game.Script.Character.Skill
 
             return ret;
         }
-        
+
         public void Init()
         {
-            
             DefaultActions.Clear();
             ActionTypes.Clear();
             Descriptions.Clear();
             var baseType = typeof(SkillAction);
-            var types =  baseType.Assembly.GetTypes();
-            
+            var types = baseType.Assembly.GetTypes();
+
             foreach (var type in types)
             {
                 if (baseType.IsAssignableFrom(type) && baseType != type)
@@ -59,7 +67,6 @@ namespace Game.Script.Character.Skill
                             DefaultActions.Add(skillDesAttribute.SkillType, System.Activator.CreateInstance(type) as SkillAction);
                             Descriptions.Add(skillDesAttribute.SkillType, skillDesAttribute.Des);
                         }
-                        
                     }
                 }
             }

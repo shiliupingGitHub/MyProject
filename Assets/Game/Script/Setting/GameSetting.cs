@@ -1,9 +1,9 @@
 ﻿using Game.Script.Common;
-using UnityEditor;
 
 namespace Game.Script.Setting
 {
-    [InitializeOnLoad]
+#if UNITY_EDITOR
+    [UnityEditor.InitializeOnLoad]
     public static class GameSettingInitializer
     {
         static GameSettingInitializer()
@@ -11,9 +11,18 @@ namespace Game.Script.Setting
             GameSetting.Instance.Init();
         }
     }
+#endif
     public class GameSetting : Singleton<GameSetting>
     {
+#if !UNITY_EDITOR
+ [UnityEngine.RuntimeInitializeOnLoadMethod]
+    static void RuntimeLoad()
+        {
+       GameSetting.Instance.Init();
+}
+#endif
         public bool ShowGrid { get; set; }
+
         public void Init()
         {
             ShowGrid = false;
