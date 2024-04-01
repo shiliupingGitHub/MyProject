@@ -10,16 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Default Local Group
+  m_Name: BK
   m_EditorClassIdentifier: 
-  m_GroupName: Default Local Group
+  m_GroupName: BK
   m_Data:
     m_SerializedData: []
-  m_GUID: a6ac5c72900381b4ead9aa33f1b29557
-  m_SerializeEntries: []
+  m_GUID: 06e13f55528bcc14d8dc484a280899de
+  m_SerializeEntries:
+  - m_GUID: f3196c7715e206b4fa100078f5f80885
+    m_Address: Assets/Game/Res/Map/Bk/TestScene.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8a5b7fa2f7b110e499305b11415bf217, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 656c4b808c31d2d44830c25831ce3ba8, type: 2}
-    - {fileID: 11400000, guid: 851b7b73a57c13e4e80dbaf57b6522a5, type: 2}
+    - {fileID: 11400000, guid: 2089f049954308f4e8af3c2c1c6f15f9, type: 2}
+    - {fileID: 11400000, guid: 9e50de1123c7b78449e463de684d31d2, type: 2}
