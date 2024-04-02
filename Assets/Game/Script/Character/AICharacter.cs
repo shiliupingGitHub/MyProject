@@ -114,6 +114,20 @@ namespace Game.Script.Character
             _pathTcl = null;
         }
 
+        public void CancelMove()
+        {
+            _rigidbody.velocity = Vector3.zero;
+            CurPathState = PathState.None;
+            if (null != _pathTcl)
+            {
+                _pathTcl.SetResult(CurPathState);
+            }
+
+            _curPathIndex = -1;
+            _path = null;
+            _pathTcl = null;
+        }
+
         private void OnCollisionStay2D(Collision2D other)
         {
             if (CurPathState == PathState.Moving)

@@ -20,8 +20,19 @@ namespace Game.Script.AI.Action
 
         public SharedGameObject target;
         public float acceptRadius = 1.0f;
+        public float rePathDistance = 2;
         private MoveStatus _moveStatus = MoveStatus.None;
         private ulong _pathId;
+        private Vector3 _oldTargetPathPosition;
+
+        void StartPath()
+        {
+            _moveStatus = MoveStatus.Path;
+            var end = target.Value.transform.position;
+            var start = gameObject.transform.position;
+            _oldTargetPathPosition = end;
+            FindPath(start, end);
+        }
 
         public override void OnStart()
         {
@@ -29,10 +40,7 @@ namespace Game.Script.AI.Action
 
             if (target.Value != null)
             {
-                _moveStatus = MoveStatus.Path;
-                var end = target.Value.transform.position;
-                var start = gameObject.transform.position;
-                FindPath(start, end);
+                StartPath();
             }
             else
             {
@@ -98,8 +106,30 @@ namespace Game.Script.AI.Action
             return MoveStatus.Success;
         }
 
+        void CheckRePath()
+        {
+            if (target.Value == null)
+                return;
+
+            var disSqt = (target.Value.transform.position - _oldTargetPathPosition).sqrMagnitude;
+
+
+            if (disSqt >= rePathDistance * rePathDistance)
+            {
+                var character = GetComponent<AICharacter>();
+                _pathId = 0;
+                character.CancelMove();
+                StartPath();
+            }
+        }
+
         public override TaskStatus OnUpdate()
         {
+            if (target.Value == null)
+            {
+                return TaskStatus.Failure;
+            }
+
             switch (_moveStatus)
             {
                 case MoveStatus.Fail:
@@ -110,7 +140,11 @@ namespace Game.Script.AI.Action
                 {
                     return TaskStatus.Success;
                 }
-
+                case MoveStatus.Moving:
+                {
+                    CheckRePath();
+                    return TaskStatus.Running;
+                }
                 default:
                     return TaskStatus.Running;
             }
