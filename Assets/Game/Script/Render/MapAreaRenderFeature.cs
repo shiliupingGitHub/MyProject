@@ -4,6 +4,7 @@ using Game.Script.Setting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 
 namespace Game.Script.Render
 {
@@ -26,16 +27,58 @@ namespace Game.Script.Render
             public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
             {
             }
+            
 
             // Here you can implement the rendering logic.
             // Use <c>ScriptableRenderContext</c> to issue drawing commands or execute command buffers
             // https://docs.unity3d.com/ScriptReference/Rendering.ScriptableRenderContext.html
             // You don't have to call ScriptableRenderContext.submit, the render pipeline will call it at specific points in the pipeline.
+
+            private MapBk _curBk = null;
+            MapBk GetMapBk(Scene scene, CameraType cameraType)
+            {
+         
+                if (null != _curBk)
+                {
+                    return _curBk;
+                }
+
+                if (cameraType == CameraType.Game || !scene.IsValid())
+                {
+                    _curBk = Object.FindObjectOfType<MapBk>();
+                }
+                else
+                {
+                    if (!scene.IsValid())
+                    {
+                        return null;
+                    }
+                    var roots = scene.GetRootGameObjects();
+
+                    foreach (var root in roots)
+                    {
+                        var bk = root.GetComponent<MapBk>();
+
+                        if (null != bk)
+                        {
+                            _curBk = bk;
+                            break;
+                        }
+                    }
+                }
+                
+                return _curBk;
+            }
             public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
             {
-                MapBk mapBk = Object.FindObjectOfType<MapBk>();
+                MapBk mapBk = GetMapBk(renderingData.cameraData.camera.scene, renderingData.cameraData.cameraType);
 
                 if (mapBk == null)
+                {
+                    return;
+                }
+
+                if (renderingData.cameraData.cameraType == CameraType.Preview)
                 {
                     return;
                 }
