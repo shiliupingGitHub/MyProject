@@ -25,7 +25,8 @@ namespace Game.Script.UI.Frames
             _btnFight.onClick.AddListener(() =>
             {
                 var levelSubsystem = Common.Game.Instance.GetSubsystem<LevelSubsystem>();
-                Common.Game.Instance.LoadNetWorkManager();
+                var networkSubsystem = Common.Game.Instance.GetSubsystem<NetworkSubsystem>();
+                networkSubsystem.LoadNetWorkManager();
                 Common.Game.Instance.Mode = GameMode.Host;
                 Common.Game.Instance.FightMap = "map_test_1";
                 NetworkManager.singleton.networkAddress = "localhost";
@@ -33,7 +34,8 @@ namespace Game.Script.UI.Frames
             });
             _btnJoin.onClick.AddListener(() =>
             {
-                Common.Game.Instance.LoadNetWorkManager();
+                var networkSubsystem = Common.Game.Instance.GetSubsystem<NetworkSubsystem>();
+                networkSubsystem.LoadNetWorkManager();
                 NetworkManager.singleton.networkAddress = !string.IsNullOrEmpty(_inputIp.text) ? _inputIp.text : "localhost";
                 Common.Game.Instance.Mode = GameMode.Client;
                 var levelSubsystem = Common.Game.Instance.GetSubsystem<LevelSubsystem>();

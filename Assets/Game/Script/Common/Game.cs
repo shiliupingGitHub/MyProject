@@ -33,8 +33,6 @@ namespace Game.Script.Common
         private readonly List<Pawn> _pawns = new();
         private FightCharacter _myController;
         private MapBk _mapBk;
-        private const string KcpNetMgrPath = "Assets/Game/Res/Net/KcpFightNetworkManager.prefab";
-        private GameObject _networkMgrGo;
         private float _lastTickTime = 0;
         
         public void RegisterPawn(Pawn pawn)
@@ -51,16 +49,6 @@ namespace Game.Script.Common
            
         }
         
-       public void LoadNetWorkManager()
-        {
-            if (_networkMgrGo != null)
-            {
-                Object.Destroy(_networkMgrGo);
-            }
-            var template = GameResMgr.Instance.LoadAssetSync<GameObject>(KcpNetMgrPath);
-            _networkMgrGo = Object.Instantiate(template);
-            _networkMgrGo.name = "NetworkMgr";
-        }
         
         public MapBk MapBk
         {
