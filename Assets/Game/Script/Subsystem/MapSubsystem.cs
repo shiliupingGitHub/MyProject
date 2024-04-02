@@ -4,6 +4,7 @@ using Game.Script.Map;
 using Game.Script.Res;
 using Game.Script.UI;
 using Game.Script.UI.Frames;
+using Mirror;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -84,14 +85,20 @@ namespace Game.Script.Subsystem
                 Common.Game.Instance.MapBk.virtualCamera.Follow = tr;
                 Common.Game.Instance.MapBk.virtualCamera.LookAt = tr;
                 Common.Game.Instance.MapBk.virtualCamera.gameObject.SetActive(true);
-                HideLoading();
+                StartGame();
             }
         }
 
-        async void HideLoading()
+        async void StartGame()
         {
             await Task.Delay(1000);
             UIManager.Instance.Hide<LoadingFrame>();
+
+            if (NetworkManager.singleton.mode == NetworkManagerMode.Host)
+            {
+                Common.Game.Instance.FightStart = true;
+            }
+            
         }
         public MapData New(int bkId)
         {

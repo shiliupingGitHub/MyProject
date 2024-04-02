@@ -7,8 +7,12 @@ namespace Game.Script.Level
 {
     public class FightLevel : Level
     {
-       
-      
+        public override void Leave()
+        {
+            base.Leave();
+            Common.Game.Instance.FightStart = false;
+        }
+
         public override void Enter()
         {
             base.Enter();

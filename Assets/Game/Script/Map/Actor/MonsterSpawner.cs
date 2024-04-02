@@ -10,19 +10,41 @@ namespace Game.Script.Map.Actor
     {
         public List<GameObject> spawns = new();
 
+        void DoBorn()
+        {
+            foreach (var spawn in spawns)
+            {
+                var go = Object.Instantiate(spawn);
+                var cellSize = Common.Game.Instance.MapBk.MyGrid.cellSize;
+                go.transform.position = transform.position + new Vector3(cellSize.x, cellSize.y, 0);
+                NetworkServer.Spawn(go);
+            }
+            Common.Game.Instance.fightStart -= DoBorn;
+        }
+
+        void TryDoBorn()
+        {
+            if (Common.Game.Instance.FightStart)
+            {
+                DoBorn();
+            }
+            else
+            {
+                Common.Game.Instance.fightStart += DoBorn;
+            }
+            
+        }
         protected override void Start()
         {
             base.Start();
 
             if (this.ActorType == ActorType.Normal)
             {
-                foreach (var spawn in spawns)
+                if (NetworkManager.singleton.mode == NetworkManagerMode.Host)
                 {
-                    var go = Object.Instantiate(spawn);
-                    var cellSize = Common.Game.Instance.MapBk.MyGrid.cellSize;
-                    go.transform.position = transform.position + new Vector3(cellSize.x, cellSize.y, 0);
-                    NetworkServer.Spawn(go);
+                    TryDoBorn();
                 }
+                
             }
           
             

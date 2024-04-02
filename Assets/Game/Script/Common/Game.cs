@@ -23,7 +23,29 @@ namespace Game.Script.Common
         public System.Action<FightCharacter> localPlayerLoad;
         public System.Action<AICharacter, bool> addMonster;
         public System.Action<AICharacter, bool> removeMonster;
+        public System.Action fightStart;
         public GameMode Mode { set; get; } = GameMode.Host;
+        private bool _fightStart = false;
+        public bool FightStart
+        {
+            get => _fightStart;
+            set
+            {
+                if (_fightStart != value)
+                {
+                    _fightStart = value;
+
+                    if (_fightStart)
+                    {
+                        fightStart?.Invoke();
+                    }
+                    else
+                    {
+                        fightStart = null;
+                    }
+                }
+            }
+        }
 
         public List<FightCharacter> Fights { get; } = new();
 
@@ -34,6 +56,8 @@ namespace Game.Script.Common
         private const string KcpNetMgrPath = "Assets/Game/Res/Net/KcpFightNetworkManager.prefab";
         private GameObject _networkMgrGo;
         private float _lastTickTime = 0;
+        
+        
 
         public void RegisterPawn(Pawn pawn)
         {
