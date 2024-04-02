@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -4765520782401287893}
   - component: {fileID: 286496018866854191}
   - component: {fileID: 6804338075589147364}
+  - component: {fileID: 1294576445667767163}
   m_Layer: 6
   m_Name: PlayerPrefab
   m_TagString: Untagged
@@ -89,15 +90,6 @@ MonoBehaviour:
   centerOffset: {x: 0, y: 0, z: 0}
   skills:
   - {fileID: 11400000, guid: 84e3ddaaee53bf74493b44a67a3a1da3, type: 2}
-  MoveUpAction: {fileID: -2468474444503369740, guid: 16f4a2f894cb2fe45820759235d1629f,
-    type: 3}
-  MoveDownAction: {fileID: 4702593330310682347, guid: 16f4a2f894cb2fe45820759235d1629f,
-    type: 3}
-  MoveLeftAction: {fileID: -6761461685217620460, guid: 16f4a2f894cb2fe45820759235d1629f,
-    type: 3}
-  MoveRightAction: {fileID: 7607208071823929490, guid: 16f4a2f894cb2fe45820759235d1629f,
-    type: 3}
-  MoveSpeed: 1
 --- !u!114 &-4765520782401287893
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,6 +180,27 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &1294576445667767163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4137186206338453546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 602e2c4c501e4788874382760930d5fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MoveUpAction: {fileID: -2468474444503369740, guid: 16f4a2f894cb2fe45820759235d1629f,
+    type: 3}
+  MoveDownAction: {fileID: 4702593330310682347, guid: 16f4a2f894cb2fe45820759235d1629f,
+    type: 3}
+  MoveLeftAction: {fileID: -6761461685217620460, guid: 16f4a2f894cb2fe45820759235d1629f,
+    type: 3}
+  MoveRightAction: {fileID: 7607208071823929490, guid: 16f4a2f894cb2fe45820759235d1629f,
+    type: 3}
+  MoveSpeed: 1
 --- !u!1 &5530022194933478838
 GameObject:
   m_ObjectHideFlags: 0
