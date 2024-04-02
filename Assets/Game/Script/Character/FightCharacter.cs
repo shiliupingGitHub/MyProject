@@ -1,6 +1,8 @@
 ﻿using System;
 using Cinemachine;
 using Game.Script.Common;
+using Game.Script.Subsystem;
+using Mirror;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,36 +23,41 @@ namespace Game.Script.Character
         private Rigidbody2D _rigidbody;
         private CinemachineBrain _cinemachineBrain;
 
+        [TargetRpc]
+        void TargetRpc_SetStartFightLeftTime(float leftTime)
+        {
+            var fightSubsystem = Common.Game.Instance.GetSubsystem<FightSubsystem>();
+            fightSubsystem.StartLeftTime = leftTime;
+        }
+
+        [Command]
+        void Cmd_RequestEnterInfo()
+        {
+            var fightSubsystem = Common.Game.Instance.GetSubsystem<FightSubsystem>();
+            TargetRpc_SetStartFightLeftTime(fightSubsystem.StartLeftTime);
+        }
+
         private void OnUpdate(float deltaTime)
         {
             if (isLocalPlayer)
             {
                 SetUpCamera();
                 DoMove();
-            }
-        }
-
-
-        void OnFixedUpdate(float deltaTime)
-        {
-            if (isLocalPlayer)
-            {
                 
             }
         }
-
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            int a = 0;
-            int b = a;
-        }
-
+        
         protected override void Start()
         {
             base.Start();
             _rigidbody = GetComponent<Rigidbody2D>();
 
             GameLoop.Add(OnUpdate);
+
+            if (isClientOnly)
+            {
+                Cmd_RequestEnterInfo();
+            }
         }
 
         protected override void OnDestroy()
@@ -59,8 +66,7 @@ namespace Game.Script.Character
 
             GameLoop.Remove(OnUpdate);
         }
-
-
+        
         public override void OnStartAuthority()
         {
             base.OnStartAuthority();

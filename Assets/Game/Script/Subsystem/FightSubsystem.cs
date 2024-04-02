@@ -6,8 +6,20 @@ namespace Game.Script.Subsystem
     public class FightSubsystem : GameSubsystem
     {
         public System.Action fightStart;
+        public System.Action startLeftTimeChanged;
+        private float _startLeftTime = 0;
+
+        public float StartLeftTime
+        {
+            get => _startLeftTime;
+            set
+            {
+                _startLeftTime = value;
+                startLeftTimeChanged?.Invoke();
+            }
+        }
+
         private bool _fightStart;
-        private float _startLeftTime = 5;
         private bool _prepareStart = false;
 
         public bool FightStart
@@ -25,6 +37,7 @@ namespace Game.Script.Subsystem
                 {
                     fightStart = null;
                     _prepareStart = false;
+                    StartLeftTime = 0;
                 }
             }
         }
@@ -37,16 +50,22 @@ namespace Game.Script.Subsystem
 
         void OnUpdate(float deltaTime)
         {
-            if (!_fightStart)
+            if (StartLeftTime > 0)
             {
-                if (_prepareStart)
-                {
-                    _startLeftTime -= deltaTime;
+                StartLeftTime -= deltaTime;
 
-                    if (_startLeftTime <= 0)
+                if (StartLeftTime <= 0)
+                {
+                    StartLeftTime = 0;
+
+                    if (!_fightStart)
                     {
-                        _prepareStart = false;
-                        FightStart = true;
+                        if (_prepareStart)
+                        {
+                            StartLeftTime -= deltaTime;
+                            _prepareStart = false;
+                            FightStart = true;
+                        }
                     }
                 }
             }
@@ -54,7 +73,7 @@ namespace Game.Script.Subsystem
 
         public void StartFight()
         {
-            _startLeftTime = 5;
+            StartLeftTime = 5;
             _prepareStart = true;
         }
     }

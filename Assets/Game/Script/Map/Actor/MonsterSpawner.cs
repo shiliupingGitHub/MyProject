@@ -41,7 +41,7 @@ namespace Game.Script.Map.Actor
 
             if (this.ActorType == ActorType.Normal)
             {
-                if (NetworkManager.singleton.mode == NetworkManagerMode.Host)
+                if (Common.Game.Instance.Mode == GameMode.Host)
                 {
                     TryDoBorn();
                 }
