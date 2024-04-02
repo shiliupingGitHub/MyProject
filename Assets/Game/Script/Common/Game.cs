@@ -25,6 +25,7 @@ namespace Game.Script.Common
         public System.Action<AICharacter, bool> addMonster;
         public System.Action<AICharacter, bool> removeMonster;
         public System.Action serverFightSceneChanged;
+        public System.Func<GameObject> serverFightNewPlayer;
         public GameMode Mode { set; get; } = GameMode.Host;
       
         public string FightMap { get; set; }

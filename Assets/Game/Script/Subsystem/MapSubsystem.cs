@@ -6,8 +6,10 @@ using Game.Script.Res;
 using Game.Script.UI;
 using Game.Script.UI.Frames;
 using Mirror;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 namespace Game.Script.Subsystem
 {
@@ -15,6 +17,7 @@ namespace Game.Script.Subsystem
     {
         
         string AssetMapPath => "Assets/Game/Res/Map/Data/";
+        private string playerAssetPath => "Assets/Game/Res/Player/PlayerPrefab.prefab";
 
         string MapExtension => ".txt";
         private MapBk _mapBk;
@@ -38,6 +41,13 @@ namespace Game.Script.Subsystem
             Common.Game.Instance.serverFightSceneChanged += () =>
             {
                 LoadMap(Common.Game.Instance.FightMap, true);
+            };
+            Common.Game.Instance.serverFightNewPlayer += () =>
+            {
+                var bornPosition =  GetRandomBornPosition();
+                var playerPrefab = GameResMgr.Instance.LoadAssetSync<GameObject>(playerAssetPath);
+                GameObject player = Object.Instantiate(playerPrefab, bornPosition, quaternion.identity);
+                return player;
             };
         }
 

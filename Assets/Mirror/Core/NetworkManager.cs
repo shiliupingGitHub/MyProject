@@ -7,9 +7,26 @@ using UnityEngine.Serialization;
 
 namespace Mirror
 {
-    public enum PlayerSpawnMethod { Random, RoundRobin }
-    public enum NetworkManagerMode { Offline, ServerOnly, ClientOnly, Host }
-    public enum HeadlessStartOptions { DoNothing, AutoStartServer, AutoStartClient }
+    public enum PlayerSpawnMethod
+    {
+        Random,
+        RoundRobin
+    }
+
+    public enum NetworkManagerMode
+    {
+        Offline,
+        ServerOnly,
+        ClientOnly,
+        Host
+    }
+
+    public enum HeadlessStartOptions
+    {
+        DoNothing,
+        AutoStartServer,
+        AutoStartClient
+    }
 
     [DisallowMultipleComponent]
     [AddComponentMenu("Network/Network Manager")]
@@ -18,44 +35,36 @@ namespace Mirror
     {
         /// <summary>Enable to keep NetworkManager alive when changing scenes.</summary>
         // This should be set if your game has a single NetworkManager that exists for the lifetime of the process. If there is a NetworkManager in each scene, then this should not be set.</para>
-        [Header("Configuration")]
-        [FormerlySerializedAs("m_DontDestroyOnLoad")]
-        [Tooltip("Should the Network Manager object be persisted through scene changes?")]
+        [Header("Configuration")] [FormerlySerializedAs("m_DontDestroyOnLoad")] [Tooltip("Should the Network Manager object be persisted through scene changes?")]
         public bool dontDestroyOnLoad = true;
 
         /// <summary>Multiplayer games should always run in the background so the network doesn't time out.</summary>
-        [FormerlySerializedAs("m_RunInBackground")]
-        [Tooltip("Multiplayer games should always run in the background so the network doesn't time out.")]
+        [FormerlySerializedAs("m_RunInBackground")] [Tooltip("Multiplayer games should always run in the background so the network doesn't time out.")]
         public bool runInBackground = true;
 
         /// <summary>Should the server auto-start when 'Server Build' is checked in build settings</summary>
-        [Header("Auto-Start Options")]
-
-        [Tooltip("Choose whether Server or Client should auto-start in headless builds")]
+        [Header("Auto-Start Options")] [Tooltip("Choose whether Server or Client should auto-start in headless builds")]
         public HeadlessStartOptions headlessStartMode = HeadlessStartOptions.DoNothing;
 
         [Tooltip("Headless Start Mode in Editor\nwhen enabled, headless start mode will be used in editor as well.")]
         public bool editorAutoStart;
 
         /// <summary>Server Update frequency, per second. Use around 60Hz for fast paced games like Counter-Strike to minimize latency. Use around 30Hz for games like WoW to minimize computations. Use around 1-10Hz for slow paced games like EVE.</summary>
-        [Tooltip("Server & Client send rate per second. Use 60-100Hz for fast paced games like Counter-Strike to minimize latency. Use around 30Hz for games like WoW to minimize computations. Use around 1-10Hz for slow paced games like EVE.")]
-        [FormerlySerializedAs("serverTickRate")]
+        [Tooltip("Server & Client send rate per second. Use 60-100Hz for fast paced games like Counter-Strike to minimize latency. Use around 30Hz for games like WoW to minimize computations. Use around 1-10Hz for slow paced games like EVE.")] [FormerlySerializedAs("serverTickRate")]
         public int sendRate = 60;
 
         // Deprecated 2023-11-25
         // Using SerializeField and HideInInspector to self-correct for being
         // replaced by headlessStartMode. This can be removed in the future.
         // See OnValidate() for how we handle this.
-        [Obsolete("Deprecated - Use headlessStartMode instead.")]
-        [FormerlySerializedAs("autoStartServerBuild"), SerializeField, HideInInspector]
+        [Obsolete("Deprecated - Use headlessStartMode instead.")] [FormerlySerializedAs("autoStartServerBuild"), SerializeField, HideInInspector]
         public bool autoStartServerBuild = true;
 
         // Deprecated 2023-11-25
         // Using SerializeField and HideInInspector to self-correct for being
         // replaced by headlessStartMode. This can be removed in the future.
         // See OnValidate() for how we handle this.
-        [Obsolete("Deprecated - Use headlessStartMode instead.")]
-        [FormerlySerializedAs("autoConnectClientBuild"), SerializeField, HideInInspector]
+        [Obsolete("Deprecated - Use headlessStartMode instead.")] [FormerlySerializedAs("autoConnectClientBuild"), SerializeField, HideInInspector]
         public bool autoConnectClientBuild;
 
         // client send rate follows server send rate to avoid errors for now
@@ -64,31 +73,23 @@ namespace Mirror
         // public int clientSendRate = 30; // 33 ms
 
         /// <summary>Automatically switch to this scene upon going offline (on start / on disconnect / on shutdown).</summary>
-        [Header("Scene Management")]
-        [Scene]
-        [FormerlySerializedAs("m_OfflineScene")]
-        [Tooltip("Scene that Mirror will switch to when the client or server is stopped")]
+        [Header("Scene Management")] [Scene] [FormerlySerializedAs("m_OfflineScene")] [Tooltip("Scene that Mirror will switch to when the client or server is stopped")]
         public string offlineScene = "";
 
         /// <summary>Automatically switch to this scene upon going online (after connect/startserver).</summary>
-        [Scene]
-        [FormerlySerializedAs("m_OnlineScene")]
-        [Tooltip("Scene that Mirror will switch to when the server is started. Clients will recieve a Scene Message to load the server's current scene when they connect.")]
+        [Scene] [FormerlySerializedAs("m_OnlineScene")] [Tooltip("Scene that Mirror will switch to when the server is started. Clients will recieve a Scene Message to load the server's current scene when they connect.")]
         public string onlineScene = "";
 
         // transport layer
-        [Header("Network Info")]
-        [Tooltip("Transport component attached to this object that server and client will use to connect")]
+        [Header("Network Info")] [Tooltip("Transport component attached to this object that server and client will use to connect")]
         public Transport transport;
 
         /// <summary>Server's address for clients to connect to.</summary>
-        [FormerlySerializedAs("m_NetworkAddress")]
-        [Tooltip("Network Address where the client should connect to the server. Server does not use this for anything.")]
+        [FormerlySerializedAs("m_NetworkAddress")] [Tooltip("Network Address where the client should connect to the server. Server does not use this for anything.")]
         public string networkAddress = "localhost";
 
         /// <summary>The maximum number of concurrent network connections to support.</summary>
-        [FormerlySerializedAs("m_MaxConnections")]
-        [Tooltip("Maximum number of concurrent connections.")]
+        [FormerlySerializedAs("m_MaxConnections")] [Tooltip("Maximum number of concurrent connections.")]
         public int maxConnections = 100;
 
         // Mirror global disconnect inactive option, independent of Transport.
@@ -100,26 +101,21 @@ namespace Mirror
         [Tooltip("Timeout in seconds for server to automatically disconnect inactive connections if 'disconnectInactiveConnections' is enabled.")]
         public float disconnectInactiveTimeout = 60f;
 
-        [Header("Authentication")]
-        [Tooltip("Authentication component attached to this object")]
+        [Header("Authentication")] [Tooltip("Authentication component attached to this object")]
         public NetworkAuthenticator authenticator;
 
         /// <summary>The default prefab to be used to create player objects on the server.</summary>
         // Player objects are created in the default handler for AddPlayer() on
         // the server. Implementing OnServerAddPlayer overrides this behaviour.
-        [Header("Player Object")]
-        [FormerlySerializedAs("m_PlayerPrefab")]
-        [Tooltip("Prefab of the player object. Prefab must have a Network Identity component. May be an empty game object or a full avatar.")]
+        [Header("Player Object")] [FormerlySerializedAs("m_PlayerPrefab")] [Tooltip("Prefab of the player object. Prefab must have a Network Identity component. May be an empty game object or a full avatar.")]
         public GameObject playerPrefab;
 
         /// <summary>Enable to automatically create player objects on connect and on scene change.</summary>
-        [FormerlySerializedAs("m_AutoCreatePlayer")]
-        [Tooltip("Should Mirror automatically spawn the player after scene change?")]
+        [FormerlySerializedAs("m_AutoCreatePlayer")] [Tooltip("Should Mirror automatically spawn the player after scene change?")]
         public bool autoCreatePlayer = true;
 
         /// <summary>Where to spawn players.</summary>
-        [FormerlySerializedAs("m_PlayerSpawnMethod")]
-        [Tooltip("Round Robin or Random order of Start Position selection")]
+        [FormerlySerializedAs("m_PlayerSpawnMethod")] [Tooltip("Round Robin or Random order of Start Position selection")]
         public PlayerSpawnMethod playerSpawnMethod;
 
         /// <summary>Prefabs that can be spawned over the network need to be registered here.</summary>
@@ -128,26 +124,21 @@ namespace Mirror
 
         /// <summary>List of transforms populated by NetworkStartPositions</summary>
         public static List<Transform> startPositions = new List<Transform>();
+
         public static int startPositionIndex;
 
-        [Header("Security")]
-        [Tooltip("For security, it is recommended to disconnect a player if a networked action triggers an exception\nThis could prevent components being accessed in an undefined state, which may be an attack vector for exploits.\nHowever, some games may want to allow exceptions in order to not interrupt the player's experience.")]
+        [Header("Security")] [Tooltip("For security, it is recommended to disconnect a player if a networked action triggers an exception\nThis could prevent components being accessed in an undefined state, which may be an attack vector for exploits.\nHowever, some games may want to allow exceptions in order to not interrupt the player's experience.")]
         public bool exceptionsDisconnect = true; // security by default
 
-        [Header("Snapshot Interpolation")]
-        public SnapshotInterpolationSettings snapshotSettings = new SnapshotInterpolationSettings();
+        [Header("Snapshot Interpolation")] public SnapshotInterpolationSettings snapshotSettings = new SnapshotInterpolationSettings();
 
-        [Header("Connection Quality")]
-        [Tooltip("Method to use for connection quality evaluation.\nSimple: based on rtt and jitter.\nPragmatic: based on snapshot interpolation adjustment.")]
+        [Header("Connection Quality")] [Tooltip("Method to use for connection quality evaluation.\nSimple: based on rtt and jitter.\nPragmatic: based on snapshot interpolation adjustment.")]
         public ConnectionQualityMethod evaluationMethod;
 
-        [Tooltip("Interval in seconds to evaluate connection quality.\nSet to 0 to disable connection quality evaluation.")]
-        [Range(0, 60)]
-        [FormerlySerializedAs("connectionQualityInterval")]
+        [Tooltip("Interval in seconds to evaluate connection quality.\nSet to 0 to disable connection quality evaluation.")] [Range(0, 60)] [FormerlySerializedAs("connectionQualityInterval")]
         public float evaluationInterval = 3;
 
-        [Header("Debug")]
-        public bool timeInterpolationGui = false;
+        [Header("Debug")] public bool timeInterpolationGui = false;
 
         /// <summary>The one and only NetworkManager</summary>
         public static NetworkManager singleton { get; internal set; }
@@ -414,7 +405,6 @@ namespace Mirror
                 authenticator.OnStartClient();
                 authenticator.OnClientAuthenticated.AddListener(OnClientAuthenticated);
             }
-
         }
 
         /// <summary>Starts the client, connects it to the server with networkAddress.</summary>
@@ -732,6 +722,7 @@ namespace Mirror
                     // Return false to not allow collision-destroyed second instance to continue.
                     return false;
                 }
+
                 //Debug.Log("NetworkManager created singleton (DontDestroyOnLoad)");
                 singleton = this;
                 if (Application.isPlaying)
@@ -942,6 +933,7 @@ namespace Mirror
                         // Reset the flag that we disabled before entering this switch
                         NetworkClient.isLoadingScene = false;
                     }
+
                     break;
                 case SceneOperation.UnloadAdditive:
                     // Ensure additive scene is actually loaded on client by name or path
@@ -955,6 +947,7 @@ namespace Mirror
                         // Reset the flag that we disabled before entering this switch
                         NetworkClient.isLoadingScene = false;
                     }
+
                     break;
             }
 
@@ -982,6 +975,7 @@ namespace Mirror
                     NetworkServer.SpawnObjects();
                     // Debug.Log($"Respawned Server objects after additive scene load: {scene.name}");
                 }
+
                 if (NetworkClient.active)
                 {
                     NetworkClient.PrepareToSpawnSceneObjects();
@@ -1214,7 +1208,7 @@ namespace Mirror
         void OnServerAddPlayerInternal(NetworkConnectionToClient conn, AddPlayerMessage msg)
         {
             //Debug.Log("NetworkManager.OnServerAddPlayer");
-
+#if Check
             if (autoCreatePlayer && playerPrefab == null)
             {
                 Debug.LogError("The PlayerPrefab is empty on the NetworkManager. Please setup a PlayerPrefab object.");
@@ -1232,6 +1226,7 @@ namespace Mirror
                 Debug.LogError("There is already a player for this connection.");
                 return;
             }
+#endif
 
             OnServerAddPlayer(conn);
         }
@@ -1357,7 +1352,9 @@ namespace Mirror
         }
 
         /// <summary>Called on the server when a new client connects.</summary>
-        public virtual void OnServerConnect(NetworkConnectionToClient conn) { }
+        public virtual void OnServerConnect(NetworkConnectionToClient conn)
+        {
+        }
 
         /// <summary>Called on the server when a client disconnects.</summary>
         // Called by NetworkServer.OnTransportDisconnect!
@@ -1378,6 +1375,7 @@ namespace Mirror
                 // this is now allowed (was not for a while)
                 //Debug.Log("Ready with no player object");
             }
+
             NetworkServer.SetClientReady(conn);
         }
 
@@ -1397,13 +1395,19 @@ namespace Mirror
         }
 
         /// <summary>Called on server when transport raises an exception. NetworkConnection may be null.</summary>
-        public virtual void OnServerError(NetworkConnectionToClient conn, TransportError error, string reason) { }
+        public virtual void OnServerError(NetworkConnectionToClient conn, TransportError error, string reason)
+        {
+        }
 
         /// <summary>Called from ServerChangeScene immediately before SceneManager.LoadSceneAsync is executed</summary>
-        public virtual void OnServerChangeScene(string newSceneName) { }
+        public virtual void OnServerChangeScene(string newSceneName)
+        {
+        }
 
         /// <summary>Called on server after a scene load with ServerChangeScene() is completed.</summary>
-        public virtual void OnServerSceneChanged(string sceneName) { }
+        public virtual void OnServerSceneChanged(string sceneName)
+        {
+        }
 
         /// <summary>Called on the client when connected to a server. By default it sets client as ready and adds a player.</summary>
         public virtual void OnClientConnect()
@@ -1424,7 +1428,9 @@ namespace Mirror
         }
 
         /// <summary>Called on clients when disconnected from a server.</summary>
-        public virtual void OnClientDisconnect() { }
+        public virtual void OnClientDisconnect()
+        {
+        }
 
         // Deprecated 2023-12-05
         /// <summary>Deprecated: NetworkClient handles this now.</summary>
@@ -1445,14 +1451,20 @@ namespace Mirror
         }
 
         /// <summary>Called on client when transport raises an exception.</summary>
-        public virtual void OnClientError(TransportError error, string reason) { }
+        public virtual void OnClientError(TransportError error, string reason)
+        {
+        }
 
         /// <summary>Called on clients when a servers tells the client it is no longer ready, e.g. when switching scenes.</summary>
-        public virtual void OnClientNotReady() { }
+        public virtual void OnClientNotReady()
+        {
+        }
 
         /// <summary>Called from ClientChangeScene immediately before SceneManager.LoadSceneAsync is executed</summary>
         // customHandling: indicates if scene loading will be handled through overrides
-        public virtual void OnClientChangeScene(string newSceneName, SceneOperation sceneOperation, bool customHandling) { }
+        public virtual void OnClientChangeScene(string newSceneName, SceneOperation sceneOperation, bool customHandling)
+        {
+        }
 
         /// <summary>Called on clients when a scene has completed loaded, when the scene load was initiated by the server.</summary>
         // Scene changes can cause player objects to be destroyed. The default
@@ -1477,22 +1489,34 @@ namespace Mirror
         // from all versions, so users only need to implement this one case.
 
         /// <summary>This is invoked when a host is started.</summary>
-        public virtual void OnStartHost() { }
+        public virtual void OnStartHost()
+        {
+        }
 
         /// <summary>This is invoked when a server is started - including when a host is started.</summary>
-        public virtual void OnStartServer() { }
+        public virtual void OnStartServer()
+        {
+        }
 
         /// <summary>This is invoked when the client is started.</summary>
-        public virtual void OnStartClient() { }
+        public virtual void OnStartClient()
+        {
+        }
 
         /// <summary>This is called when a server is stopped - including when a host is stopped.</summary>
-        public virtual void OnStopServer() { }
+        public virtual void OnStopServer()
+        {
+        }
 
         /// <summary>This is called when a client is stopped.</summary>
-        public virtual void OnStopClient() { }
+        public virtual void OnStopClient()
+        {
+        }
 
         /// <summary>This is called when a host is stopped.</summary>
-        public virtual void OnStopHost() { }
+        public virtual void OnStopHost()
+        {
+        }
 
         // keep OnGUI even in builds. useful to debug snap interp.
         void OnGUI()

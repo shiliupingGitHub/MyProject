@@ -10,14 +10,9 @@ namespace Game.Script.Misc
         public override void OnServerAddPlayer(NetworkConnectionToClient conn)
         {
 
-            var mapSubsystem = Common.Game.Instance.GetSubsystem<MapSubsystem>();
-
-            var bornPosition = mapSubsystem.GetRandomBornPosition();
-            GameObject player = Instantiate(playerPrefab, bornPosition, quaternion.identity);
-
-            // instantiating a "Player" prefab gives it the name "Player(clone)"
-            // => appending the connectionId is WAY more useful for debugging!
-            player.name = $"{playerPrefab.name} [connId={conn.connectionId}]";
+            var player = Common.Game.Instance.serverFightNewPlayer.Invoke();
+            
+            player.name = $"{player.name} [connId={conn.connectionId}]";
             NetworkServer.AddPlayerForConnection(conn, player);
         }
 
