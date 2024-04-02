@@ -35,6 +35,10 @@ namespace Game.Script.Subsystem
                 CheckMap();
                 GenerateInitAreas();
             };
+            Common.Game.Instance.serverFightSceneChanged += () =>
+            {
+                LoadMap(Common.Game.Instance.FightMap, true);
+            };
         }
 
         public Vector3 GetRandomBornPosition()

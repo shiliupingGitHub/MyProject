@@ -27,8 +27,7 @@ namespace Game.Script.Misc
 
             if (sceneName.Contains("Fight"))
             {
-                var mapSubsystem = Common.Game.Instance.GetSubsystem<MapSubsystem>();
-                mapSubsystem.LoadMap("map_test_1", true);
+                Common.Game.Instance.serverFightSceneChanged?.Invoke();
             }
         }
 

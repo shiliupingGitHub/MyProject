@@ -27,6 +27,7 @@ namespace Game.Script.UI.Frames
                 var levelSubsystem = Common.Game.Instance.GetSubsystem<LevelSubsystem>();
                 Common.Game.Instance.LoadNetWorkManager();
                 Common.Game.Instance.Mode = GameMode.Host;
+                Common.Game.Instance.FightMap = "map_test_1";
                 NetworkManager.singleton.networkAddress = "localhost";
                 levelSubsystem.Enter(LevelType.Fight);
             });

@@ -25,8 +25,10 @@ namespace Game.Script.Common
         public System.Action<AICharacter, bool> addMonster;
         public System.Action<AICharacter, bool> removeMonster;
         public System.Action fightStart;
+        public System.Action serverFightSceneChanged;
         public GameMode Mode { set; get; } = GameMode.Host;
-        private bool _fightStart = false;
+        private bool _fightStart ;
+        public string FightMap { get; set; }
         public bool FightStart
         {
             get => _fightStart;
