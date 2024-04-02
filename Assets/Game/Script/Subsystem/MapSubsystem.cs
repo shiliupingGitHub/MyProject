@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Game.Script.Common;
 using Game.Script.Map;
 using Game.Script.Res;
 using Game.Script.UI;
@@ -94,7 +95,7 @@ namespace Game.Script.Subsystem
             await Task.Delay(1000);
             UIManager.Instance.Hide<LoadingFrame>();
 
-            if (NetworkManager.singleton.mode == NetworkManagerMode.Host)
+            if (Common.Game.Instance.Mode== GameMode.Host)
             {
                 Common.Game.Instance.FightStart = true;
             }

@@ -15,6 +15,7 @@ namespace Game.Script.Common
         Host,
         Edit,
         Client,
+        Home,
     }
     public class Game : SingletonWithOnInstance<Game>
     {
