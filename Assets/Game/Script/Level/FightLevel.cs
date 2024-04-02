@@ -1,4 +1,5 @@
 ﻿using Game.Script.Common;
+using Game.Script.Subsystem;
 using Game.Script.UI;
 using Game.Script.UI.Frames;
 using Mirror;
@@ -10,7 +11,8 @@ namespace Game.Script.Level
         public override void Leave()
         {
             base.Leave();
-            Common.Game.Instance.FightStart = false;
+            var fightSubsystem = Common.Game.Instance.GetSubsystem<FightSubsystem>();
+            fightSubsystem.FightStart = false;
         }
 
         public override void Enter()

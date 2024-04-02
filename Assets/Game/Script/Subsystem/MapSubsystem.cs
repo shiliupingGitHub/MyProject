@@ -101,7 +101,8 @@ namespace Game.Script.Subsystem
 
             if (Common.Game.Instance.Mode== GameMode.Host)
             {
-                Common.Game.Instance.FightStart = true;
+                var fightSubsystem = Common.Game.Instance.GetSubsystem<FightSubsystem>();
+                fightSubsystem.StartFight();
             }
             
         }

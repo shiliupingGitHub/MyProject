@@ -24,34 +24,11 @@ namespace Game.Script.Common
         public System.Action<FightCharacter> localPlayerLoad;
         public System.Action<AICharacter, bool> addMonster;
         public System.Action<AICharacter, bool> removeMonster;
-        public System.Action fightStart;
         public System.Action serverFightSceneChanged;
         public GameMode Mode { set; get; } = GameMode.Host;
-        private bool _fightStart ;
+      
         public string FightMap { get; set; }
-        public bool FightStart
-        {
-            get => _fightStart;
-            set
-            {
-                if (_fightStart != value)
-                {
-                    _fightStart = value;
-
-                    if (_fightStart)
-                    {
-                        fightStart?.Invoke();
-                    }
-                    else
-                    {
-                        fightStart = null;
-                    }
-                }
-            }
-        }
-
         public List<FightCharacter> Fights { get; } = new();
-
         private readonly Dictionary<System.Type, GameSubsystem> _subsystems = new();
         private readonly List<Pawn> _pawns = new();
         private FightCharacter _myController;
@@ -60,8 +37,6 @@ namespace Game.Script.Common
         private GameObject _networkMgrGo;
         private float _lastTickTime = 0;
         
-        
-
         public void RegisterPawn(Pawn pawn)
         {
             if (!_pawns.Contains(pawn))

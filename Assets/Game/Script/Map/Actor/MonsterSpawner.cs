@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Game.Script.Character;
 using Game.Script.Common;
+using Game.Script.Subsystem;
 using Mirror;
 using UnityEngine;
 
@@ -19,18 +20,18 @@ namespace Game.Script.Map.Actor
                 go.transform.position = transform.position + new Vector3(cellSize.x, cellSize.y, 0);
                 NetworkServer.Spawn(go);
             }
-            Common.Game.Instance.fightStart -= DoBorn;
         }
 
         void TryDoBorn()
         {
-            if (Common.Game.Instance.FightStart)
+            var fightSubsystem = Common.Game.Instance.GetSubsystem<FightSubsystem>();
+            if (fightSubsystem.FightStart)
             {
                 DoBorn();
             }
             else
             {
-                Common.Game.Instance.fightStart += DoBorn;
+                fightSubsystem.fightStart += DoBorn;
             }
             
         }
