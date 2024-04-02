@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Game.Script.Async;
 using Game.Script.Common;
 using Game.Script.Map;
 using Priority_Queue;
@@ -17,7 +18,7 @@ namespace Game.Script.Subsystem
         public int endX;
         public int endY;
         public ulong pathId;
-        public TaskCompletionSource<List<Vector3>>  tls;
+        public  ETTaskCompletionSource<List<Vector3>>  tls;
     }
 
     public class PathSubsystem : GameSubsystem
@@ -36,7 +37,7 @@ namespace Game.Script.Subsystem
                 {
                     if (request.tls != null)
                     {
-                        request.tls.SetCanceled();
+                        request.tls.SetResult(null);
                     }
                 }
                 _pathRequestList.Clear();
@@ -50,16 +51,16 @@ namespace Game.Script.Subsystem
             while (true)
             {
                 OnTick();
-                await Task.Delay(1);
+                await TimerSubsystem.Delay(1);
             }
         }
 
-        public Task<List<Vector3>> AddPath(Vector3 start, Vector3 end,  ref ulong pathId)
+        public ETTask<List<Vector3>> AddPath(Vector3 start, Vector3 end,  ref ulong pathId)
         {
              pathId = _pathId;
             _pathId++;
 
-            TaskCompletionSource<List<Vector3>> curtls = new();
+            ETTaskCompletionSource<List<Vector3>> curtls = new();
             
             (int sX, int sY) = Common.Game.Instance.MapBk.GetGridIndex(start);
             (int eX, int eY) = Common.Game.Instance.MapBk.GetGridIndex(end);
@@ -74,7 +75,7 @@ namespace Game.Script.Subsystem
 
             if (request.tls != null)
             {
-                request.tls.SetCanceled();
+                request.tls.SetResult(null);
                 _pathRequestList.Remove(request);
             }
             

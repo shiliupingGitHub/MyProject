@@ -104,7 +104,7 @@ namespace Game.Script.Common
             while (true)
             {
                 Tick();
-                await Task.Delay(1);
+                await TimerSubsystem.Delay(1);
             }
         }
 

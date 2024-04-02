@@ -1,8 +1,8 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using BehaviorDesigner.Runtime;
 using Game.Script.AI;
+using Game.Script.Async;
 using Game.Script.Common;
 using UnityEngine;
 
@@ -45,14 +45,14 @@ namespace Game.Script.Character
         private int _curPathIndex = -1;
         private float _curAcceptRadius = 1f;
 
-        private GameObject _targetGo = null;
-        private TaskCompletionSource<PathState> _pathTcl;
+        private GameObject _targetGo ;
+        private ETTaskCompletionSource<PathState> _pathTcl;
         private Vector3 _lasChangePosition;
         private float _lastChangePositionTime;
 
-        public Task<PathState> SetPath(List<Vector3> path, float acceptRadius = 1.2f, GameObject targetGo = null)
+        public ETTask<PathState> SetPath(List<Vector3> path, float acceptRadius = 1.2f, GameObject targetGo = null)
         {
-            _pathTcl = new TaskCompletionSource<PathState>();
+            _pathTcl = new ETTaskCompletionSource<PathState>();
             _curPathIndex = 2;
             _path = path;
             CurPathState = PathState.Moving;

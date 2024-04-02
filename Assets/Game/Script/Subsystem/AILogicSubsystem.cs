@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using BehaviorDesigner.Runtime.Tasks;
 using Game.Script.AI.Logic;
 using Game.Script.Character;
 using UnityEngine;
@@ -10,8 +9,8 @@ namespace Game.Script.Subsystem
     public class AILogicSubsystem : GameSubsystem
     {
         private readonly List<AILogic> _logics = new();
-        private List<AICharacter> _characters = new();
-        private float _lastTickTime = 0;
+        private readonly List<AICharacter> _characters = new();
+        private float _lastTickTime;
         public override void OnInitialize()
         {
             base.OnInitialize();
@@ -77,7 +76,7 @@ namespace Game.Script.Subsystem
                     TickCharacters(delta);
                 }
 
-                await Task.Delay(1);
+                await TimerSubsystem.Delay(1);
             }
         }
     }

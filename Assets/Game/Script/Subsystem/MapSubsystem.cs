@@ -106,7 +106,7 @@ namespace Game.Script.Subsystem
 
         async void StartGame()
         {
-            await Task.Delay(1000);
+            await TimerSubsystem.Delay(1000);
             UIManager.Instance.Hide<LoadingFrame>();
 
             if (Common.Game.Instance.Mode== GameMode.Host)

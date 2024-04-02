@@ -65,7 +65,7 @@ namespace Game.Script.UI.Frames
             while (_bTicking)
             {
                 Tick();
-                await Task.Delay(1);
+                await TimerSubsystem.Delay(1);
             }
         }
 
