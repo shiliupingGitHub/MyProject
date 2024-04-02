@@ -3,7 +3,7 @@
 
 namespace Game.Script.Subsystem
 {
-    public class GameSubsystem : ISubsystem
+    public abstract class GameSubsystem : ISubsystem
     {
         public virtual void OnInitialize()
         {
