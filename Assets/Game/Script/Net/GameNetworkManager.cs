@@ -9,7 +9,11 @@ namespace Game.Script.Misc
     {
         public override void OnServerAddPlayer(NetworkConnectionToClient conn)
         {
-            GameObject player = Instantiate(playerPrefab, new Vector3(3, 1, 0), quaternion.identity);
+
+            var mapSubsystem = Common.Game.Instance.GetSubsystem<MapSubsystem>();
+
+            var bornPosition = mapSubsystem.GetRandomBornPosition();
+            GameObject player = Instantiate(playerPrefab, bornPosition, quaternion.identity);
 
             // instantiating a "Player" prefab gives it the name "Player(clone)"
             // => appending the connectionId is WAY more useful for debugging!

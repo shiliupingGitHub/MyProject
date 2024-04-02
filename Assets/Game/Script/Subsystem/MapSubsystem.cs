@@ -35,6 +35,34 @@ namespace Game.Script.Subsystem
             };
         }
 
+        public Vector3 GetRandomBornPosition()
+        {
+            int chooseX = _mapBk.xGridNum / 2;
+            int chooseY = _mapBk.yGridNum/ 2;
+
+            for (int i = 0; i < 2; i++)
+            {
+                int x = Random.Range(0, _mapBk.xGridNum - 1);
+                int y = Random.Range(0, _mapBk.yGridNum - 1);
+
+                var area = GetArea(x, y);
+
+                if (null == area || !area.Blocked)
+                {
+                    chooseX = x;
+                    chooseY = y;
+                    break;
+                }
+            }
+
+            Vector3 ret = _mapBk.Offset;
+
+            var cellSize = _mapBk.MyGrid.cellSize;
+            ret.x += chooseX * cellSize.x + cellSize.x * 0.5f;
+            ret.y += chooseY * cellSize.y + cellSize.y * 0.5f;
+            return ret;
+        }
+
 
         public MapArea GetArea(int x, int y, bool create = false)
         {
@@ -62,7 +90,7 @@ namespace Game.Script.Subsystem
 
         async void HideLoading()
         {
-            await Task.Delay(1);
+            await Task.Delay(1000);
             UIManager.Instance.Hide<LoadingFrame>();
         }
         public MapData New(int bkId)
