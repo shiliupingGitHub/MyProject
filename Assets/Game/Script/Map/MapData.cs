@@ -135,6 +135,41 @@ namespace Game.Script.Map
             }
         }
 
+        void LoadActor(MapBk mapBk, ActorData actorData, bool preview = true, bool net = false)
+        {
+            ActorConfig actorConfig = ActorConfig.dic[actorData.id];
+            var template = GameResMgr.Instance.LoadAssetSync<GameObject>(actorConfig.path);
+
+            if (template)
+            {
+                var go = Object.Instantiate(template) as GameObject;
+                if (preview)
+                {
+                    go.tag = "Preview";
+                }
+
+                var actor = go.GetComponent<MapActor>();
+
+                if (actor != null)
+                {
+                    actor.Config = actorConfig;
+                    actor.ActorType = preview ? ActorType.Preview : ActorType.Normal;
+                }
+
+                go.transform.position = mapBk.GetPosition(actorData.x, actorData.y);
+                actorData.go = go;
+
+                if (net && actor.isNet)
+                {
+                    if (go.TryGetComponent(out NetworkIdentity identity))
+                    {
+                        NetworkServer.Spawn(go);
+                    }
+
+                }
+            }
+        }
+
         public void LoadActorsSync(bool preview = true, bool net = false)
         {
             MapBk mapBk = Object.FindObjectOfType<MapBk>();
@@ -143,38 +178,8 @@ namespace Game.Script.Map
                 return ;
             foreach (var actorData in _actors)
             {
-                ActorConfig actorConfig = ActorConfig.dic[actorData.id];
-                var template = GameResMgr.Instance.LoadAssetSync<GameObject>(actorConfig.path);
+                LoadActor(mapBk, actorData, preview, net);
 
-                if (template)
-                {
-                    var go = Object.Instantiate(template) as GameObject;
-                    if (preview)
-                    {
-                        go.tag = "Preview";
-                    }
-                    
-                    var actor = go.GetComponent<MapActor>();
-                    
-                    if (actor != null)
-                    {
-                        actor.Config = actorConfig;
-                        actor.ActorType = preview?ActorType.Preview:ActorType.Normal;
-                    }
-
-                    go.transform.position = mapBk.GetPosition(actorData.x, actorData.y);
-                    actorData.go = go;
-
-                    if (net && actor.isNet)
-                    {
-                        if (go.TryGetComponent(out NetworkIdentity identity))
-                        {
-                            NetworkServer.Spawn(go);
-                        }
-                        
-                    }
-
-                }
             }
         }
 
