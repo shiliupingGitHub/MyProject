@@ -19,13 +19,15 @@ namespace Game.Script.UI
             {
                 var asset = GameResMgr.Instance.LoadAssetSync<GameObject>(ResPath);
                 _gameObject = Object.Instantiate(asset,parent);
-                InitField(_gameObject);
+                InitField(_gameObject, this);
             }
         }
+        
+        
 
-        void InitField(GameObject go)
+        public static void InitField(GameObject go, System.Object o)
         {
-            var typeInfo = GetType() as TypeInfo;
+            var typeInfo = o.GetType() as TypeInfo;
 
             if (typeInfo == null)
             {
@@ -49,16 +51,16 @@ namespace Game.Script.UI
                     {
                         if (field.FieldType == typeof(GameObject))
                         {
-                            field.SetValue(this, transform.gameObject);
+                            field.SetValue(o, transform.gameObject);
                         }
                         else if (field.FieldType == typeof(Transform))
                         {
-                            field.SetValue(this, transform);
+                            field.SetValue(o, transform);
                         }
                         else
                         {
                             var component = transform.GetComponent(field.FieldType);
-                            field.SetValue(this, component);
+                            field.SetValue(o, component);
                         }
                     }
                     else
