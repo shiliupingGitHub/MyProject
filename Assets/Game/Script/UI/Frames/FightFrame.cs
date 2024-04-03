@@ -2,6 +2,7 @@
 using Game.Script.Attribute;
 using Game.Script.Common;
 using Game.Script.Subsystem;
+using Mirror;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +13,7 @@ namespace Game.Script.UI.Frames
         protected override string ResPath => "Assets/Game/Res/UI/FightFrame.prefab";
         
         [UIPath("offset/lbLeftTime")] private Text _lbLeftTime;
-
+        [UIPath("offset/btnReturnHall")] private Button _btnReturnHall;
         private LineRenderer _lineRenderer;
         public override void Init(Transform parent)
         {
@@ -20,6 +21,23 @@ namespace Game.Script.UI.Frames
             UpdateStartFightLeftTime();
             var fightSubsystem = Common.Game.Instance.GetSubsystem<FightSubsystem>();
             fightSubsystem.startLeftTimeChanged += UpdateStartFightLeftTime;
+            _btnReturnHall.onClick.AddListener(() =>
+            {
+                switch (Common.Game.Instance.Mode)
+                {
+                    case GameMode.Host:
+                    {
+                        NetworkManager.singleton.StopHost();
+                    }
+                        break;
+                    case GameMode.Client:
+                    {
+                        NetworkManager.singleton.StopClient();
+                    }
+                        break;
+                }
+            });
+          
 
         }
 
