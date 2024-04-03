@@ -32,12 +32,13 @@ namespace Game.Script.Subsystem
                 CheckMap();
             } ;
 
-            Common.Game.Instance.mapBkLoad += script =>
+            var eventSubsystem = Common.Game.Instance.GetSubsystem<EventSubsystem>();
+            eventSubsystem.Subscribe("mapBkLoad", script =>
             {
-                _mapBk = script;
+                _mapBk = script as MapBk;
                 CheckMap();
                 GenerateInitAreas();
-            };
+            });
             Common.Game.Instance.serverFightSceneChanged += () =>
             {
                 LoadMap(Common.Game.Instance.FightMap, true);

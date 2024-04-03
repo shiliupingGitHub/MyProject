@@ -21,7 +21,6 @@ namespace Game.Script.Common
 
     public class Game : SingletonWithOnInstance<Game>
     {
-        public System.Action<MapBk> mapBkLoad;
         public System.Action<FightCharacter> localPlayerLoad;
         public System.Action<AICharacter, bool> addMonster;
         public System.Action<AICharacter, bool> removeMonster;
@@ -54,11 +53,9 @@ namespace Game.Script.Common
             set
             {
                 _mapBk = value;
-
-                if (mapBkLoad != null)
-                {
-                    mapBkLoad.Invoke(_mapBk);
-                }
+                
+                var eventSubsystem = Common.Game.Instance.GetSubsystem<EventSubsystem>();
+                eventSubsystem.Raise("mapBkLoad", _mapBk);
             }
             get => _mapBk;
         }
