@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cinemachine;
+using Game.Script.Async;
 using Game.Script.Common;
 using Game.Script.Map.Actor;
 using Game.Script.Res;
+using Game.Script.Subsystem;
 using Mirror;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -35,6 +37,22 @@ namespace Game.Script.Map
             LoadActorsSync(preview, net);
         }
 
+
+        public  async void  LoadAsync()
+        {
+            
+            LoadBk(false, true);
+            
+            MapBk mapBk = Object.FindObjectOfType<MapBk>();
+            
+            foreach (var actorData in _actors)
+            {
+                LoadActor(mapBk, actorData, false, true);
+                await TimerSubsystem.Delay(1);
+            }
+
+            
+        }
         public string Serialize()
         {
             return JsonUtility.ToJson(this);

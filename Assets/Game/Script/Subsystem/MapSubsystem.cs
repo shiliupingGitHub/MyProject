@@ -218,7 +218,7 @@ namespace Game.Script.Subsystem
             var content = GameResMgr.Instance.LoadAssetSync<TextAsset>(path);
             var mapData = MapData.DeSerialize(content.text);
             
-            mapData.LoadSync(false, true);
+            mapData.LoadAsync();
         }
     }
 }
