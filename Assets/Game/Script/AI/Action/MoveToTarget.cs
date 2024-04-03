@@ -68,15 +68,15 @@ namespace Game.Script.AI.Action
                 return;
             }
 
-            var character = GetComponent<AICharacter>();
+            var characterMovement = GetComponent<AICharacterMovement>();
             _pathId = 0;
             _moveStatus = MoveStatus.Moving;
-            var result = await character.SetPath(path, acceptRadius, target.Value);
+            var result = await characterMovement.Move(path, acceptRadius, target.Value);
 
             DoResult(result);
         }
 
-        void DoResult(AICharacter.PathState result)
+        void DoResult(PathState result)
         {
             if (_moveStatus == MoveStatus.Moving)
             {
@@ -95,11 +95,11 @@ namespace Game.Script.AI.Action
             }
         }
 
-        MoveStatus ConvertPathState(AICharacter.PathState state)
+        MoveStatus ConvertPathState(PathState state)
         {
             switch (state)
             {
-                case AICharacter.PathState.Fail:
+                case PathState.Fail:
                     return MoveStatus.Fail;
             }
 
@@ -116,9 +116,9 @@ namespace Game.Script.AI.Action
 
             if (disSqt >= rePathDistance * rePathDistance)
             {
-                var character = GetComponent<AICharacter>();
+                var characterMovement = GetComponent<AICharacterMovement>();
                 _pathId = 0;
-                character.CancelMove();
+                characterMovement.CancelMove();
                 StartPath();
             }
         }

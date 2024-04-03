@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 8541539398798180198}
   - component: {fileID: 2978856458451260467}
   - component: {fileID: 6228015611244146279}
+  - component: {fileID: -3277198635055497020}
   m_Layer: 9
   m_Name: Monster_Test
   m_TagString: Untagged
@@ -175,7 +176,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 84e3ddaaee53bf74493b44a67a3a1da3, type: 2}
   externalBehaviorTree: {fileID: 11400000, guid: a47db7b25a25d444daf40fc760dab93b,
     type: 2}
-  moveSpeed: 0.5
 --- !u!114 &8541539398798180198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,3 +266,16 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &-3277198635055497020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5248929476824234659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 157406c4634342efb0e32ca365c1782c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 0.5
