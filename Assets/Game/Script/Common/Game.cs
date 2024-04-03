@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Game.Script.Character;
 using Game.Script.Map;
@@ -17,9 +18,9 @@ namespace Game.Script.Common
         Client,
         Home,
     }
+
     public class Game : SingletonWithOnInstance<Game>
     {
-
         public System.Action<MapBk> mapBkLoad;
         public System.Action<FightCharacter> localPlayerLoad;
         public System.Action<AICharacter, bool> addMonster;
@@ -27,15 +28,14 @@ namespace Game.Script.Common
         public System.Action serverFightSceneChanged;
         public System.Func<GameObject> serverFightNewPlayer;
         public GameMode Mode { set; get; } = GameMode.Host;
-      
+
         public string FightMap { get; set; }
         public List<FightCharacter> Fights { get; } = new();
         private readonly Dictionary<System.Type, GameSubsystem> _subsystems = new();
         private readonly List<Pawn> _pawns = new();
         private FightCharacter _myController;
         private MapBk _mapBk;
-        private float _lastTickTime = 0;
-        
+        private const long TickMaxTime = 5;
         public void RegisterPawn(Pawn pawn)
         {
             if (!_pawns.Contains(pawn))
@@ -46,11 +46,9 @@ namespace Game.Script.Common
                     Fights.Add(character);
                 }
             }
-
-           
         }
-        
-        
+
+
         public MapBk MapBk
         {
             set
@@ -79,31 +77,37 @@ namespace Game.Script.Common
             get => _myController;
         }
 
-        public void Tick()
-        {
-            if (_lastTickTime == 0)
-            {
-                _lastTickTime = Time.unscaledTime;
-            }
-            else
-            {
-                float curTime = Time.unscaledTime;
-                float delta = curTime - _lastTickTime;
-                foreach (var pawn in _pawns)
-                {
-                    pawn.Tick(delta);
-                }
 
-                _lastTickTime = curTime;
-            }
-            
-        }
-
-         async void DoTick()
+        async void DoTick()
         {
             while (true)
             {
-                Tick();
+                Stopwatch stopwatch = new Stopwatch();
+                long executeMilliseconds = 0;
+                int curIndex = 0;
+                while (curIndex < _pawns.Count)
+                {
+                   
+                    stopwatch.Restart();
+                    var pawn = _pawns[curIndex];
+                    curIndex++;
+                    float curTime = Time.unscaledTime;
+                    float delta = curTime - pawn.LastTickTime;
+                    pawn.Tick(delta);
+                    pawn.LastTickTime = curTime;
+                    
+                    stopwatch.Stop();
+                    
+                    executeMilliseconds += (int)stopwatch.ElapsedMilliseconds;
+                    
+                    if(executeMilliseconds > TickMaxTime)
+                    {
+                        executeMilliseconds = 0;
+                        await TimerSubsystem.Delay(1);
+                    };
+
+                }
+                
                 await TimerSubsystem.Delay(1);
             }
         }
@@ -117,7 +121,7 @@ namespace Game.Script.Common
             }
         }
 
-        public T GetSubsystem<T>() where T: GameSubsystem
+        public T GetSubsystem<T>() where T : GameSubsystem
         {
             var type = typeof(T);
             _subsystems.TryGetValue(type, out var ret);
@@ -135,10 +139,8 @@ namespace Game.Script.Common
                 {
                     if (System.Activator.CreateInstance(type) is GameSubsystem subsystem)
                     {
-                       
-                        _subsystems.Add(type,subsystem);
+                        _subsystems.Add(type, subsystem);
                     }
-                   
                 }
             }
 
@@ -148,7 +150,6 @@ namespace Game.Script.Common
             }
 
             DoTick();
-
         }
     }
 }

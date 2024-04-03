@@ -7,11 +7,13 @@ namespace Game.Script.Character
     [RequireComponent(typeof(NetworkTransformReliable))]
     public class Pawn : Actor
     {
-        public Vector3 Position { get; set; }
+        public Vector3 Position { get; private set; }
+        public float LastTickTime;
         protected override void Awake()
         {
             base.Awake();
             Common.Game.Instance.RegisterPawn(this);
+            LastTickTime = Time.unscaledTime;
         }
 
         protected override void OnDestroy()  
