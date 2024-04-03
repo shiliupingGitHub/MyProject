@@ -21,10 +21,7 @@ namespace Game.Script.Common
 
     public class Game : SingletonWithOnInstance<Game>
     {
-        public System.Action<FightCharacter> localPlayerLoad;
-        public System.Action<AICharacter, bool> addMonster;
-        public System.Action<AICharacter, bool> removeMonster;
-        public System.Action serverFightSceneChanged;
+
         public System.Func<GameObject> serverFightNewPlayer;
         public GameMode Mode { set; get; } = GameMode.Host;
 
@@ -65,11 +62,9 @@ namespace Game.Script.Common
             set
             {
                 _myController = value;
-
-                if (null != localPlayerLoad)
-                {
-                    localPlayerLoad.Invoke(_myController);
-                }
+                
+                var eventSubsystem = Common.Game.Instance.GetSubsystem<EventSubsystem>();
+                eventSubsystem.Raise("localPlayerLoad", _myController);
             }
             get => _myController;
         }

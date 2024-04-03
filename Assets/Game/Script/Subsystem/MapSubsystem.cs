@@ -27,22 +27,23 @@ namespace Game.Script.Subsystem
         public override void OnInitialize()
         {
             base.OnInitialize();
-            Common.Game.Instance.localPlayerLoad += (_) =>
+            
+            
+            var eventSubsystem = Common.Game.Instance.GetSubsystem<EventSubsystem>();
+            eventSubsystem.Subscribe("localPlayerLoad", o =>
             {
                 CheckMap();
-            } ;
-
-            var eventSubsystem = Common.Game.Instance.GetSubsystem<EventSubsystem>();
+            });
             eventSubsystem.Subscribe("mapBkLoad", script =>
             {
                 _mapBk = script as MapBk;
                 CheckMap();
                 GenerateInitAreas();
             });
-            Common.Game.Instance.serverFightSceneChanged += () =>
+            eventSubsystem.Subscribe("serverFightSceneChanged", o =>
             {
                 LoadMap(Common.Game.Instance.FightMap, true);
-            };
+            });
             Common.Game.Instance.serverFightNewPlayer += () =>
             {
                 var bornPosition =  GetRandomBornPosition();

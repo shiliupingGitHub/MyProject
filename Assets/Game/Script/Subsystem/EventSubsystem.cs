@@ -5,7 +5,7 @@ namespace Game.Script.Subsystem
     public class EventSubsystem : GameSubsystem
     {
         private Dictionary<string, System.Action<System.Object>> _subscribers = new();
-        public void Raise(string eventName, System.Object o)
+        public void Raise(string eventName, System.Object o = null)
         {
             if(_subscribers.TryGetValue(eventName, out var subscriber))
                 subscriber(o);

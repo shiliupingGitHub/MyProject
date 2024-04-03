@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Game.Script.AI.Logic;
 using Game.Script.Character;
+using Game.Script.Common;
 using UnityEngine;
 using Task = System.Threading.Tasks.Task;
 
@@ -25,22 +26,17 @@ namespace Game.Script.Subsystem
                     _logics.Add(logic);
                 }
             }
-
-            Common.Game.Instance.addMonster += (character, isServer) =>
-            {
-                if (isServer)
-                {
-                    _characters.Add(character);
-                }
-            };
             
-            Common.Game.Instance.removeMonster += (character, isServer) =>
+            var eventSubsystem = Common.Game.Instance.GetSubsystem<EventSubsystem>();
+            eventSubsystem.Subscribe("addMonster", o =>
             {
-                if (isServer)
-                {
-                    _characters.Remove(character);
-                }
-            };
+                _characters.Add(o as AICharacter);
+            });
+            
+            eventSubsystem.Subscribe("removeMonster", o =>
+            {
+                _characters.Remove(o as AICharacter);
+            });
             
             Tick();
         }
@@ -70,17 +66,21 @@ namespace Game.Script.Subsystem
         {
             while (true)
             {
-                if (_lastTickTime == 0)
+                if (Common.Game.Instance.Mode == GameMode.Host)
                 {
-                    _lastTickTime = Time.unscaledTime;
+                    if (_lastTickTime == 0)
+                    {
+                        _lastTickTime = Time.unscaledTime;
+                    }
+                    else
+                    {
+                        float curTime = Time.unscaledTime;
+                        float delta = curTime - _lastTickTime;
+                        _lastTickTime = curTime;
+                        TickCharacters(delta);
+                    }
                 }
-                else
-                {
-                    float curTime = Time.unscaledTime;
-                    float delta = curTime - _lastTickTime;
-                    _lastTickTime = curTime;
-                    TickCharacters(delta);
-                }
+                
 
                 await TimerSubsystem.Delay(1);
             }

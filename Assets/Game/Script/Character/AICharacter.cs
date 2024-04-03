@@ -4,6 +4,7 @@ using BehaviorDesigner.Runtime;
 using Game.Script.AI;
 using Game.Script.Async;
 using Game.Script.Common;
+using Game.Script.Subsystem;
 using UnityEngine;
 
 
@@ -51,25 +52,18 @@ namespace Game.Script.Character
         protected override void Start()
         {
             base.Start();
-
-            if (Common.Game.Instance.addMonster != null)
-            {
-                Common.Game.Instance.addMonster.Invoke(this, isServer);
-            }
+            
+            var eventSubsystem = Common.Game.Instance.GetSubsystem<EventSubsystem>();
+            eventSubsystem.Raise("addMonster", this);
         }
-
         
-
         protected override void OnDestroy()
         {
             base.OnDestroy();
-
-           
-
-            if (Common.Game.Instance.removeMonster != null)
-            {
-                Common.Game.Instance.removeMonster.Invoke(this, isServer);
-            }
+            
+            var eventSubsystem = Common.Game.Instance.GetSubsystem<EventSubsystem>();
+            eventSubsystem.Raise("removeMonster", this);
+          
         }
         
 

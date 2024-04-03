@@ -22,7 +22,8 @@ namespace Game.Script.Misc
 
             if (sceneName.Contains("Fight"))
             {
-                Common.Game.Instance.serverFightSceneChanged?.Invoke();
+                var eventSubsystem = Common.Game.Instance.GetSubsystem<EventSubsystem>();
+                eventSubsystem.Raise("serverFightSceneChanged");
             }
         }
 
