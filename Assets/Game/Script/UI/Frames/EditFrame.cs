@@ -39,7 +39,7 @@ namespace Game.Script.UI.Frames
         [UIPath("btnSave")] private Button _btnSave;
         [UIPath("ActorTemplate")] private GameObject _actorTemplate;
         [UIPath("svActors/Viewport/Content")] private Transform _contentRoot;
-
+        [UIPath("btnReturnHall")] private Button _btnReturnHall;
 
         void AddToTick()
         {
@@ -354,7 +354,12 @@ namespace Game.Script.UI.Frames
         public override void Init(Transform parent)
         {
             base.Init(parent);
-            _btnNew.GetComponent<Button>().onClick.AddListener(() =>
+            _btnReturnHall.onClick.AddListener(() =>
+            {
+                var levelSubsystem = Common.Game.Instance.GetSubsystem<LevelSubsystem>();
+                levelSubsystem.Enter(LevelType.Hall);
+            });
+            _btnNew.onClick.AddListener(() =>
             {
                 if (_curMapData != null)
                 {
