@@ -17,9 +17,9 @@ namespace Game.Script.Common
 
     public class Actor : NetworkBehaviour
     {
+        public Transform CacheTransform { get; set; }
         protected virtual Vector2Int[] Areas => null;
         protected virtual bool IsBlock => false;
-        protected Transform cacheTransform;
         private int _areaIndex = -1;
         private readonly List<(int, int)> _nowArea = new();
         private readonly List<(int, int)> _tempArea = new();
@@ -38,7 +38,7 @@ namespace Game.Script.Common
 
         protected virtual void Awake()
         {
-            cacheTransform = transform;
+            CacheTransform = transform;
         }
 
         protected virtual void OnDestroy()
@@ -65,7 +65,7 @@ namespace Game.Script.Common
         protected virtual void UpdateArea()
         {
             var mapSubsystem = Game.Instance.GetSubsystem<MapSubsystem>();
-            var position = cacheTransform.position;
+            var position = CacheTransform.position;
             var (nowAreaIndex, x, y) = mapSubsystem.CreateAreaIndex(position);
 
             if (nowAreaIndex != _areaIndex)

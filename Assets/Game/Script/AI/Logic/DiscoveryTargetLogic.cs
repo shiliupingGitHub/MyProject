@@ -1,5 +1,6 @@
 ﻿using BehaviorDesigner.Runtime;
 using Game.Script.Character;
+using Game.Script.Common;
 using UnityEngine;
 
 namespace Game.Script.AI.Logic
@@ -10,33 +11,27 @@ namespace Game.Script.AI.Logic
         {
             if (Common.Game.Instance.MyController != null)
             {
-                if (character.BehaviorTree != null)
+                if (character.Target == null)
                 {
-                    if (character.BehaviorTree.GetVariable("Target") is SharedGameObject targetVar && targetVar.Value == null)
+                    var curDisSqt = float.MaxValue;
+                    var mePosition = character.Position;
+                    FightCharacter player = null;
+                    foreach (var fight in Common.Game.Instance.Fights)
                     {
-                        var curDisSqt = float.MaxValue;
-                        var mePosition = character.transform.position;
-                        FightCharacter player = null;
-                        foreach (var fight in Common.Game.Instance.Fights)
+                        var fightPosition = fight.Position;
+                        var tempSqt = (fightPosition - mePosition).sqrMagnitude;
+                        if (tempSqt < curDisSqt)
                         {
-                            var fightPosition = fight.transform.position;
-                            var tempSqt = (fightPosition - mePosition).sqrMagnitude;
-                            if (tempSqt < curDisSqt)
-                            {
-                                curDisSqt = tempSqt;
-                                player = fight;
-
-                            }
+                            curDisSqt = tempSqt;
+                            player = fight;
                         }
+                    }
 
-                        if (player != null)
-                        {
-                            character.BehaviorTree.SetVariableValue("Target", player.gameObject);
-                        }
-                       
+                    if (player != null)
+                    {
+                        GameLoop.RunGameThead(() => { character.Target = player.gameObject; });
                     }
                 }
-                
             }
         }
     }

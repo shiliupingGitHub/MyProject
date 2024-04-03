@@ -7,6 +7,7 @@ namespace Game.Script.Character
     [RequireComponent(typeof(NetworkTransformReliable))]
     public class Pawn : Actor
     {
+        public Vector3 Position { get; set; }
         protected override void Awake()
         {
             base.Awake();
@@ -21,6 +22,7 @@ namespace Game.Script.Character
         
         public virtual void Tick(float deltaTime)
         {
+            Position = CacheTransform.position;
         }
     }   
 }

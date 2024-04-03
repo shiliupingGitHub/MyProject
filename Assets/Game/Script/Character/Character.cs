@@ -37,9 +37,9 @@ namespace Game.Script.Character
                 _curSkill.ExecuteSkill(deltaTime, this);
             }
 
-            if (_lastPosition != cacheTransform.position)
+            if (_lastPosition != CacheTransform.position)
             {
-                _lastPosition = cacheTransform.position;
+                _lastPosition = CacheTransform.position;
                 positionChanged?.Invoke();
             }
         }

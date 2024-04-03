@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Game.Script.AI.Logic;
 using Game.Script.Character;
 using UnityEngine;
@@ -46,9 +47,14 @@ namespace Game.Script.Subsystem
 
         void TickCharacters(float deltaTime)
         {
-            foreach (var character in _characters)
+            if (_characters.Count > 0)
             {
-                TickLogic(character, deltaTime);
+                int num = _characters.Count;
+                Parallel.For(0, num, (i, _) =>
+                {
+                    var character = _characters[i];
+                    TickLogic(character, deltaTime);
+                });
             }
         }
 

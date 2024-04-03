@@ -18,6 +18,21 @@ namespace Game.Script.Character
         public ExternalBehavior externalBehaviorTree;
         public GameBehaviorTree BehaviorTree => _gameBehaviorTree;
 
+        private GameObject _target;
+        public GameObject Target
+        {
+            get => _target;
+            set
+            {
+                if (null != _gameBehaviorTree)
+                {
+                    _target = value;
+                    _gameBehaviorTree.SetVariableValue("Target", value);
+                }
+                
+            }
+        }
+
         public override void OnStartServer()
         {
             base.OnStartServer();
