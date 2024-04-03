@@ -126,7 +126,7 @@ namespace Game.Script.Subsystem
                         finalPath.Add(request.endPosition);
                     }
                     
-                    GameLoop.Instance.RunGameThead(() =>
+                    GameLoop.RunGameThead(() =>
                     {
                         request.tls.SetResult(finalPath);
                     });

@@ -9,7 +9,7 @@ namespace Game.Script.Common
         public bool drawFps = true;
         public System.Action<float> doUpdate;
         public System.Action<float> doFixedUpdate;
-        private System.Action _gameAction;
+        private System.Action _threadAction;
         private int _frame;
         // 上一次计算帧率的时间
         private float _lastTime;
@@ -39,12 +39,12 @@ namespace Game.Script.Common
 
             lock (this)
             {
-                if (null != _gameAction)
+                if (null != _threadAction)
                 {
-                    _gameAction.Invoke();
+                    _threadAction.Invoke();
                 }
 
-                _gameAction = null;
+                _threadAction = null;
             }
 
             Physics2D.Simulate(Time.unscaledDeltaTime);
@@ -94,11 +94,15 @@ namespace Game.Script.Common
             }
         }
 
-        public void RunGameThead(System.Action action)
+        public static void RunGameThead(System.Action action)
         {
-            lock (this)
+            if (!_instance)
             {
-                _gameAction += action;
+                return;
+            }
+            lock (_instance)
+            {
+                _instance._threadAction += action;
             }
         }
 
