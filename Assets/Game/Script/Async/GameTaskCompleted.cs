@@ -4,11 +4,11 @@ using System.Runtime.CompilerServices;
 
 namespace Game.Script.Async
 {
-    [AsyncMethodBuilder(typeof (AsyncETTaskCompletedMethodBuilder))]
-    public struct ETTaskCompleted: ICriticalNotifyCompletion
+    [AsyncMethodBuilder(typeof (AsyncGameTaskCompletedMethodBuilder))]
+    public struct GameTaskCompleted: ICriticalNotifyCompletion
     {
         [DebuggerHidden]
-        public ETTaskCompleted GetAwaiter()
+        public GameTaskCompleted GetAwaiter()
         {
             return this;
         }

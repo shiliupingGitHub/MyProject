@@ -5,19 +5,19 @@ using System.Security;
 
 namespace Game.Script.Async
 {
-    public struct AsyncETVoidMethodBuilder
+    public struct AsyncGameVoidMethodBuilder
     {
         // 1. Static Create method.
         [DebuggerHidden]
-        public static AsyncETVoidMethodBuilder Create()
+        public static AsyncGameVoidMethodBuilder Create()
         {
-            AsyncETVoidMethodBuilder builder = new AsyncETVoidMethodBuilder();
+            AsyncGameVoidMethodBuilder builder = new AsyncGameVoidMethodBuilder();
             return builder;
         }
 
         // 2. TaskLike Task property(void)
         [DebuggerHidden]
-        public ETVoid Task => default;
+        public GameVoid Task => default;
 
         // 3. SetException
         [DebuggerHidden]

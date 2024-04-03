@@ -46,13 +46,13 @@ namespace Game.Script.Character
         private float _curAcceptRadius = 1f;
 
         private GameObject _targetGo ;
-        private ETTaskCompletionSource<PathState> _pathTcl;
+        private GameTaskCompletionSource<PathState> _pathTcl;
         private Vector3 _lasChangePosition;
         private float _lastChangePositionTime;
 
-        public ETTask<PathState> SetPath(List<Vector3> path, float acceptRadius = 1.2f, GameObject targetGo = null)
+        public GameTask<PathState> SetPath(List<Vector3> path, float acceptRadius = 1.2f, GameObject targetGo = null)
         {
-            _pathTcl = new ETTaskCompletionSource<PathState>();
+            _pathTcl = new GameTaskCompletionSource<PathState>();
             _curPathIndex = 2;
             _path = path;
             CurPathState = PathState.Moving;

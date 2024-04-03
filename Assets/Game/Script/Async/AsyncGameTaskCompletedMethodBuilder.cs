@@ -5,18 +5,18 @@ using System.Security;
 
 namespace Game.Script.Async
 {
-    public struct AsyncETTaskCompletedMethodBuilder
+    public struct AsyncGameTaskCompletedMethodBuilder
     {
         // 1. Static Create method.
         [DebuggerHidden]
-        public static AsyncETTaskCompletedMethodBuilder Create()
+        public static AsyncGameTaskCompletedMethodBuilder Create()
         {
-            AsyncETTaskCompletedMethodBuilder builder = new AsyncETTaskCompletedMethodBuilder();
+            AsyncGameTaskCompletedMethodBuilder builder = new AsyncGameTaskCompletedMethodBuilder();
             return builder;
         }
 
         // 2. TaskLike Task property(void)
-        public ETTaskCompleted Task => default;
+        public GameTaskCompleted Task => default;
 
         // 3. SetException
         [DebuggerHidden]

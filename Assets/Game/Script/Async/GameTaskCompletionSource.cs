@@ -5,14 +5,14 @@ using System.Runtime.ExceptionServices;
 
 namespace Game.Script.Async
 {
-    public class ETTaskCompletionSource: ICriticalNotifyCompletion
+    public class GameTaskCompletionSource: ICriticalNotifyCompletion
     {
         private AwaiterStatus state;
         private ExceptionDispatchInfo exception;
         private Action continuation; // action or list
 
         [DebuggerHidden]
-        public ETTask Task => new ETTask(this);
+        public GameTask Task => new GameTask(this);
 
         [DebuggerHidden]
         public AwaiterStatus Status => state;
@@ -48,7 +48,7 @@ namespace Game.Script.Async
                     this.exception = null;
                     return;
                 default:
-                    throw new NotSupportedException("ETTask does not allow call GetResult directly when task not completed. Please use 'await'.");
+                    throw new NotSupportedException("GameTask does not allow call GetResult directly when task not completed. Please use 'await'.");
             }
         }
 
@@ -111,7 +111,7 @@ namespace Game.Script.Async
         }
     }
 
-    public class ETTaskCompletionSource<T>: ICriticalNotifyCompletion
+    public class GameTaskCompletionSource<T>: ICriticalNotifyCompletion
     {
         private AwaiterStatus state;
         private T value;
@@ -119,10 +119,10 @@ namespace Game.Script.Async
         private Action continuation; // action or list
 
         [DebuggerHidden]
-        public ETTask<T> Task => new ETTask<T>(this);
+        public GameTask<T> Task => new GameTask<T>(this);
 
         [DebuggerHidden]
-        public ETTaskCompletionSource<T> GetAwaiter()
+        public GameTaskCompletionSource<T> GetAwaiter()
         {
             return this;
         }

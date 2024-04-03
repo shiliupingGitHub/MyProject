@@ -2,7 +2,7 @@
 
 namespace Game.Script.Async
 {
-    public class ETCancellationToken
+    public class GameCancellationToken
     {
         private Action action;
 

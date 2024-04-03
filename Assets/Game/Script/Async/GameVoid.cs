@@ -4,8 +4,8 @@ using System.Runtime.CompilerServices;
 
 namespace Game.Script.Async
 {
-    [AsyncMethodBuilder(typeof (AsyncETVoidMethodBuilder))]
-    public struct ETVoid: ICriticalNotifyCompletion
+    [AsyncMethodBuilder(typeof (AsyncGameVoidMethodBuilder))]
+    public struct GameVoid: ICriticalNotifyCompletion
     {
         [DebuggerHidden]
         public void Coroutine()

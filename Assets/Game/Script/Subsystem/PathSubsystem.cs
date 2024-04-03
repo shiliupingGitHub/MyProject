@@ -18,7 +18,7 @@ namespace Game.Script.Subsystem
         public int endX;
         public int endY;
         public ulong pathId;
-        public  ETTaskCompletionSource<List<Vector3>>  tls;
+        public  GameTaskCompletionSource<List<Vector3>>  tls;
     }
 
     public class PathSubsystem : GameSubsystem
@@ -55,12 +55,12 @@ namespace Game.Script.Subsystem
             }
         }
 
-        public ETTask<List<Vector3>> AddPath(Vector3 start, Vector3 end,  ref ulong pathId)
+        public GameTask<List<Vector3>> AddPath(Vector3 start, Vector3 end,  ref ulong pathId)
         {
              pathId = _pathId;
             _pathId++;
 
-            ETTaskCompletionSource<List<Vector3>> curtls = new();
+            GameTaskCompletionSource<List<Vector3>> curtls = new();
             
             (int sX, int sY) = Common.Game.Instance.MapBk.GetGridIndex(start);
             (int eX, int eY) = Common.Game.Instance.MapBk.GetGridIndex(end);

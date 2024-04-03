@@ -62,7 +62,7 @@ namespace Game.Script.AI.Action
                 return;
             }
 
-            if (path.Count == 0)
+            if (path ==null ||  path.Count == 0)
             {
                 _moveStatus = MoveStatus.Fail;
                 return;

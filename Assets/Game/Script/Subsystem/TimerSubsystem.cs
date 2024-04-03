@@ -8,7 +8,7 @@ namespace Game.Script.Subsystem
     public class TimerSubsystem : GameSubsystem
     {
 
-        public static ETTask Delay(float time)
+        public static GameTask Delay(float time)
         {
             var timerSubsystem = Common.Game.Instance.GetSubsystem<TimerSubsystem>();
             return timerSubsystem.WaitTime(time);
@@ -16,15 +16,15 @@ namespace Game.Script.Subsystem
         struct TimerData
         {
             public float time;
-            public ETTaskCompletionSource tcs;
+            public GameTaskCompletionSource tcs;
         }
 
         private readonly SimplePriorityQueue<TimerData> _queue = new();
 
-        ETTask WaitTime(float time)
+        GameTask WaitTime(float time)
         {
             TimerData data = new TimerData();
-            data.tcs = new ETTaskCompletionSource();
+            data.tcs = new GameTaskCompletionSource();
             data.time = Time.unscaledTime + time / 1000;
             
             _queue.Enqueue(data, data.time);

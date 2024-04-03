@@ -7,19 +7,19 @@ namespace Game.Script.Async
 {
     public struct ETAsyncTaskMethodBuilder
     {
-        public ETTaskCompletionSource Tcs;
+        public GameTaskCompletionSource Tcs;
 
         // 1. Static Create method.
         [DebuggerHidden]
         public static ETAsyncTaskMethodBuilder Create()
         {
-            ETAsyncTaskMethodBuilder builder = new ETAsyncTaskMethodBuilder() { Tcs = new ETTaskCompletionSource() };
+            ETAsyncTaskMethodBuilder builder = new ETAsyncTaskMethodBuilder() { Tcs = new GameTaskCompletionSource() };
             return builder;
         }
 
         // 2. TaskLike Task property.
         [DebuggerHidden]
-        public ETTask Task => this.Tcs.Task;
+        public GameTask Task => this.Tcs.Task;
 
         // 3. SetException
         [DebuggerHidden]
@@ -66,19 +66,19 @@ namespace Game.Script.Async
 
     public struct ETAsyncTaskMethodBuilder<T>
     {
-        public ETTaskCompletionSource<T> Tcs;
+        public GameTaskCompletionSource<T> Tcs;
 
         // 1. Static Create method.
         [DebuggerHidden]
         public static ETAsyncTaskMethodBuilder<T> Create()
         {
-            ETAsyncTaskMethodBuilder<T> builder = new ETAsyncTaskMethodBuilder<T>() { Tcs = new ETTaskCompletionSource<T>() };
+            ETAsyncTaskMethodBuilder<T> builder = new ETAsyncTaskMethodBuilder<T>() { Tcs = new GameTaskCompletionSource<T>() };
             return builder;
         }
 
         // 2. TaskLike Task property.
         [DebuggerHidden]
-        public ETTask<T> Task => this.Tcs.Task;
+        public GameTask<T> Task => this.Tcs.Task;
 
         // 3. SetException
         [DebuggerHidden]

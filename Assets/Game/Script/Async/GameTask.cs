@@ -4,20 +4,20 @@ using System.Runtime.CompilerServices;
 namespace Game.Script.Async
 {
     [AsyncMethodBuilder(typeof (ETAsyncTaskMethodBuilder))]
-    public struct ETTask
+    public struct GameTask
     {
-        public static ETTaskCompleted CompletedTask => new ETTaskCompleted();
+        public static GameTaskCompleted CompletedTask => new GameTaskCompleted();
 
-        private readonly ETTaskCompletionSource awaiter;
+        private readonly GameTaskCompletionSource awaiter;
 
         [DebuggerHidden]
-        public ETTask(ETTaskCompletionSource awaiter)
+        public GameTask(GameTaskCompletionSource awaiter)
         {
             this.awaiter = awaiter;
         }
 
         [DebuggerHidden]
-        public ETTaskCompletionSource GetAwaiter()
+        public GameTaskCompletionSource GetAwaiter()
         {
             return this.awaiter;
         }
@@ -29,25 +29,25 @@ namespace Game.Script.Async
         }
 
         [DebuggerHidden]
-        private async ETVoid InnerCoroutine()
+        private async GameVoid InnerCoroutine()
         {
             await this;
         }
     }
 
     [AsyncMethodBuilder(typeof (ETAsyncTaskMethodBuilder<>))]
-    public struct ETTask<T>
+    public struct GameTask<T>
     {
-        private readonly ETTaskCompletionSource<T> awaiter;
+        private readonly GameTaskCompletionSource<T> awaiter;
 
         [DebuggerHidden]
-        public ETTask(ETTaskCompletionSource<T> awaiter)
+        public GameTask(GameTaskCompletionSource<T> awaiter)
         {
             this.awaiter = awaiter;
         }
 
         [DebuggerHidden]
-        public ETTaskCompletionSource<T> GetAwaiter()
+        public GameTaskCompletionSource<T> GetAwaiter()
         {
             return this.awaiter;
         }
@@ -58,7 +58,7 @@ namespace Game.Script.Async
             InnerCoroutine().Coroutine();
         }
 
-        private async ETVoid InnerCoroutine()
+        private async GameVoid InnerCoroutine()
         {
             await this;
         }
