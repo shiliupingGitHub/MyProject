@@ -93,6 +93,9 @@ namespace Game.Script.AI.Action
                 var pathSystem = Common.Game.Instance.GetSubsystem<PathSubsystem>();
                 pathSystem.RemovePath(_pathId);
             }
+
+            var movement = GetComponent<AICharacterMovement>();
+            movement.CancelMove();
         }
 
         MoveStatus ConvertPathState(PathState state)
