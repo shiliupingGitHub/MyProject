@@ -100,7 +100,7 @@ namespace Game.Script.UI.Frames
             var input = go.transform.Find("inputValue").GetComponent<InputField>();
             input.text = curValue;
 
-            input.onValueChanged.AddListener(str =>
+            input.onSubmit.AddListener(str =>
             {
                 fieldInfo.SetValue(action, str);
                 bSerilizeAction = true;
@@ -124,7 +124,7 @@ namespace Game.Script.UI.Frames
             var input = go.transform.Find("inputValue").GetComponent<InputField>();
             input.text = curValue.ToString();
 
-            input.onValueChanged.AddListener(str =>
+            input.onSubmit.AddListener(str =>
             {
                 float value; 
                 float.TryParse(str, result: out value);
@@ -149,7 +149,7 @@ namespace Game.Script.UI.Frames
             var input = go.transform.Find("inputValue").GetComponent<InputField>();
             input.text = curValue.ToString();
 
-            input.onValueChanged.AddListener(str =>
+            input.onSubmit.AddListener(str =>
             {
                 int value; 
                 int.TryParse(str, result: out value);
@@ -177,6 +177,7 @@ namespace Game.Script.UI.Frames
             {
                 bRefreshActionList = false;
                 RefreshActionList();
+                RefreshCurSelectEvent();
             }
             if(bRefreshActionDetail)
             {
@@ -224,8 +225,8 @@ namespace Game.Script.UI.Frames
             }
             _actionDetail.SetActive(true);
             _inputActionName.text = _curActionData.name;
-            _inputActionName.onValueChanged.RemoveAllListeners();
-            _inputActionName.onValueChanged.AddListener(str =>
+            _inputActionName.onSubmit.RemoveAllListeners();
+            _inputActionName.onSubmit.AddListener(str =>
             {
                 _curActionData.name = str;
                 bRefreshActionList = true;
@@ -505,8 +506,88 @@ namespace Game.Script.UI.Frames
                 image.color = index == _curSelectAction?Color.green:Color.white;
             };
         }
+
+        void ChangeSelectEventName(string name)
+        {
+            MapEventData ed = null;
+            switch (_curEventPage)
+            {
+                case 0:
+                {
+                    ed = _curMapData.timeEvents[_curSelectEvent];
+                }
+                    break;
+                case 1:
+                {
+                    ed = _curMapData.systemEvents[_curSelectEvent];
+                }
+                    break;
+                case 2:
+                {
+                    ed = _curMapData.customEvents[_curSelectEvent];
+                }
+                    break;
+            }
+            ed.name = name;
+        }
+
+        void ChangeEventTime(float time)
+        {
+            if (_curEventPage != 0)
+            {
+                return;
+            }
+            MapTimeEventData ed  = _curMapData.timeEvents[_curSelectEvent];
+            ed.time = time;
+
+        }
+
+        void RefreshCurSelectEvent()
+        {
+            MapEventData ed = null;
+            switch (_curEventPage)
+            {
+                case 0:
+                {
+                    ed = _curMapData.timeEvents[_curSelectEvent];
+                }
+                    break;
+                case 1:
+                {
+                    ed = _curMapData.systemEvents[_curSelectEvent];
+                }
+                    break;
+                case 2:
+                {
+                    ed = _curMapData.customEvents[_curSelectEvent];
+                }
+                    break;
+            }
+            if (_curEventPage == 0)
+            {
+                _inputTime.text = ((MapTimeEventData) (ed)).time.ToString();
+                _inputTime.onSubmit.RemoveAllListeners();
+                _inputTime.onSubmit.AddListener(str =>
+                {
+                    if (float.TryParse(str, out var time))
+                    {
+                        ChangeEventTime(time);
+                    }
+                           
+                });
+            }
+                    
+            _inputEventName.text = ed.name;
+            _inputEventName.onSubmit.RemoveAllListeners();
+            _inputEventName.onSubmit.AddListener(str =>
+            {
+                ChangeSelectEventName(str);
+                bRefreshEventList = true;
+            });
+        }
         void InitEventList()
         {
+           
             _eventList.onItemReload += (go, index) =>
             {
                 MapEventData ed = null;
@@ -514,13 +595,19 @@ namespace Game.Script.UI.Frames
                 switch (_curEventPage)
                 {
                     case 0:
+                    {
                         ed = _curMapData.timeEvents[index];
+                    }
                         break;
                     case 1:
+                    {
                         ed = _curMapData.systemEvents[index];
+                    }
                         break;
                     case 2:
+                    {
                         ed = _curMapData.customEvents[index];
+                    }
                         break;
                 }
                 var btn = go.GetComponent<Button>();
@@ -531,8 +618,10 @@ namespace Game.Script.UI.Frames
                     _curSelectEvent = index;
                     bRefreshEventList = true;
                     bRefreshActionList = true;
-                });
+                    
 
+                });
+                
                 text.text = ed.name;
                 image.color = index == _curSelectEvent?Color.green:Color.white;
             };
