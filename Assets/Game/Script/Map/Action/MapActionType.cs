@@ -3,5 +3,6 @@
     public enum MapActionType
     {
         BornMonster = 0,
+        PutBox = 1,
     }
 }

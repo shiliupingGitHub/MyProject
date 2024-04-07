@@ -224,6 +224,12 @@ namespace Game.Script.UI.Frames
             }
             _actionDetail.SetActive(true);
             _inputActionName.text = _curActionData.name;
+            _inputActionName.onValueChanged.RemoveAllListeners();
+            _inputActionName.onValueChanged.AddListener(str =>
+            {
+                _curActionData.name = str;
+                bRefreshActionList = true;
+            });
             _ddActionType.ClearOptions();
             List<string> options = new List<string>();
             foreach (var actionType in Enum.GetValues(typeof(MapActionType)))
@@ -231,6 +237,13 @@ namespace Game.Script.UI.Frames
                 options.Add(actionType.ToString());
             }
             _ddActionType.AddOptions(options);
+            _ddActionType.onValueChanged.RemoveAllListeners();
+            _ddActionType.onValueChanged.AddListener(index =>
+            {
+                var str = options[index];
+                _curActionData.type =  Enum.Parse<MapActionType>(str);
+                bRefreshActionDetail = true;
+            });
             
             for (int i = paramRoot.childCount - 1; i >= 0; --i)
             {
