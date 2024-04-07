@@ -1,6 +1,6 @@
 ﻿namespace Game.Script.Level
 {
-    public class Level
+    public abstract class Level
     {
         public virtual void Leave(){}
         public virtual void Enter(){}
