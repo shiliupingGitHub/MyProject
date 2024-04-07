@@ -17,10 +17,8 @@ namespace Game.Script.Map
     {
         [SerializeField] public int x;
         [SerializeField] public int y;
-        [SerializeField]
-        public int id;
-        [NonSerialized]
-        public GameObject go;
+        [SerializeField] public int id;
+        [NonSerialized] public GameObject go;
     }
 
     [Serializable]
@@ -47,48 +45,58 @@ namespace Game.Script.Map
     [Serializable]
     public class MapSystemEventData : MapEventData
     {
-        
     }
 
     [Serializable]
     public class MapCustomEventData : MapEventData
     {
-        
     }
+
     public class MapData
     {
-        [SerializeField]
-        public int bkId;
-        [SerializeField] public  List<ActorData> actors = new();
+        [SerializeField] public int bkId;
+        [SerializeField] public List<ActorData> actors = new();
         [SerializeField] public List<MapTimeEventData> timeEvents = new();
         [SerializeField] public List<MapSystemEventData> systemEvents = new();
         [SerializeField] public List<MapCustomEventData> customEvents = new();
-        [NonSerialized]
-        private GameObject _bkMapGo;
+        [NonSerialized] private GameObject _bkMapGo;
         public GameObject BkMapGo => _bkMapGo;
-        
-        public void LoadSync(bool preview = true,bool net = false)
+
+        public void LoadSync(bool preview = true, bool net = false)
         {
             LoadBk(preview, net);
             LoadActorsSync(preview, net);
+            if (!preview)
+            {
+                var gameEventSubsystem = Common.Game.Instance.GetSubsystem<EventSubsystem>();
+                if (null != gameEventSubsystem)
+                {
+                    gameEventSubsystem.Raise("AllMapLoaded", this);
+                }
+            }
         }
 
 
-        public  async void  LoadAsync()
+        public async void LoadAsync()
         {
-            
             LoadBk(false, true);
-            
+
             MapBk mapBk = Object.FindObjectOfType<MapBk>();
-            
+
             foreach (var actorData in actors)
             {
                 LoadActor(mapBk, actorData, false, true);
                 await TimerSubsystem.Delay(1);
             }
 
-            
+
+            var gameEventSubsystem = Common.Game.Instance.GetSubsystem<EventSubsystem>();
+            if (null != gameEventSubsystem)
+            {
+                gameEventSubsystem.Raise("AllMapLoaded", this);
+            }
         }
+
         public string Serialize()
         {
             return JsonUtility.ToJson(this);
@@ -96,7 +104,7 @@ namespace Game.Script.Map
 
         public static MapData DeSerialize(string data)
         {
-           return JsonUtility.FromJson<MapData>(data);
+            return JsonUtility.FromJson<MapData>(data);
         }
 
         public void RemoveActor(Vector3 position)
@@ -104,8 +112,8 @@ namespace Game.Script.Map
             MapBk mapBk = GameObject.FindObjectOfType<MapBk>();
 
             if (mapBk == null)
-                return ;
-            
+                return;
+
             (int x, int y) = mapBk.GetGridIndex(position);
 
             List<ActorData> removes = new();
@@ -123,6 +131,7 @@ namespace Game.Script.Map
                 Object.Destroy(remove.go);
             }
         }
+
         public bool AddActor(Vector3 position, ActorConfig actorConfig, bool preview = true, bool net = false)
         {
             MapBk mapBk = GameObject.FindObjectOfType<MapBk>();
@@ -130,7 +139,7 @@ namespace Game.Script.Map
             if (mapBk == null)
                 return false;
 
-            
+
             var template = GameResMgr.Instance.LoadAssetSync<GameObject>(actorConfig.path);
 
             if (template)
@@ -142,7 +151,7 @@ namespace Game.Script.Map
                 }
 
                 var actor = go.GetComponent<MapActor>();
-               
+
                 if (actor != null)
                 {
                     actor.Config = actorConfig;
@@ -157,9 +166,8 @@ namespace Game.Script.Map
                 actorData.id = actorConfig.id;
                 actors.Add(actorData);
                 go.transform.position = position;
-
-
             }
+
             return false;
         }
 
@@ -169,7 +177,7 @@ namespace Game.Script.Map
             {
                 var template = GameResMgr.Instance.LoadAssetSync<GameObject>(MapBKConfig.dic[bkId].path);
                 _bkMapGo = Object.Instantiate(template) as GameObject;
-                
+
                 _bkMapGo.transform.localPosition = Vector3.zero;
 
                 if (net)
@@ -180,12 +188,11 @@ namespace Game.Script.Map
                 if (Preview)
                 {
                     var mapScript = _bkMapGo.GetComponent<MapBk>();
-                    
+
                     mapScript.virtualCamera.gameObject.SetActive(false);
-                    var brain =  mapScript.GetComponentInChildren<CinemachineBrain>();
+                    var brain = mapScript.GetComponentInChildren<CinemachineBrain>();
                     brain.gameObject.SetActive(false);
                 }
-                
             }
         }
 
@@ -219,7 +226,6 @@ namespace Game.Script.Map
                     {
                         NetworkServer.Spawn(go);
                     }
-
                 }
             }
         }
@@ -229,11 +235,10 @@ namespace Game.Script.Map
             MapBk mapBk = Object.FindObjectOfType<MapBk>();
 
             if (mapBk == null)
-                return ;
+                return;
             foreach (var actorData in actors)
             {
                 LoadActor(mapBk, actorData, preview, net);
-
             }
         }
 
@@ -261,6 +266,7 @@ namespace Game.Script.Map
                     Object.Destroy(actorData.go);
                 }
             }
+
             actors.Clear();
         }
 

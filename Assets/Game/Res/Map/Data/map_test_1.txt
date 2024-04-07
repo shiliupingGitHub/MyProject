@@ -1,1 +1,1 @@
-{"bkId":1,"_actors":[{"x":7,"y":3,"id":1}]}
+{"bkId":1,"actors":[],"timeEvents":[{"name":"test","actions":[{"data":"","name":"testaction","type":0}],"time":0.0}],"systemEvents":[],"customEvents":[]}
