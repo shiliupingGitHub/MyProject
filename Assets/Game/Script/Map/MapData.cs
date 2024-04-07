@@ -24,34 +24,34 @@ namespace Game.Script.Map
     }
 
     [Serializable]
-    public struct MapActionData
+    public class MapActionData
     {
         [SerializeField] public string data;
         [SerializeField] public string name;
-        [SerializeField] public string type;
+        [SerializeField] public MapActionType type;
     }
 
     [Serializable]
-    public class MapEvent
+    public class MapEventData
     {
         [SerializeField] public string name;
         [SerializeField] public List<MapActionData> actions = new();
     }
 
     [Serializable]
-    public class MapTimeEvent : MapEvent
+    public class MapTimeEventData : MapEventData
     {
         [SerializeField] public float time;
     }
 
     [Serializable]
-    public class MapSystemEvent : MapEvent
+    public class MapSystemEventData : MapEventData
     {
         
     }
 
     [Serializable]
-    public class MapCustomEvent : MapEvent
+    public class MapCustomEventData : MapEventData
     {
         
     }
@@ -60,9 +60,9 @@ namespace Game.Script.Map
         [SerializeField]
         public int bkId;
         [SerializeField] public  List<ActorData> actors = new();
-        [SerializeField] public List<MapTimeEvent> timeEvents = new();
-        [SerializeField] public List<MapSystemEvent> systemEvents = new();
-        [SerializeField] public List<MapCustomEvent> customEvents = new();
+        [SerializeField] public List<MapTimeEventData> timeEvents = new();
+        [SerializeField] public List<MapSystemEventData> systemEvents = new();
+        [SerializeField] public List<MapCustomEventData> customEvents = new();
         [NonSerialized]
         private GameObject _bkMapGo;
         public GameObject BkMapGo => _bkMapGo;
