@@ -29,6 +29,8 @@ namespace OneP.InfinityScrollView
 	}
 
 	public class InfinityScrollView : MonoBehaviour {
+		
+		public System.Action<GameObject,int> onItemReload;
 		[Header("Setting Reference object")]
 		public GameObject prefab; // link object item
 		public ScrollRect scrollRect;// link to UGUI scrollRect
@@ -397,6 +399,8 @@ namespace OneP.InfinityScrollView
 			if (baseItem != null) {
 				baseItem.Reload (this,indexReload);
 			}
+			
+			onItemReload?.Invoke(obj, indexReload);
 		}
 
 		private Vector3 GetLocationAppear(Vector2 initVec,int location){

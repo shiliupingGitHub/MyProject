@@ -45,7 +45,7 @@ namespace Game.Script.Map
     }
 
     [Serializable]
-    public class MapFightEvent : MapEvent
+    public class MapSystemEvent : MapEvent
     {
         
     }
@@ -59,10 +59,10 @@ namespace Game.Script.Map
     {
         [SerializeField]
         public int bkId;
-        [SerializeField]   List<ActorData> _actors = new();
-        [SerializeField] List<MapTimeEvent> _timeEvents = new();
-        [SerializeField] List<MapFightEvent> _fightEvents = new();
-        [SerializeField] List<MapCustomEvent> _customEvents = new();
+        [SerializeField] public  List<ActorData> actors = new();
+        [SerializeField] public List<MapTimeEvent> timeEvents = new();
+        [SerializeField] public List<MapSystemEvent> systemEvents = new();
+        [SerializeField] public List<MapCustomEvent> customEvents = new();
         [NonSerialized]
         private GameObject _bkMapGo;
         public GameObject BkMapGo => _bkMapGo;
@@ -81,7 +81,7 @@ namespace Game.Script.Map
             
             MapBk mapBk = Object.FindObjectOfType<MapBk>();
             
-            foreach (var actorData in _actors)
+            foreach (var actorData in actors)
             {
                 LoadActor(mapBk, actorData, false, true);
                 await TimerSubsystem.Delay(1);
@@ -109,7 +109,7 @@ namespace Game.Script.Map
             (int x, int y) = mapBk.GetGridIndex(position);
 
             List<ActorData> removes = new();
-            foreach (var actor in _actors)
+            foreach (var actor in actors)
             {
                 if (actor.x == x && actor.y == y)
                 {
@@ -119,7 +119,7 @@ namespace Game.Script.Map
 
             foreach (var remove in removes)
             {
-                _actors.Remove(remove);
+                actors.Remove(remove);
                 Object.Destroy(remove.go);
             }
         }
@@ -155,7 +155,7 @@ namespace Game.Script.Map
                 actorData.x = x;
                 actorData.y = y;
                 actorData.id = actorConfig.id;
-                _actors.Add(actorData);
+                actors.Add(actorData);
                 go.transform.position = position;
 
 
@@ -230,7 +230,7 @@ namespace Game.Script.Map
 
             if (mapBk == null)
                 return ;
-            foreach (var actorData in _actors)
+            foreach (var actorData in actors)
             {
                 LoadActor(mapBk, actorData, preview, net);
 
@@ -254,14 +254,14 @@ namespace Game.Script.Map
 
         public void UnLoadActors()
         {
-            foreach (var actorData in _actors)
+            foreach (var actorData in actors)
             {
                 if (actorData.go != null)
                 {
                     Object.Destroy(actorData.go);
                 }
             }
-            _actors.Clear();
+            actors.Clear();
         }
 
         public void UnLoadSync()
