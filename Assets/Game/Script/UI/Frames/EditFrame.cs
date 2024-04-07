@@ -40,6 +40,7 @@ namespace Game.Script.UI.Frames
         [UIPath("ActorTemplate")] private GameObject _actorTemplate;
         [UIPath("svActors/Viewport/Content")] private Transform _contentRoot;
         [UIPath("btnReturnHall")] private Button _btnReturnHall;
+        [UIPath("btnEventEdit")] private Button _btnEventEdit;
 
         void AddToTick()
         {
@@ -375,6 +376,14 @@ namespace Game.Script.UI.Frames
                 {
                     SetCameraCenter(mapBk);
                     GameSetting.Instance.ShowGrid = true;
+                }
+            });
+            
+            _btnEventEdit.onClick.AddListener(() =>
+            {
+                if (_curMapData != null)
+                {
+                    UIManager.Instance.Show<FightEventEditFrame>();
                 }
             });
 

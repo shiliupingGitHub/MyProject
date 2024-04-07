@@ -16,7 +16,12 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: a6ac5c72900381b4ead9aa33f1b29557
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: ad8213d433888c84a954dfccb79892ff
+    m_Address: Assets/Game/Res/UI/FightEventEditFrame.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8a5b7fa2f7b110e499305b11415bf217, type: 2}
   m_SchemaSet:
