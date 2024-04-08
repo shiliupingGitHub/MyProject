@@ -11,7 +11,7 @@ namespace Game.Script.UI.Frames
     {
         protected override string ResPath => "Assets/Game/Res/UI/MapSettingEditFrame.prefab";
         [UIPath("offset/btnClose")] private Button _btnClose;
-        [UIPath("offset/params")] private Transform _paramsRoot;
+        [UIPath("offset/Scroll View/Viewport/Content/params")] private Transform _paramsRoot;
         private MapData _curMapData;
         
         public override void Init(Transform parent)
