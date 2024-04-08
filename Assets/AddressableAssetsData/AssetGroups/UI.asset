@@ -42,6 +42,31 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7031aa0c46d571341ba0636f4aebffbb
+    m_Address: Assets/Game/Res/UI/ActorDataEditFrame.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 32e530e1a4dc5884796aa8d2e29d95e3
+    m_Address: Assets/Game/Res/UI/Extern/floatParam.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f240750bf1306e146a4e7fa4e0f372a7
+    m_Address: Assets/Game/Res/UI/Extern/intParam.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8a225629b555ab746b6cc556426b2533
+    m_Address: Assets/Game/Res/UI/Extern/stingParam.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1ed8a92c319b36a439db3d7d97541642
+    m_Address: Assets/Game/Res/UI/MapSettingEditFrame.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8a5b7fa2f7b110e499305b11415bf217, type: 2}
   m_SchemaSet:
