@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Cinemachine;
 using Game.Script.Async;
+using Game.Script.Attribute;
 using Game.Script.Common;
 using Game.Script.Map.Actor;
 using Game.Script.Res;
@@ -13,12 +15,29 @@ using Object = UnityEngine.Object;
 namespace Game.Script.Map
 {
     [Serializable]
+    public class ActorFieldData
+    {
+        public string fieldName;
+        public string fieldValue;
+    }
+
+    [Serializable]
     public class ActorData
     {
         [SerializeField] public int x;
         [SerializeField] public int y;
         [SerializeField] public int id;
+        [SerializeField] public List<ActorFieldData> fieldData = new();
         [NonSerialized] public GameObject go;
+
+        public void Set<T>(string fieldName, T value)
+        {
+            fieldData.RemoveAll(data => data.fieldName == fieldName);
+            ActorFieldData data = new();
+            data.fieldName = fieldName;
+            data.fieldValue = value.ToString();
+            fieldData.Add(data);
+        }
     }
 
     [Serializable]
@@ -132,6 +151,27 @@ namespace Game.Script.Map
             }
         }
 
+        public ActorData GetActorData(Vector3 position)
+        {
+            MapBk mapBk = GameObject.FindObjectOfType<MapBk>();
+
+            if (mapBk == null)
+                return null;
+
+            (int x, int y) = mapBk.GetGridIndex(position);
+
+            List<ActorData> removes = new();
+            foreach (var actor in actors)
+            {
+                if (actor.x == x && actor.y == y)
+                {
+                    return actor;
+                }
+            }
+
+            return null;
+        }
+
         public bool AddActor(Vector3 position, ActorConfig actorConfig, bool preview = true, bool net = false)
         {
             MapBk mapBk = GameObject.FindObjectOfType<MapBk>();
@@ -196,6 +236,49 @@ namespace Game.Script.Map
             }
         }
 
+        void DeserializeActorField(MapActor actor, ActorData actorData)
+        {
+            var typeInfo = (System.Reflection.TypeInfo)actor.GetType();
+
+            foreach (var field in typeInfo.DeclaredFields)
+            {
+                if (field.IsStatic)
+                {
+                    continue;
+                }
+
+                if (!field.IsPublic)
+                {
+                    continue;
+                }
+
+                var fieldType = field.FieldType;
+
+                var attr = field.GetCustomAttribute<ActorDataDesAttribute>();
+
+                if (null != attr)
+                {
+                    var data = actorData.fieldData.Find(x => x.fieldName == field.Name);
+
+                    if (null != data)
+                    {
+                        if (fieldType == typeof(int))
+                        {
+                            field.SetValue(actor, int.Parse(data.fieldValue));
+                        }
+                        else if (fieldType == typeof(float))
+                        {
+                            field.SetValue(actor, float.Parse(data.fieldValue));
+                        }
+                        else if (fieldType == typeof(string))
+                        {
+                            field.SetValue(actor, data.fieldValue);
+                        }
+                    }
+                }
+            }
+        }
+
         void LoadActor(MapBk mapBk, ActorData actorData, bool preview = true, bool net = false)
         {
             ActorConfig actorConfig = ActorConfig.dic[actorData.id];
@@ -215,6 +298,7 @@ namespace Game.Script.Map
                 {
                     actor.Config = actorConfig;
                     actor.ActorType = preview ? ActorType.Preview : ActorType.Normal;
+                    DeserializeActorField(actor, actorData);
                 }
 
                 go.transform.position = mapBk.GetPosition(actorData.x, actorData.y);

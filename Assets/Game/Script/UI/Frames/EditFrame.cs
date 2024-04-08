@@ -183,6 +183,17 @@ namespace Game.Script.UI.Frames
                                 _curMapData.RemoveActor(worldPosition);
                             }
                         }
+                        else if (Input.GetKey(KeyCode.LeftAlt))
+                        {
+                            if(null != _curMapData)
+                            {
+                                var worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                                var actorData = _curMapData.GetActorData(worldPosition);
+                                var frame = UIManager.Instance.Show<ActorDataEditFrame>();
+                                frame.SetActorData(actorData);
+                                
+                            }
+                        }
                     }
                 };
             }

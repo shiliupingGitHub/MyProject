@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.Script.Attribute;
 using Game.Script.Character;
 using Game.Script.Common;
 using Game.Script.Subsystem;
@@ -9,6 +10,12 @@ namespace Game.Script.Map.Actor
 {
     public class MonsterSpawner : MapActor
     {
+        [ActorDataDes("p1")]
+        public int p1;
+        [ActorDataDes("p2")]
+        public float p2;
+        [ActorDataDes("p3")]
+        public string p3;
         public List<GameObject> spawns = new();
 
         void DoBorn()
