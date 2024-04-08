@@ -61,9 +61,9 @@ namespace Game.Script.Subsystem
             _pathId++;
 
             GameTaskCompletionSource<List<Vector3>> curtls = new();
-            
-            (int sX, int sY) = Common.Game.Instance.MapBk.GetGridIndex(start);
-            (int eX, int eY) = Common.Game.Instance.MapBk.GetGridIndex(end);
+            var mapSubsystem = Common.Game.Instance.GetSubsystem<MapSubsystem>();
+            (int sX, int sY) = mapSubsystem.MapBk.GetGridIndex(start);
+            (int eX, int eY) = mapSubsystem.MapBk.GetGridIndex(end);
 
             _pathRequestList.Add(new PathRequest() { tls = curtls,startPosition = start, endPosition = end, pathId = pathId , startX = sX, startY = sY, endX = eX, endY = eY});
             return curtls.Task;
@@ -96,14 +96,15 @@ namespace Game.Script.Subsystem
         }
         void OnTick()
         {
-            if (Common.Game.Instance.MapBk == null)
+            var mapSubsystem = Common.Game.Instance.GetSubsystem<MapSubsystem>();
+            if (mapSubsystem.MapBk == null)
             {
                 return;
             }
 
             int num = Mathf.Min(PathNumPerFrame, _pathRequestList.Count);
-            var offset = Common.Game.Instance.MapBk.Offset;
-            var cellSize = Common.Game.Instance.MapBk.MyGrid.cellSize;
+            var offset = mapSubsystem.MapBk.Offset;
+            var cellSize = mapSubsystem.MapBk.MyGrid.cellSize;
             var cellX = cellSize.x;
             var cellY = cellSize.y;
             if (num > 0)
@@ -188,10 +189,11 @@ namespace Game.Script.Subsystem
 
         private (bool, (int, int))[] GetNeighbours(int xCordinate, int yCordinate, bool walkableDiagonals = false)
         {
+            var mapSubsystem = Common.Game.Instance.GetSubsystem<MapSubsystem>();
             List<(bool, (int, int))> neighbourCells = new List<(bool, (int, int))>();
 
-            int heigth = Common.Game.Instance.MapBk.yGridNum;
-            int width = Common.Game.Instance.MapBk.xGridNum;
+            int heigth = mapSubsystem.MapBk.yGridNum;
+            int width = mapSubsystem.MapBk.xGridNum;
 
             int range = 1;
             int yStart = (int)MathF.Max(0, yCordinate - range);
@@ -243,12 +245,13 @@ namespace Game.Script.Subsystem
 
         private List<(int, int)> GeneratePath(int startX, int startY, int goalX, int goalY, bool manhattanHeuristic = true, bool walkableDiagonals = false)
         {
+            var mapSubsystem = Common.Game.Instance.GetSubsystem<MapSubsystem>();
             // Set the heuristic function to use based on the manhattanHeuristic parameter
             Func<int, int, int, int, float> heuristic = manhattanHeuristic ? CalcHeuristicManhattan : CalcHeuristicEuclidean;
 
             // Get the dimensions of the map
-            int mapHeight = Common.Game.Instance.MapBk.yGridNum;
-            int mapWidth = Common.Game.Instance.MapBk.xGridNum;
+            int mapHeight = mapSubsystem.MapBk.yGridNum;
+            int mapWidth = mapSubsystem.MapBk.xGridNum;
 
             // Define constants and arrays needed for the algorithm
             float sqrt2 = Mathf.Sqrt(2);

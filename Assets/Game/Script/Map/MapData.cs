@@ -71,6 +71,12 @@ namespace Game.Script.Map
     {
     }
 
+    [Serializable]
+    public class MapBaseSetting
+    {
+        [SerializeField] public float fightStartTime = 5f;
+    }
+
     public class MapData
     {
         [SerializeField] public int bkId;
@@ -78,6 +84,7 @@ namespace Game.Script.Map
         [SerializeField] public List<MapTimeEventData> timeEvents = new();
         [SerializeField] public List<MapSystemEventData> systemEvents = new();
         [SerializeField] public List<MapCustomEventData> customEvents = new();
+        [SerializeField] public MapBaseSetting BaseSetting = new();
         [NonSerialized] private GameObject _bkMapGo;
         public GameObject BkMapGo => _bkMapGo;
 

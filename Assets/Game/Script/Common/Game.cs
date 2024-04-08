@@ -45,17 +45,7 @@ namespace Game.Script.Common
         }
 
 
-        public MapBk MapBk
-        {
-            set
-            {
-                _mapBk = value;
-                
-                var eventSubsystem = Common.Game.Instance.GetSubsystem<EventSubsystem>();
-                eventSubsystem.Raise("mapBkLoad", _mapBk);
-            }
-            get => _mapBk;
-        }
+
 
         public FightCharacter MyController
         {

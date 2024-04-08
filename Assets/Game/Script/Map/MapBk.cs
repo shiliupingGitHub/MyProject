@@ -1,6 +1,7 @@
 using Cinemachine;
 using UnityEngine;
 using Game.Script.Attribute;
+using Game.Script.Subsystem;
 using Mirror;
 
 namespace Game.Script.Map
@@ -67,7 +68,8 @@ namespace Game.Script.Map
 
         private void Awake()
         {
-            Common.Game.Instance.MapBk = this;
+            var mapSubsystem = Common.Game.Instance.GetSubsystem<MapSubsystem>();
+            mapSubsystem.MapBk = this;
         }
 
 

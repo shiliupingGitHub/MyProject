@@ -73,7 +73,9 @@ namespace Game.Script.Subsystem
 
         public void StartFight()
         {
-            StartLeftTime = 5;
+            var mapSubsystem = Common.Game.Instance.GetSubsystem<MapSubsystem>();
+            
+            StartLeftTime = mapSubsystem.CurMapData.BaseSetting.fightStartTime;
             _prepareStart = true;
         }
     }

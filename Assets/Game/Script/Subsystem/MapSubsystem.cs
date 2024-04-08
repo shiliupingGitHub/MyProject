@@ -21,8 +21,20 @@ namespace Game.Script.Subsystem
 
         string MapExtension => ".txt";
         private MapBk _mapBk;
+        public MapData CurMapData { get; private set; }
 
         private readonly Dictionary<uint, MapArea> _areas = new();
+        public MapBk MapBk
+        {
+            set
+            {
+                _mapBk = value;
+                
+                var eventSubsystem = Common.Game.Instance.GetSubsystem<EventSubsystem>();
+                eventSubsystem.Raise("mapBkLoad", _mapBk);
+            }
+            get => _mapBk;
+        }
 
         public override void OnInitialize()
         {
@@ -96,12 +108,12 @@ namespace Game.Script.Subsystem
 
         void CheckMap()
         {
-            if (Common.Game.Instance.MapBk != null && Common.Game.Instance.MyController != null)
+            if (MapBk != null && Common.Game.Instance.MyController != null)
             {
                 var tr = Common.Game.Instance.MyController.transform;
-                Common.Game.Instance.MapBk.virtualCamera.Follow = tr;
-                Common.Game.Instance.MapBk.virtualCamera.LookAt = tr;
-                Common.Game.Instance.MapBk.virtualCamera.gameObject.SetActive(true);
+                MapBk.virtualCamera.Follow = tr;
+                MapBk.virtualCamera.LookAt = tr;
+                MapBk.virtualCamera.gameObject.SetActive(true);
                 StartGame();
             }
         }
@@ -219,7 +231,7 @@ namespace Game.Script.Subsystem
             var path = AssetMapPath + mapName + MapExtension;
             var content = GameResMgr.Instance.LoadAssetSync<TextAsset>(path);
             var mapData = MapData.DeSerialize(content.text);
-            
+            CurMapData = mapData;
             mapData.LoadAsync();
         }
     }
