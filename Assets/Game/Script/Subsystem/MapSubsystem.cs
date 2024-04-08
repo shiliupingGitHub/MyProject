@@ -15,7 +15,6 @@ namespace Game.Script.Subsystem
 {
     public class MapSubsystem : GameSubsystem
     {
-        
         string AssetMapPath => "Assets/Game/Res/Map/Data/";
         private string playerAssetPath => "Assets/Game/Res/Player/PlayerPrefab.prefab";
 
@@ -24,12 +23,13 @@ namespace Game.Script.Subsystem
         public MapData CurMapData { get; private set; }
 
         private readonly Dictionary<uint, MapArea> _areas = new();
+
         public MapBk MapBk
         {
             set
             {
                 _mapBk = value;
-                
+
                 var eventSubsystem = Common.Game.Instance.GetSubsystem<EventSubsystem>();
                 eventSubsystem.Raise("mapBkLoad", _mapBk);
             }
@@ -39,26 +39,20 @@ namespace Game.Script.Subsystem
         public override void OnInitialize()
         {
             base.OnInitialize();
-            
-            
+
+
             var eventSubsystem = Common.Game.Instance.GetSubsystem<EventSubsystem>();
-            eventSubsystem.Subscribe("localPlayerLoad", o =>
-            {
-                CheckMap();
-            });
+            eventSubsystem.Subscribe("localPlayerLoad", o => { CheckMap(); });
             eventSubsystem.Subscribe("mapBkLoad", script =>
             {
                 _mapBk = script as MapBk;
                 CheckMap();
                 GenerateInitAreas();
             });
-            eventSubsystem.Subscribe("serverFightSceneChanged", o =>
-            {
-                LoadMap(Common.Game.Instance.FightMap, true);
-            });
+            eventSubsystem.Subscribe("serverFightSceneChanged", o => { LoadMap(Common.Game.Instance.FightMap, true); });
             Common.Game.Instance.serverFightNewPlayer += () =>
             {
-                var bornPosition =  GetRandomBornPosition();
+                var bornPosition = GetRandomBornPosition();
                 var playerPrefab = GameResMgr.Instance.LoadAssetSync<GameObject>(playerAssetPath);
                 GameObject player = Object.Instantiate(playerPrefab, bornPosition, quaternion.identity);
                 return player;
@@ -68,7 +62,7 @@ namespace Game.Script.Subsystem
         public Vector3 GetRandomBornPosition()
         {
             int chooseX = _mapBk.xGridNum / 2;
-            int chooseY = _mapBk.yGridNum/ 2;
+            int chooseY = _mapBk.yGridNum / 2;
 
             for (int i = 0; i < 2; i++)
             {
@@ -103,6 +97,7 @@ namespace Game.Script.Subsystem
                 ret = new MapArea();
                 _areas.Add(areaKey, ret);
             }
+
             return ret;
         }
 
@@ -110,24 +105,18 @@ namespace Game.Script.Subsystem
 
         void CheckMap()
         {
-
             if (IsFighting)
             {
-                if (Common.Game.Instance.MyController == null)
+                if (MapBk != null && Common.Game.Instance.MyController != null)
                 {
-                    return;
-                }
-            }
-            
-            if (MapBk != null)
-            {
-                var tr = Common.Game.Instance.MyController.transform;
-                MapBk.virtualCamera.Follow = tr;
-                MapBk.virtualCamera.LookAt = tr;
-                MapBk.virtualCamera.gameObject.SetActive(true);
-                
-                if(IsFighting)
+                    var tr = Common.Game.Instance.MyController.transform;
+                    MapBk.virtualCamera.Follow = tr;
+                    MapBk.virtualCamera.LookAt = tr;
+                    MapBk.virtualCamera.gameObject.SetActive(true);
+
+
                     StartGame();
+                }
             }
         }
 
@@ -136,13 +125,13 @@ namespace Game.Script.Subsystem
             await TimerSubsystem.Delay(1000);
             UIManager.Instance.Hide<LoadingFrame>();
 
-            if (Common.Game.Instance.Mode== GameMode.Host)
+            if (Common.Game.Instance.Mode == GameMode.Host)
             {
                 var fightSubsystem = Common.Game.Instance.GetSubsystem<FightSubsystem>();
                 fightSubsystem.StartFight();
             }
-            
         }
+
         public MapData New(int bkId)
         {
             MapData mapData = new MapData
@@ -160,8 +149,8 @@ namespace Game.Script.Subsystem
             uint ret = x | y;
 
             return ret;
-
         }
+
         public (int, int, int) CreateAreaIndex(Vector3 position)
         {
             if (_mapBk == null)
@@ -169,7 +158,7 @@ namespace Game.Script.Subsystem
                 return (-1, -1, -1);
             }
 
-            
+
             Vector3 relative = position - _mapBk.transform.position;
 
             int x = Mathf.FloorToInt(relative.x / _mapBk.MyGrid.cellSize.x);
@@ -177,15 +166,17 @@ namespace Game.Script.Subsystem
 
             if (x < 0)
             {
-                return (-1, -1, -1);;
+                return (-1, -1, -1);
+                ;
             }
 
             if (y < 0)
             {
-                return (-1, -1, -1);;
+                return (-1, -1, -1);
+                ;
             }
-            
-            return ( (int)CreateAreaIndex((uint)x, (uint)y), x, y);
+
+            return ((int)CreateAreaIndex((uint)x, (uint)y), x, y);
         }
 
         void AddAreaMapBlock(uint x, uint y)
@@ -199,7 +190,7 @@ namespace Game.Script.Subsystem
 
             area.MapBlocked = true;
         }
-        
+
         void GenerateInitAreas()
         {
             _areas.Clear();
@@ -208,8 +199,8 @@ namespace Game.Script.Subsystem
             {
                 return;
             }
-            
-            if(_mapBk.blockTilesRoot == null)
+
+            if (_mapBk.blockTilesRoot == null)
                 return;
 
             var tileMaps = _mapBk.blockTilesRoot.GetComponentsInChildren<Tilemap>();
@@ -234,18 +225,16 @@ namespace Game.Script.Subsystem
                     }
                 }
             }
-
-
         }
 
-        
+
         public void LoadMap(string mapName, bool net, bool inAsset = true)
         {
             var path = AssetMapPath + mapName + MapExtension;
             var content = GameResMgr.Instance.LoadAssetSync<TextAsset>(path);
             var mapData = MapData.DeSerialize(content.text);
             CurMapData = mapData;
-            mapData.LoadAsync();
+            mapData.LoadAsync(false, net);
         }
     }
 }

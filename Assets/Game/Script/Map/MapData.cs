@@ -103,15 +103,15 @@ namespace Game.Script.Map
         }
 
 
-        public async void LoadAsync()
+        public async void LoadAsync(bool Preview = false, bool net = true)
         {
-            LoadBk(false, true);
+            LoadBk(Preview, net);
 
             MapBk mapBk = Object.FindObjectOfType<MapBk>();
 
             foreach (var actorData in actors)
             {
-                LoadActor(mapBk, actorData, false, true);
+                LoadActor(mapBk, actorData, Preview, net);
                 await TimerSubsystem.Delay(1);
             }
 

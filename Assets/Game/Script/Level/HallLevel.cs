@@ -16,8 +16,13 @@ namespace Game.Script.Level
             base.Enter();
             Common.Game.Instance.Mode = GameMode.Hall;
             SceneManager.LoadScene(SceneName);
-            UIManager.Instance.Hide<LoadingFrame>();
             UIManager.Instance.Show<HallFrame>();
+            LoadComplete();
+        }
+        async void LoadComplete()
+        {
+            await TimerSubsystem.Delay(1000);
+            UIManager.Instance.Hide<LoadingFrame>();
         }
     }
 }
