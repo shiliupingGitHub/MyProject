@@ -51,34 +51,12 @@ namespace Game.Script.UI.Frames
             {
                 return;
             }
-            
-           
-            var typeInfo = (TypeInfo)mapActor.GetType();
-            
-            foreach (var field in typeInfo.DeclaredFields)
+            FieldDrawer.BeginDraw(_paramsRoot);
+            FieldDrawer.Draw(_paramsRoot, mapActor, (info, o) =>
             {
-                if (field.IsStatic)
-                {
-                    continue;
-                }
-
-                if (!field.IsPublic)
-                {
-                    continue;
-                }
-                
-                var attr = field.GetCustomAttribute<ActorDataDesAttribute>();
-
-                if (null != attr)
-                {
-                    FieldDrawer.Draw(_paramsRoot, field, mapActor, o =>
-                    {
-                        _curActorData.Set(field.Name, o);
-                    });
-                }
-              
-                
-            }
+                _curActorData.Set(info.Name, o);
+            }, typeof(ActorDataDesAttribute));
+            
         }
     }
 }

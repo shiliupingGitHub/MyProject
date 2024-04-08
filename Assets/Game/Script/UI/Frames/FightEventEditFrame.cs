@@ -1,7 +1,6 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Game.Script.Attribute;
 using Game.Script.Common;
 using Game.Script.Map;
@@ -10,7 +9,6 @@ using Game.Script.UI.Ext;
 using OneP.InfinityScrollView;
 using UnityEngine;
 using UnityEngine.UI;
-using Object = UnityEngine.Object;
 
 namespace Game.Script.UI.Frames
 {
@@ -30,19 +28,19 @@ namespace Game.Script.UI.Frames
         [UIPath("offset/Content/inputTime")] private InputField _inputTime;
         [UIPath("offset/Content/actionList")] private InfinityScrollView _actionList;
         [UIPath("offset/Content/ActionDetail/inputActionName")] private InputField _inputActionName;
-        [UIPath("offset/Content/ActionDetail/params")] private Transform paramRoot;
+        [UIPath("offset/Content/ActionDetail/params")] private Transform _paramRoot;
         [UIPath("offset/Content/ActionDetail/ddActionType")] private Dropdown _ddActionType;
         [UIPath("offset/Content/ActionDetail")]
         private GameObject _actionDetail;
 
-        private int _curEventPage = 0;
+        private int _curEventPage ;
         private int _curSelectEvent = -1;
         private MapData _curMapData;
-        private bool bRefreshEventList = false;
-        private bool bRefreshActionList = false;
-        private bool bRefreshActionDetail = true;
+        private bool _bRefreshEventList = false;
+        private bool _bRefreshActionList = false;
+        private bool _bRefreshActionDetail = true;
         private int _curSelectAction = -1;
-        private bool bSerilizeAction = false;
+        private bool _bSerilizeAction = false;
         private MapActionData _curActionData;
         private MapAction _drawAction = null;
         
@@ -64,27 +62,27 @@ namespace Game.Script.UI.Frames
 
         void OnUpdate(float delta)
         {
-            if (bRefreshEventList)
+            if (_bRefreshEventList)
             {
-                bRefreshEventList = false;
+                _bRefreshEventList = false;
                 RefreshEventList();
             }
             
-            if(bRefreshActionList)
+            if(_bRefreshActionList)
             {
-                bRefreshActionList = false;
+                _bRefreshActionList = false;
                 RefreshActionList();
                 RefreshCurSelectEvent();
             }
-            if(bRefreshActionDetail)
+            if(_bRefreshActionDetail)
             {
-                bRefreshActionDetail = false;
+                _bRefreshActionDetail = false;
                 RefreshActionDetail();
             }
 
-            if (bSerilizeAction)
+            if (_bSerilizeAction)
             {
-                bSerilizeAction = false;
+                _bSerilizeAction = false;
                 SerializeAction();
             }
         }
@@ -126,7 +124,7 @@ namespace Game.Script.UI.Frames
             _inputActionName.onSubmit.AddListener(str =>
             {
                 _curActionData.name = str;
-                bRefreshActionList = true;
+                _bRefreshActionList = true;
             });
             _ddActionType.ClearOptions();
             List<string> options = new List<string>();
@@ -140,7 +138,7 @@ namespace Game.Script.UI.Frames
             {
                 var str = options[index];
                 _curActionData.type =  Enum.Parse<MapActionType>(str);
-                bRefreshActionDetail = true;
+                _bRefreshActionDetail = true;
             });
             
             
@@ -157,27 +155,13 @@ namespace Game.Script.UI.Frames
 
             if (null == _drawAction)
             {
-                _drawAction = System.Activator.CreateInstance(type) as MapAction;
+                _drawAction = Activator.CreateInstance(type) as MapAction;
             }
-            var typeInfo = (System.Reflection.TypeInfo)type;
-            FieldDrawer.BeginDraw(paramRoot);
-            foreach (var field in typeInfo.DeclaredFields)
+            FieldDrawer.BeginDraw(_paramRoot);
+            FieldDrawer.Draw(_paramRoot, _drawAction, (_, _) =>
             {
-                if (field.IsStatic)
-                {
-                    continue;
-                }
-
-                if (!field.IsPublic)
-                {
-                    continue;
-                }
-                FieldDrawer.Draw(paramRoot, field, _drawAction, o =>
-                {
-                    bSerilizeAction = true;
-                });
-                
-            }
+                _bSerilizeAction = true;
+            });
         }
 
         void RefreshActionList()
@@ -331,12 +315,12 @@ namespace Game.Script.UI.Frames
                             break;
                     }
 
-                    bRefreshActionList = true;
+                    _bRefreshActionList = true;
                 }
             });
             _btnAddAction.onClick.AddListener(() =>
             {
-                bRefreshActionList = true;
+                _bRefreshActionList = true;
                 var action = new MapActionData();
                 action.name = "new action";
                 action.type = MapActionType.BornMonster;
@@ -389,9 +373,9 @@ namespace Game.Script.UI.Frames
                 btn.onClick.AddListener(() =>
                 {
                     _curSelectAction = index;
-                    bRefreshActionList = true;
+                    _bRefreshActionList = true;
                     _curActionData = data;
-                    bRefreshActionDetail = true;
+                    _bRefreshActionDetail = true;
                 });
 
                 text.text = data.name;
@@ -474,7 +458,7 @@ namespace Game.Script.UI.Frames
             _inputEventName.onSubmit.AddListener(str =>
             {
                 ChangeSelectEventName(str);
-                bRefreshEventList = true;
+                _bRefreshEventList = true;
             });
         }
         void InitEventList()
@@ -508,8 +492,8 @@ namespace Game.Script.UI.Frames
                 btn.onClick.AddListener(() =>
                 {
                     _curSelectEvent = index;
-                    bRefreshEventList = true;
-                    bRefreshActionList = true;
+                    _bRefreshEventList = true;
+                    _bRefreshActionList = true;
                     
 
                 });

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Globalization;
+using System.Reflection;
 using Game.Script.Attribute;
 using Game.Script.Res;
 using Game.Script.Subsystem;
@@ -7,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Game.Script.UI.Ext
 {
-    public class FieldDrawer
+    public static class FieldDrawer
     {
         private const string FloatTemplate = "Assets/Game/Res/UI/Extern/floatParam.prefab";
         private const string IntTemplate = "Assets/Game/Res/UI/Extern/intParam.prefab";
@@ -20,28 +21,56 @@ namespace Game.Script.UI.Ext
                 Object.Destroy(tr.GetChild(i).gameObject);
             }
         }
-        public static void Draw(Transform tr, FieldInfo fieldInfo, object obj, System.Action<System.Object> onValueChanged)
+
+        public static void Draw(Transform tr, System.Object obj, System.Action<FieldInfo,System.Object> valueChanged, System.Type attributeTag = null)
+        {
+            var type = obj.GetType();
+            var typeInfo = (TypeInfo)type;
+            foreach (var field in typeInfo.DeclaredFields)
+            {
+                if (field.IsStatic)
+                {
+                    continue;
+                }
+
+                if (!field.IsPublic)
+                {
+                    continue;
+                }
+                
+                if(null != attributeTag)
+                {
+                    if (!field.IsDefined(attributeTag))
+                    {
+                        continue;
+                    }
+                }
+                Draw(tr, field, obj, o =>
+                {
+                   valueChanged.Invoke(field, o);
+                });
+                
+            }
+        }
+        public static void Draw(Transform tr, FieldInfo fieldInfo, object obj, System.Action<System.Object> valueChanged)
         {
             if (fieldInfo.FieldType == typeof(float))
             {
-                DrawFloat(tr, fieldInfo, obj, (float value) =>
+                DrawFloat(tr, fieldInfo, obj, (value) =>
                 {
-                    onValueChanged(value);
+                    valueChanged(value);
                 });
             }
             else if (fieldInfo.FieldType == typeof(int))
             {
-                DrawInt(tr, fieldInfo, obj, (int value) =>
+                DrawInt(tr, fieldInfo, obj, ( value) =>
                 {
-                    onValueChanged(value);
+                    valueChanged(value);
                 });
             }
             else if (fieldInfo.FieldType == typeof(string))
             {
-                DrawString(tr, fieldInfo, obj, (string value) =>
-                {
-                    onValueChanged(value);
-                });
+                DrawString(tr, fieldInfo, obj, valueChanged);
             }
         }
        static string GetHeaderName(FieldInfo fieldInfo)
@@ -58,7 +87,8 @@ namespace Game.Script.UI.Ext
 
             return localizationSystem.Get(header);
         }
-        public static void DrawFloat(Transform tr, FieldInfo fieldInfo, object obj, System.Action<float> onValueChanged)
+
+        private static void DrawFloat(Transform tr, FieldInfo fieldInfo, object obj, System.Action<float> valueChanged)
         {
             var curValue = fieldInfo.GetValue(obj) is float ? (float)fieldInfo.GetValue(obj) : 0;
             string header = GetHeaderName(fieldInfo);
@@ -67,17 +97,17 @@ namespace Game.Script.UI.Ext
             var textName = go.transform.Find("tbName").GetComponent<Text>();
             textName.text = header;
             var input = go.transform.Find("inputValue").GetComponent<InputField>();
-            input.text = curValue.ToString();
-
-            input.onSubmit.AddListener(str =>
+            input.text = curValue.ToString(CultureInfo.InvariantCulture);
+            input.onValueChanged.RemoveAllListeners();
+            input.onValueChanged.AddListener(str =>
             {
-                float value; 
-                float.TryParse(str, result: out value);
+                float.TryParse(str, result: out var value);
                 fieldInfo.SetValue(obj, value);
-                onValueChanged.Invoke(value);
+                valueChanged.Invoke(value);
             });
         }
-        public static void DrawString(Transform tr,FieldInfo fieldInfo, object obj, System.Action<string> onValueChanged)
+
+        private static void DrawString(Transform tr,FieldInfo fieldInfo, object obj, System.Action<string> valueChanged)
         {
             var curValue = fieldInfo.GetValue(obj) is string ? (string)fieldInfo.GetValue(obj) : string.Empty;
             string header = GetHeaderName(fieldInfo);
@@ -88,14 +118,15 @@ namespace Game.Script.UI.Ext
             textName.text = header;
             var input = go.transform.Find("inputValue").GetComponent<InputField>();
             input.text = curValue;
-
-            input.onSubmit.AddListener(str =>
+            input.onValueChanged.RemoveAllListeners();
+            input.onValueChanged.AddListener(str =>
             {
                 fieldInfo.SetValue(obj, str);
-                onValueChanged.Invoke(str);
+                valueChanged.Invoke(str);
             });
         }
-        public static void DrawInt(Transform tr,FieldInfo fieldInfo, object obj, System.Action<int> onValueChanged)
+
+        private static void DrawInt(Transform tr,FieldInfo fieldInfo, object obj, System.Action<int> valueChanged)
         {
             var curValue = fieldInfo.GetValue(obj) is int ? (int)fieldInfo.GetValue(obj) : 0;
             var template = GameResMgr.Instance.LoadAssetSync<GameObject>(IntTemplate);
@@ -106,13 +137,12 @@ namespace Game.Script.UI.Ext
             textName.text = header;
             var input = go.transform.Find("inputValue").GetComponent<InputField>();
             input.text = curValue.ToString();
-
-            input.onSubmit.AddListener(str =>
+            input.onValueChanged.RemoveAllListeners();
+            input.onValueChanged.AddListener(str =>
             {
-                int value; 
-                int.TryParse(str, result: out value);
+                int.TryParse(str, result: out var value);
                 fieldInfo.SetValue(obj, value);
-                onValueChanged.Invoke(value);
+                valueChanged.Invoke(value);
             });
         }
     }
