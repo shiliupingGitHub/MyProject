@@ -61,6 +61,13 @@ namespace Game.Script.Subsystem
             }
             UIManager.Instance.Clear();
             UIManager.Instance.Show<LoadingFrame>(true, true);
+            DoEnter(levelType);
+            
+        }
+
+        async void DoEnter(LevelType levelType)
+        {
+            await TimerSubsystem.Delay(1);
             _levels[levelType].Enter();
             _curLevel = levelType;
             System.GC.Collect();
