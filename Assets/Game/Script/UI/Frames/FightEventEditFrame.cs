@@ -14,6 +14,12 @@ namespace Game.Script.UI.Frames
 {
     public class FightEventEditFrame : Frame
     {
+        enum EventPage
+        {
+            Time,
+            System,
+            Custom,
+        }
         protected override string ResPath => "Assets/Game/Res/UI/FightEventEditFrame.prefab";
         [UIPath("offset/btnClose")] private Button _btnClose;
         [UIPath("offset/btnAddEvent")] private Button _btnAddEvent;
@@ -31,9 +37,9 @@ namespace Game.Script.UI.Frames
         [UIPath("offset/Content/ActionDetail/params")] private Transform _paramRoot;
         [UIPath("offset/Content/ActionDetail/ddActionType")] private Dropdown _ddActionType;
         [UIPath("offset/Content/ActionDetail")]
+        
         private GameObject _actionDetail;
-
-        private int _curEventPage ;
+        private EventPage _curEventPage ;
         private int _curSelectEvent = -1;
         private MapData _curMapData;
         private bool _bRefreshEventList = false;
@@ -174,13 +180,13 @@ namespace Game.Script.UI.Frames
 
             switch (_curEventPage)
             {
-                case 0:
+                case EventPage.Time:
                     RefreshTimeActionList();
                     break;
-                case 1:
+                case EventPage.System:
                     RefreshSystemActionList();
                     break;
-                case 2:
+                case EventPage.Custom:
                     RefreshCustomActionList();
                     break;
             }
@@ -211,19 +217,19 @@ namespace Game.Script.UI.Frames
 
             switch (_curEventPage)
             {
-                case 0:
+                case EventPage.Time:
                 {
                     _eventList.Setup(_curMapData.timeEvents.Count);
                     _inputTime.gameObject.SetActive(true);
                 }
                     break;
-                case 1:
+                case EventPage.System:
                 {
                     _eventList.Setup(_curMapData.systemEvents.Count);
                     _inputTime.gameObject.SetActive(false);
                 }
                     break;
-                case 2:
+                case EventPage.Custom:
                 {
                     _eventList.Setup(_curMapData.customEvents.Count);
                     _inputTime.gameObject.SetActive(false);
@@ -237,17 +243,17 @@ namespace Game.Script.UI.Frames
         {
             _btnTimeEvent.onClick.AddListener(() =>
             {
-                _curEventPage = 0;
+                _curEventPage = EventPage.Time;
                 RefreshEventList();
             });
             _btnSystemEvent.onClick.AddListener(() =>
             {
-                _curEventPage = 1;
+                _curEventPage = EventPage.System;
                 RefreshEventList();
             });
             _btnCustomEvent.onClick.AddListener(() =>
             {
-                _curEventPage = 2;
+                _curEventPage = EventPage.Custom;
                 RefreshEventList();
             });
             _btnRemoveEvent.onClick.AddListener(() =>
@@ -256,13 +262,13 @@ namespace Game.Script.UI.Frames
                 {
                     switch (_curEventPage)
                     {
-                        case 0:
+                        case EventPage.Time:
                             _curMapData.timeEvents.RemoveAt(_curSelectEvent);
                             break;
-                        case 1:
+                        case EventPage.System:
                             _curMapData.systemEvents.RemoveAt(_curSelectEvent);
                             break;
-                        case 2:
+                        case EventPage.Custom:
                             _curMapData.customEvents.RemoveAt(_curSelectEvent);
                             break;
                     }
@@ -273,21 +279,21 @@ namespace Game.Script.UI.Frames
             {
                 switch (_curEventPage)
                 {
-                    case 0:
+                    case EventPage.Time:
                     {
                         var te = new MapTimeEventData();
                         te.name = "new time event";
                         _curMapData.timeEvents.Add(te);
                     }
                         break;
-                    case 1:
+                    case EventPage.System:
                     {
                         var e = new MapSystemEventData();
                         e.name = "new sytem event";
                         _curMapData.systemEvents.Add(e);
                     }
                         break;
-                    case 2:
+                    case EventPage.Custom:
                     {
                         var e = new MapCustomEventData();
                         e.name = "new custom event";
@@ -304,13 +310,13 @@ namespace Game.Script.UI.Frames
                 {
                     switch (_curEventPage)
                     {
-                        case 0:
+                        case EventPage.Time:
                             _curMapData.timeEvents[_curSelectEvent].actions.RemoveAt(_curSelectAction);
                             break;
-                        case 1:
+                        case EventPage.System:
                             _curMapData.systemEvents[_curSelectEvent].actions.RemoveAt(_curSelectAction);
                             break;
-                        case 2:
+                        case EventPage.Custom:
                             _curMapData.customEvents[_curSelectEvent].actions.RemoveAt(_curSelectAction);
                             break;
                     }
@@ -326,18 +332,18 @@ namespace Game.Script.UI.Frames
                 action.type = MapActionType.BornMonster;
                 switch (_curEventPage)
                 {
-                    case 0:
+                    case EventPage.Time:
                     {
                      
                         _curMapData.timeEvents[_curSelectEvent].actions.Add(action);
                     }
                         break;
-                    case 1:
+                    case EventPage.System:
                     {
                       _curMapData.systemEvents[_curSelectEvent].actions.Add(action);
                     }
                         break;
-                    case 2:
+                    case EventPage.Custom:
                     {
                         _curMapData.customEvents[_curSelectEvent].actions.Add(action);
                     }
@@ -357,13 +363,13 @@ namespace Game.Script.UI.Frames
                 Text text = go.transform.Find("Text").GetComponent<Text>();
                 switch (_curEventPage)
                 {
-                    case 0:
+                    case EventPage.Time:
                         data = _curMapData.timeEvents[_curSelectEvent].actions[index];
                         break;
-                    case 1:
+                    case EventPage.System:
                         data  = _curMapData.systemEvents[_curSelectEvent].actions[index];
                         break;
-                    case 2:
+                    case EventPage.Custom:
                         data  = _curMapData.customEvents[_curSelectEvent].actions[index];
                         break;
                 }
@@ -388,17 +394,17 @@ namespace Game.Script.UI.Frames
             MapEventData ed = null;
             switch (_curEventPage)
             {
-                case 0:
+                case EventPage.Time:
                 {
                     ed = _curMapData.timeEvents[_curSelectEvent];
                 }
                     break;
-                case 1:
+                case EventPage.System:
                 {
                     ed = _curMapData.systemEvents[_curSelectEvent];
                 }
                     break;
-                case 2:
+                case EventPage.Custom:
                 {
                     ed = _curMapData.customEvents[_curSelectEvent];
                 }
@@ -409,7 +415,7 @@ namespace Game.Script.UI.Frames
 
         void ChangeEventTime(float time)
         {
-            if (_curEventPage != 0)
+            if (_curEventPage != EventPage.Time)
             {
                 return;
             }
@@ -423,23 +429,23 @@ namespace Game.Script.UI.Frames
             MapEventData ed = null;
             switch (_curEventPage)
             {
-                case 0:
+                case EventPage.Time:
                 {
                     ed = _curMapData.timeEvents[_curSelectEvent];
                 }
                     break;
-                case 1:
+                case EventPage.System:
                 {
                     ed = _curMapData.systemEvents[_curSelectEvent];
                 }
                     break;
-                case 2:
+                case EventPage.Custom:
                 {
                     ed = _curMapData.customEvents[_curSelectEvent];
                 }
                     break;
             }
-            if (_curEventPage == 0)
+            if (_curEventPage == EventPage.Time)
             {
                 _inputTime.text = ((MapTimeEventData) (ed)).time.ToString();
                 _inputTime.onSubmit.RemoveAllListeners();
@@ -470,17 +476,17 @@ namespace Game.Script.UI.Frames
                 Text text = go.transform.Find("Text").GetComponent<Text>();
                 switch (_curEventPage)
                 {
-                    case 0:
+                    case EventPage.Time:
                     {
                         ed = _curMapData.timeEvents[index];
                     }
                         break;
-                    case 1:
+                    case EventPage.System:
                     {
                         ed = _curMapData.systemEvents[index];
                     }
                         break;
-                    case 2:
+                    case EventPage.Custom:
                     {
                         ed = _curMapData.customEvents[index];
                     }
