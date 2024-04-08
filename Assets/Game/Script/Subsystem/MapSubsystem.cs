@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Game.Script.Common;
 using Game.Script.Map;
+using Game.Script.Map.Logic;
 using Game.Script.Res;
 using Game.Script.UI;
 using Game.Script.UI.Frames;
@@ -23,6 +24,7 @@ namespace Game.Script.Subsystem
         public MapData CurMapData { get; private set; }
 
         private readonly Dictionary<uint, MapArea> _areas = new();
+        public bool MapLoaded { get; private set; }
 
         public MapBk MapBk
         {
@@ -48,6 +50,10 @@ namespace Game.Script.Subsystem
                 _mapBk = script as MapBk;
                 CheckMap();
                 GenerateInitAreas();
+            });
+            eventSubsystem.Subscribe("AllMapLoaded", _ =>
+            {
+                MapLoaded = true;
             });
             eventSubsystem.Subscribe("serverFightSceneChanged", o => { LoadMap(Common.Game.Instance.FightMap, true); });
             Common.Game.Instance.serverFightNewPlayer += () =>
@@ -230,6 +236,7 @@ namespace Game.Script.Subsystem
 
         public void LoadMap(string mapName, bool net, bool inAsset = true)
         {
+            MapLoaded = false;
             var path = AssetMapPath + mapName + MapExtension;
             var content = GameResMgr.Instance.LoadAssetSync<TextAsset>(path);
             var mapData = MapData.DeSerialize(content.text);
