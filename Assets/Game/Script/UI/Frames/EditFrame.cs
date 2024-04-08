@@ -41,6 +41,7 @@ namespace Game.Script.UI.Frames
         [UIPath("svActors/Viewport/Content")] private Transform _contentRoot;
         [UIPath("btnReturnHall")] private Button _btnReturnHall;
         [UIPath("btnEventEdit")] private Button _btnEventEdit;
+        [UIPath("btnSetting")] private Button _btnSetting;
 
         void AddToTick()
         {
@@ -190,7 +191,7 @@ namespace Game.Script.UI.Frames
                                 var worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                                 var actorData = _curMapData.GetActorData(worldPosition);
                                 var frame = UIManager.Instance.Show<ActorDataEditFrame>();
-                                frame.SetActorData(actorData);
+                                frame.CurActorData = actorData;
                                 
                             }
                         }
@@ -372,6 +373,15 @@ namespace Game.Script.UI.Frames
             {
                 var levelSubsystem = Common.Game.Instance.GetSubsystem<LevelSubsystem>();
                 levelSubsystem.Enter(LevelType.Hall);
+            });
+            _btnSetting.onClick.AddListener(() =>
+            {
+                if (_curMapData != null)
+                {
+                    var frame = UIManager.Instance.Show<MapSettingEditFrame>();
+                    frame.CurMapData = _curMapData;
+                }
+              
             });
             _btnNew.onClick.AddListener(() =>
             {

@@ -16,30 +16,27 @@ namespace Game.Script.UI.Frames
         protected override string ResPath => "Assets/Game/Res/UI/ActorDataEditFrame.prefab";
         [UIPath("offset/btnClose")] private Button _btnClose;
         [UIPath("offset/params")] private Transform _paramsRoot;
-        [UIPath("offset/floatParam")] private GameObject _floatParam;
-        [UIPath("offset/intParam")] private GameObject _intParam;
-        [UIPath("offset/stringParam")] private GameObject _stringParam;
         private ActorData _curActorData;
-    
-
+        
         public override void Init(Transform parent)
         {
             base.Init(parent);
             _btnClose.onClick.AddListener(Hide);
         }
-        public void SetActorData(ActorData actorData)
+
+        public ActorData CurActorData
         {
-            _curActorData = actorData;
-            RefreshActorUI();
+            set
+            {
+                _curActorData = value;
+                RefreshActorUI();
+            }
         }
+    
 
         void RefreshActorUI()
         {
-            for (int i = _paramsRoot.childCount - 1; i >= 0; --i)
-            {
-                Object.Destroy(_paramsRoot.GetChild(i).gameObject);
-            }
-
+            
             if (_curActorData.go == null)
             {
                 return;
