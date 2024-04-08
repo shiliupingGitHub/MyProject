@@ -106,15 +106,28 @@ namespace Game.Script.Subsystem
             return ret;
         }
 
+        bool IsFighting => Common.Game.Instance.Mode == GameMode.Client || Common.Game.Instance.Mode == GameMode.Host;
+
         void CheckMap()
         {
-            if (MapBk != null && Common.Game.Instance.MyController != null)
+
+            if (IsFighting)
+            {
+                if (Common.Game.Instance.MyController == null)
+                {
+                    return;
+                }
+            }
+            
+            if (MapBk != null)
             {
                 var tr = Common.Game.Instance.MyController.transform;
                 MapBk.virtualCamera.Follow = tr;
                 MapBk.virtualCamera.LookAt = tr;
                 MapBk.virtualCamera.gameObject.SetActive(true);
-                StartGame();
+                
+                if(IsFighting)
+                    StartGame();
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using Game.Script.Attribute;
+using Game.Script.Common;
 using Game.Script.Subsystem;
 using Game.Script.UI;
 using Game.Script.UI.Frames;
@@ -14,6 +15,7 @@ namespace Game.Script.Level
         {
             base.Enter();
             SceneManager.LoadScene(SceneName);
+            Common.Game.Instance.Mode = GameMode.Home;
             UIManager.Instance.Show<HomeFrame>();
             LoadComplete();
         }

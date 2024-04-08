@@ -1,4 +1,5 @@
 ﻿using Game.Script.Attribute;
+using Game.Script.Common;
 using Game.Script.Subsystem;
 using Game.Script.UI;
 using Game.Script.UI.Frames;
@@ -13,7 +14,7 @@ namespace Game.Script.Level
         public override void Enter()
         {
             base.Enter();
-
+            Common.Game.Instance.Mode = GameMode.Hall;
             SceneManager.LoadScene(SceneName);
             UIManager.Instance.Hide<LoadingFrame>();
             UIManager.Instance.Show<HallFrame>();

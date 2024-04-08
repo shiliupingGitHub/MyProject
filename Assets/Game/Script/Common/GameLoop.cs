@@ -10,6 +10,7 @@ namespace Game.Script.Common
         public System.Action<float> doUpdate;
         public System.Action<float> doFixedUpdate;
         private System.Action _threadAction;
+        public System.Action applicationQuit;
         private int _frame;
         // 上一次计算帧率的时间
         private float _lastTime;
@@ -29,6 +30,12 @@ namespace Game.Script.Common
         {
             doUpdate = null;
         }
+
+         void OnApplicationQuit()
+        {
+            applicationQuit.Invoke();
+        }
+
         private void Update()
         {
             
@@ -111,6 +118,22 @@ namespace Game.Script.Common
             if (_instance)
             {
                 _instance.doUpdate += action;
+            }
+        }
+
+        public static void AddQuit(System.Action action)
+        {
+            if (_instance)
+            {
+                _instance.applicationQuit += action;
+            }
+        }
+        
+        public static void RemoveQuit(System.Action action)
+        {
+            if (_instance)
+            {
+                _instance.applicationQuit -= action;
             }
         }
 
