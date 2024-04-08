@@ -4,6 +4,7 @@ using System.Reflection;
 using Game.Script.Attribute;
 using Game.Script.Map;
 using Game.Script.Map.Actor;
+using Game.Script.Subsystem;
 using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -42,7 +43,9 @@ namespace Game.Script.UI.Frames
                 header = attr.Name;
             }
 
-            return header;
+            var localizationSystem = Common.Game.Instance.GetSubsystem<LocalizationSubsystem>();
+
+            return localizationSystem.Get(header);
         }
 
         void OnDrawStringField(System.Object action, FieldInfo fieldInfo)

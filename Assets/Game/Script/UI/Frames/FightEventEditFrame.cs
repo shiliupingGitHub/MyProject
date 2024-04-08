@@ -82,8 +82,10 @@ namespace Game.Script.UI.Frames
             {
                 header = attr.Name;
             }
+            
+            var localizationSystem = Common.Game.Instance.GetSubsystem<LocalizationSubsystem>();
 
-            return header;
+            return localizationSystem.Get(header);
         }
         void OnDrawStringField(System.Object action, FieldInfo fieldInfo)
         {
