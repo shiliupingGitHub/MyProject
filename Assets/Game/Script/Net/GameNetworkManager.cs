@@ -30,6 +30,8 @@ namespace Game.Script.Misc
         public override void OnClientDisconnect()
         {
             base.OnClientDisconnect();
+            var eventSubsystem = Common.Game.Instance.GetSubsystem<EventSubsystem>();
+            eventSubsystem.Raise("LeaveMap");
             var levelSystem = Common.Game.Instance.GetSubsystem<LevelSubsystem>();
             levelSystem.Enter(LevelType.Hall);
             
