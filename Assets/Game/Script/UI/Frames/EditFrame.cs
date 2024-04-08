@@ -406,7 +406,7 @@ namespace Game.Script.UI.Frames
             {
                 if (_curMapData != null)
                 {
-                    var frame = UIManager.Instance.Show<FightEventEditFrame>();
+                    var frame = UIManager.Instance.Show<MapEventEditFrame>();
                     frame.SetData(_curMapData);
                 }
             });

@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 namespace Game.Script.UI.Frames
 {
-    public class FightEventEditFrame : Frame
+    public class MapEventEditFrame : Frame
     {
         enum EventPage
         {
@@ -20,7 +20,7 @@ namespace Game.Script.UI.Frames
             System,
             Custom,
         }
-        protected override string ResPath => "Assets/Game/Res/UI/FightEventEditFrame.prefab";
+        protected override string ResPath => "Assets/Game/Res/UI/MapEventEditFrame.prefab";
         [UIPath("offset/btnClose")] private Button _btnClose;
         [UIPath("offset/btnAddEvent")] private Button _btnAddEvent;
         [UIPath("offset/btnRemoveEvent")] private Button _btnRemoveEvent;
