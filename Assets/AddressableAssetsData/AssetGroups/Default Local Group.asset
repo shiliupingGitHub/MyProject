@@ -17,11 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: a6ac5c72900381b4ead9aa33f1b29557
   m_SerializeEntries:
-  - m_GUID: ad8213d433888c84a954dfccb79892ff
-    m_Address: Assets/Game/Res/UI/FightEventEditFrame.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 804de6aeaa071ac4bb3313a56d75fe99
     m_Address: Assets/Game/Res/UI/Extern/boolParam.prefab
     m_ReadOnly: 0
@@ -32,8 +27,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 555477e2ad335df40a140d8741550fc9
-    m_Address: Assets/Game/Res/Home/TestHomeActor.asset
+  - m_GUID: 7fa997ff02f6329479586271e15a5201
+    m_Address: Assets/Game/Res/Config/HomeActorConfig.csv
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
