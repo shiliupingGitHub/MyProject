@@ -25,6 +25,7 @@ namespace Game.Script.Subsystem
        
         SimplePriorityQueue<TimeExecuteEvent> _timeEvents = new();
         Dictionary<string, List<ExecuteEvent>> _executeEvents = new();
+        Queue<string> _eventQueue = new();
 
         void OnAllMapLoaded(System.Object o)
         {
@@ -36,6 +37,11 @@ namespace Game.Script.Subsystem
         }
 
         public void Raise(string eventName)
+        {
+            _eventQueue.Enqueue(eventName);
+        }
+
+        void DoEvent(string eventName)
         {
             if (_executeEvents.TryGetValue(eventName, out var events))
             {
@@ -79,6 +85,11 @@ namespace Game.Script.Subsystem
                         break;
                     }
                 }
+            }
+
+            while (_eventQueue.Count > 0)
+            {
+                DoEvent(_eventQueue.Dequeue());
             }
         }
 
