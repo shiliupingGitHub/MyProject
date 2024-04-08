@@ -8,6 +8,7 @@ namespace Game.Script.Map
         public  int p1;
         public  float p2;
         public  string p3;
+        public bool p4;
         public override void Execute()
         {
             

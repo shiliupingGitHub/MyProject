@@ -274,6 +274,10 @@ namespace Game.Script.Map
                         {
                             field.SetValue(actor, data.fieldValue);
                         }
+                        else if(fieldType == typeof(bool))
+                        {
+                            field.SetValue(actor, bool.Parse(data.fieldValue));
+                        }
                     }
                 }
             }

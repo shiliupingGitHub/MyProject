@@ -1,10 +1,12 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Reflection;
 using Game.Script.Attribute;
 using Game.Script.Res;
 using Game.Script.Subsystem;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace Game.Script.UI.Ext
 {
@@ -13,7 +15,7 @@ namespace Game.Script.UI.Ext
         private const string FloatTemplate = "Assets/Game/Res/UI/Extern/floatParam.prefab";
         private const string IntTemplate = "Assets/Game/Res/UI/Extern/intParam.prefab";
         private const string StringTemplate = "Assets/Game/Res/UI/Extern/stingParam.prefab";
-
+        private const string boolTemplate = "Assets/Game/Res/UI/Extern/boolParam.prefab";
         public static void BeginDraw(Transform tr)
         {
             for (int i = tr.childCount - 1; i >= 0; --i)
@@ -72,6 +74,10 @@ namespace Game.Script.UI.Ext
             {
                 DrawString(tr, fieldInfo, obj, valueChanged);
             }
+            else if(fieldInfo.FieldType == typeof(bool))
+            {
+                DrawBool(tr, fieldInfo, obj, valueChanged);
+            }
         }
        static string GetHeaderName(FieldInfo fieldInfo)
         {
@@ -87,7 +93,25 @@ namespace Game.Script.UI.Ext
 
             return localizationSystem.Get(header);
         }
-
+        
+        private static void DrawBool(Transform tr, FieldInfo fieldInfo, object obj, Action<object> valueChanged)
+        {
+            var curValue =  (bool)fieldInfo.GetValue(obj);
+            string header = GetHeaderName(fieldInfo);
+            var template = GameResMgr.Instance.LoadAssetSync<GameObject>(boolTemplate);
+            var go = Object.Instantiate(template, tr);
+            var textName = go.transform.Find("tbName").GetComponent<Text>();
+            textName.text = header;
+            var toggle = go.transform.Find("toggleValue").GetComponent<Toggle>();
+            toggle.isOn = curValue;
+            toggle.onValueChanged.RemoveAllListeners();
+            toggle.onValueChanged.AddListener(value =>
+            {
+                fieldInfo.SetValue(obj, value);
+                valueChanged.Invoke(value);
+            });
+            
+        }
         private static void DrawFloat(Transform tr, FieldInfo fieldInfo, object obj, System.Action<float> valueChanged)
         {
             var curValue = fieldInfo.GetValue(obj) is float ? (float)fieldInfo.GetValue(obj) : 0;
