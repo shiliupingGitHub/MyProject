@@ -1,6 +1,8 @@
-﻿namespace Game.Script.Home.Actor
+﻿using UnityEngine;
+
+namespace Game.Script.Home.Actor
 {
-    public abstract class HomeActor
+    public  class HomeActor : ScriptableObject
     {
         
     }
