@@ -12,6 +12,7 @@ namespace Game.Script.Subsystem
         Hall,
         Fight,
         Edit,
+        Home,
     }
     public class LevelSubsystem : GameSubsystem
     {

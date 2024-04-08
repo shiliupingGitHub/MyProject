@@ -19,9 +19,16 @@ namespace Game.Script.UI.Frames
         private Button _btnJoin;
         [UIPath("offset/btnEdit")]
         private Button _btnEdit;
+        [UIPath("offset/btnHome")]
+        private Button _btnHome;
         public override void Init(Transform parent)
         {
             base.Init(parent);
+            _btnHome.onClick.AddListener(() =>
+            {
+                var levelSubsystem = Common.Game.Instance.GetSubsystem<LevelSubsystem>();
+                levelSubsystem.Enter(LevelType.Home);
+            });
             _btnFight.onClick.AddListener(() =>
             {
                 var levelSubsystem = Common.Game.Instance.GetSubsystem<LevelSubsystem>();
