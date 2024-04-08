@@ -286,10 +286,11 @@ namespace Game.Script.UI.Frames
             }
         }
 
+        private List<int> _bkIds = new();
         void InitBks()
         {
             var mapConfigs = MapBKConfig.dic;
-
+            _bkIds.Clear();
             List<string> mapDdContent = new();
             _ddBk.ClearOptions();
             for (int i = 1; i <= mapConfigs.Count; i++)
@@ -297,6 +298,7 @@ namespace Game.Script.UI.Frames
                 var mapConfig = mapConfigs[i];
 
                 mapDdContent.Add(mapConfig.name);
+                _bkIds.Add(mapConfig.id);
             }
 
             _ddBk.AddOptions(mapDdContent);
@@ -379,7 +381,7 @@ namespace Game.Script.UI.Frames
                 }
 
                 var mapSubsystem = Common.Game.Instance.GetSubsystem<MapSubsystem>();
-                _curMapData = mapSubsystem.New(_ddBk.value + 1);
+                _curMapData = mapSubsystem.New(_bkIds[_ddBk.value]);
                 _curMapData.LoadSync();
                 EnableInput();
                 MapBk mapBk = Object.FindObjectOfType<MapBk>();
