@@ -6,6 +6,7 @@ using Game.Script.Attribute;
 using Game.Script.Common;
 using Game.Script.Map;
 using Game.Script.Subsystem;
+using Game.Script.UI.Ext;
 using OneP.InfinityScrollView;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,31 +20,18 @@ namespace Game.Script.UI.Frames
         [UIPath("offset/btnClose")] private Button _btnClose;
         [UIPath("offset/btnAddEvent")] private Button _btnAddEvent;
         [UIPath("offset/btnRemoveEvent")] private Button _btnRemoveEvent;
-        [UIPath("offset/Content/btnAddAction")]
-        private Button _btnAddAction;
-        [UIPath("offset/Content/btnRemoveAction")]
-        private Button _btnRemoveAction;
-
+        [UIPath("offset/Content/btnAddAction")] private Button _btnAddAction;
+        [UIPath("offset/Content/btnRemoveAction")] private Button _btnRemoveAction;
         [UIPath("offset/btnTimeEvent")] private Button _btnTimeEvent;
         [UIPath("offset/btnSystemEvent")] private Button _btnSystemEvent;
         [UIPath("offset/btnCustomEvent")] private Button _btnCustomEvent;
         [UIPath("offset/eventList")] private InfinityScrollView _eventList;
-
-        [UIPath("offset/Content/inputEventName")]
-        private InputField _inputEventName;
-
+        [UIPath("offset/Content/inputEventName")] private InputField _inputEventName;
         [UIPath("offset/Content/inputTime")] private InputField _inputTime;
         [UIPath("offset/Content/actionList")] private InfinityScrollView _actionList;
-
-        [UIPath("offset/Content/ActionDetail/inputActionName")]
-        private InputField _inputActionName;
-
+        [UIPath("offset/Content/ActionDetail/inputActionName")] private InputField _inputActionName;
         [UIPath("offset/Content/ActionDetail/params")] private Transform paramRoot;
-        [UIPath("offset/Content/floatParam")] private GameObject _floatPram;
-        [UIPath("offset/Content/stingParam")] private GameObject _stringPram;
-        [UIPath("offset/Content/intParam")] private GameObject _intPram;
         [UIPath("offset/Content/ActionDetail/ddActionType")] private Dropdown _ddActionType;
-
         [UIPath("offset/Content/ActionDetail")]
         private GameObject _actionDetail;
 
@@ -57,9 +45,7 @@ namespace Game.Script.UI.Frames
         private bool bSerilizeAction = false;
         private MapActionData _curActionData;
         private MapAction _drawAction = null;
-        private Dictionary<System.Type, Action<System.Object, FieldInfo>> _typeDraw = new();
         
-
         public override void Init(Transform parent)
         {
             base.Init(parent);
@@ -68,99 +54,8 @@ namespace Game.Script.UI.Frames
             InitActionList();
             InitBtns();
             GameLoop.Add(OnUpdate);
-            _typeDraw.Add(typeof(string), OnDrawStringField);
-            _typeDraw.Add(typeof(float), OnDrawFloatField);
-            _typeDraw.Add(typeof(int), OnDrawIntField);
         }
         
-        string GetHeaderName(FieldInfo fieldInfo)
-        {
-            string header = fieldInfo.Name;
-            var attr = fieldInfo.GetCustomAttribute<LabelAttribute>();
-
-            if (null != attr)
-            {
-                header = attr.Name;
-            }
-            
-            var localizationSystem = Common.Game.Instance.GetSubsystem<LocalizationSubsystem>();
-
-            return localizationSystem.Get(header);
-        }
-        void OnDrawStringField(System.Object action, FieldInfo fieldInfo)
-        {
-            if (null == action)
-            {
-                return;
-            }
-            var curValue = fieldInfo.GetValue(action) is string ? (string)fieldInfo.GetValue(action) : string.Empty;
-            string header = GetHeaderName(fieldInfo);
-            var go = Object.Instantiate(_stringPram, paramRoot);
-            go.SetActive(true);
-            var textName = go.transform.Find("tbName").GetComponent<Text>();
-            textName.text = header;
-            var input = go.transform.Find("inputValue").GetComponent<InputField>();
-            input.text = curValue;
-
-            input.onSubmit.AddListener(str =>
-            {
-                fieldInfo.SetValue(action, str);
-                bSerilizeAction = true;
-            });
-       
-
-        }
-        
-        void OnDrawFloatField(System.Object action, FieldInfo fieldInfo)
-        {
-            if (null == action)
-            {
-                return;
-            }
-            var curValue = fieldInfo.GetValue(action) is float ? (float)fieldInfo.GetValue(action) : 0;
-            string header = GetHeaderName(fieldInfo);
-            var go = Object.Instantiate(_floatPram, paramRoot);
-            go.SetActive(true);
-            var textName = go.transform.Find("tbName").GetComponent<Text>();
-            textName.text = header;
-            var input = go.transform.Find("inputValue").GetComponent<InputField>();
-            input.text = curValue.ToString();
-
-            input.onSubmit.AddListener(str =>
-            {
-                float value; 
-                float.TryParse(str, result: out value);
-                fieldInfo.SetValue(action, value);
-                bSerilizeAction = true;
-            });
-            
-        }
-        
-        void OnDrawIntField(System.Object action, FieldInfo fieldInfo)
-        {
-            if (null == action)
-            {
-                return;
-            }
-            var curValue = fieldInfo.GetValue(action) is int ? (int)fieldInfo.GetValue(action) : 0;
-            var go = Object.Instantiate(_intPram, paramRoot);
-            go.SetActive(true);
-            string header = GetHeaderName(fieldInfo);
-            var textName = go.transform.Find("tbName").GetComponent<Text>();
-            textName.text = header;
-            var input = go.transform.Find("inputValue").GetComponent<InputField>();
-            input.text = curValue.ToString();
-
-            input.onSubmit.AddListener(str =>
-            {
-                int value; 
-                int.TryParse(str, result: out value);
-                fieldInfo.SetValue(action, value);
-                bSerilizeAction = true;
-            });
-            
-        }
-
         protected override void OnDestroy()
         {
             base.OnDestroy();
@@ -248,10 +143,7 @@ namespace Game.Script.UI.Frames
                 bRefreshActionDetail = true;
             });
             
-            for (int i = paramRoot.childCount - 1; i >= 0; --i)
-            {
-                Object.Destroy(paramRoot.GetChild(i).gameObject);
-            }
+            
             _ddActionType.value = (int)_curActionData.type;
             DrawAction(_curActionData.type, _curActionData.data);
 
@@ -268,7 +160,7 @@ namespace Game.Script.UI.Frames
                 _drawAction = System.Activator.CreateInstance(type) as MapAction;
             }
             var typeInfo = (System.Reflection.TypeInfo)type;
-            
+            FieldDrawer.BeginDraw(paramRoot);
             foreach (var field in typeInfo.DeclaredFields)
             {
                 if (field.IsStatic)
@@ -280,12 +172,10 @@ namespace Game.Script.UI.Frames
                 {
                     continue;
                 }
-                var fieldType = field.FieldType;
-
-                if (_typeDraw.TryGetValue(fieldType, out var drawAction))
+                FieldDrawer.Draw(paramRoot, field, _drawAction, o =>
                 {
-                    drawAction.Invoke(_drawAction, field);
-                }
+                    bSerilizeAction = true;
+                });
                 
             }
         }
