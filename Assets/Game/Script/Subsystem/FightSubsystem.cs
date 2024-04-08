@@ -47,9 +47,13 @@ namespace Game.Script.Subsystem
             base.OnInitialize();
             GameLoop.Add(OnUpdate);
         }
-
+        bool IsFighting => Common.Game.Instance.Mode == GameMode.Client || Common.Game.Instance.Mode == GameMode.Host;
         void OnUpdate(float deltaTime)
         {
+            if (!IsFighting)
+            {
+                return;
+            }
             if (StartLeftTime > 0)
             {
                 StartLeftTime -= deltaTime;
